@@ -27,11 +27,11 @@
 			<div class="sf-footer__col">
 				<h4 class="sf-footer__heading">Data Sources</h4>
 				<ul class="sf-footer__links">
-					<li><a href="<?php echo esc_url( home_url( '/docs/data-sources/' ) ); ?>">Google Search Console</a></li>
-					<li><a href="<?php echo esc_url( home_url( '/docs/data-sources/' ) ); ?>">Bing Webmaster Tools</a></li>
-					<li><a href="<?php echo esc_url( home_url( '/docs/data-sources/' ) ); ?>">Google Analytics 4</a></li>
-					<li><a href="<?php echo esc_url( home_url( '/docs/data-sources/' ) ); ?>">Keyword Planner</a></li>
-					<li><a href="<?php echo esc_url( home_url( '/docs/data-sources/' ) ); ?>">Google Trends</a></li>
+					<li><a href="<?php echo esc_url( home_url( '/docs/data-sources/#google-search-console' ) ); ?>">Google Search Console</a></li>
+					<li><a href="<?php echo esc_url( home_url( '/docs/data-sources/#bing-webmaster-tools' ) ); ?>">Bing Webmaster Tools</a></li>
+					<li><a href="<?php echo esc_url( home_url( '/docs/data-sources/#google-analytics-4' ) ); ?>">Google Analytics 4</a></li>
+					<li><a href="<?php echo esc_url( home_url( '/docs/data-sources/#google-keyword-planner' ) ); ?>">Keyword Planner</a></li>
+					<li><a href="<?php echo esc_url( home_url( '/docs/data-sources/#google-trends' ) ); ?>">Google Trends</a></li>
 					<li><a href="<?php echo esc_url( home_url( '/docs/data-sources/' ) ); ?>">SerpAPI</a></li>
 				</ul>
 			</div>
@@ -53,13 +53,13 @@
 			<div class="sf-footer__col">
 				<h4 class="sf-footer__heading">Export &amp; Analysis</h4>
 				<ul class="sf-footer__links">
-					<li><a href="<?php echo esc_url( home_url( '/docs/export-output/' ) ); ?>">Markdown Briefs</a></li>
-					<li><a href="<?php echo esc_url( home_url( '/docs/export-output/' ) ); ?>">CSV Export</a></li>
-					<li><a href="<?php echo esc_url( home_url( '/docs/export-output/' ) ); ?>">llms.txt</a></li>
-					<li><a href="<?php echo esc_url( home_url( '/docs/features/' ) ); ?>">SEO Score</a></li>
-					<li><a href="<?php echo esc_url( home_url( '/docs/features/' ) ); ?>">Content Briefs</a></li>
-					<li><a href="<?php echo esc_url( home_url( '/docs/features/' ) ); ?>">Keyword Clusters</a></li>
-					<li><a href="<?php echo esc_url( home_url( '/docs/features/' ) ); ?>">Competitor Analysis</a></li>
+					<li><a href="<?php echo esc_url( home_url( '/docs/export-output/#markdown-briefs' ) ); ?>">Markdown Briefs</a></li>
+					<li><a href="<?php echo esc_url( home_url( '/docs/export-output/#zip-bulk-export' ) ); ?>">CSV Export</a></li>
+					<li><a href="<?php echo esc_url( home_url( '/docs/export-output/#llms-txt-generation' ) ); ?>">llms.txt</a></li>
+					<li><a href="<?php echo esc_url( home_url( '/docs/features/#searchforge-score' ) ); ?>">SEO Score</a></li>
+					<li><a href="<?php echo esc_url( home_url( '/docs/features/#ai-content-briefs' ) ); ?>">Content Briefs</a></li>
+					<li><a href="<?php echo esc_url( home_url( '/docs/features/#keyword-clustering' ) ); ?>">Keyword Clusters</a></li>
+					<li><a href="<?php echo esc_url( home_url( '/docs/features/#competitor-intelligence' ) ); ?>">Competitor Analysis</a></li>
 				</ul>
 			</div>
 		</div>

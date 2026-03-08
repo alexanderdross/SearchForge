@@ -526,7 +526,7 @@
 	.sf-doc-nav__link:hover,
 	.sf-doc-nav__link.active {
 		border-left-color: transparent;
-		background: rgba(15, 118, 110, 0.1);
+		background: rgba(91, 125, 158, 0.1);
 	}
 }
 

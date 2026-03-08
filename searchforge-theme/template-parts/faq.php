@@ -66,6 +66,7 @@ $faqs = [
 				</div>
 			<?php endforeach; ?>
 		</div>
+		<noscript><style>.sf-faq__answer[hidden] { display: block !important; }</style></noscript>
 	</div>
 </section>
 

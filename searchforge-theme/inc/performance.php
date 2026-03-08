@@ -8,20 +8,12 @@
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Preload critical fonts.
- */
-function sf_theme_preload_fonts(): void {
-	echo '<link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>' . "\n";
-	echo '<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>' . "\n";
-}
-add_action( 'wp_head', 'sf_theme_preload_fonts', 1 );
-
-/**
- * Remove jQuery from frontend (not needed).
+ * Remove jQuery from frontend (theme does not use it).
+ * Uses wp_dequeue_script to avoid breaking plugins that declare jQuery as a dependency.
  */
 function sf_theme_dequeue_jquery(): void {
 	if ( ! is_admin() ) {
-		wp_deregister_script( 'jquery' );
+		wp_dequeue_script( 'jquery' );
 	}
 }
 add_action( 'wp_enqueue_scripts', 'sf_theme_dequeue_jquery' );

@@ -30,7 +30,7 @@ $tiers = [
 		'popular'    => true,
 		'cta_text'   => 'Get Pro',
 		'cta_class'  => 'sf-btn--primary',
-		'cta_url'    => '/checkout/?tier=pro',
+		'cta_url'    => home_url( '/checkout/?tier=pro' ),
 		'features'   => [
 			'All 8 data sources (unlimited)',
 			'Full SearchForge Score breakdown',
@@ -51,7 +51,7 @@ $tiers = [
 		'popular'    => false,
 		'cta_text'   => 'Contact Sales',
 		'cta_class'  => 'sf-btn--outline',
-		'cta_url'    => '/enterprise/',
+		'cta_url'    => home_url( '/enterprise/' ),
 		'features'   => [
 			'Everything in Pro',
 			'10 sites, unlimited team members',

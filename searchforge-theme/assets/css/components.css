@@ -104,7 +104,7 @@
 	align-items: center;
 	justify-content: center;
 	border-radius: var(--radius-md);
-	background: rgba(15, 118, 110, 0.1);
+	background: rgba(91, 125, 158, 0.1);
 	margin-bottom: var(--space-md);
 }
 .sf-card__icon--muted {
@@ -141,7 +141,7 @@
 	align-items: center;
 	justify-content: center;
 	border-radius: var(--radius-md);
-	background: rgba(15, 118, 110, 0.1);
+	background: rgba(91, 125, 158, 0.1);
 }
 .sf-feature-card__content h3 {
 	font-size: 1.0625rem;

@@ -35,12 +35,12 @@ add_action( 'after_setup_theme', 'sf_theme_setup' );
  * Enqueue styles and scripts.
  */
 function sf_theme_enqueue_assets(): void {
-	// Fonts.
+	// Fonts — self-hosted for GDPR compliance (no Google CDN requests).
 	wp_enqueue_style(
 		'sf-fonts',
-		'https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Outfit:wght@600;700&family=JetBrains+Mono:wght@400&display=swap',
+		SF_THEME_URI . '/assets/fonts/fonts.css',
 		[],
-		null
+		SF_THEME_VERSION
 	);
 
 	// Stylesheets — all depend on variables only (allows parallel loading).
@@ -94,8 +94,12 @@ function sf_theme_legal_redirects(): void {
 		'/contact/'  => 'https://dross.net/contact/?topic=searchforge',
 	];
 
-	$raw_uri = isset( $_SERVER['REQUEST_URI'] ) ? sanitize_text_field( wp_unslash( $_SERVER['REQUEST_URI'] ) ) : '';
-	$path    = trailingslashit( wp_parse_url( $raw_uri, PHP_URL_PATH ) );
+	$raw_uri    = isset( $_SERVER['REQUEST_URI'] ) ? sanitize_text_field( wp_unslash( $_SERVER['REQUEST_URI'] ) ) : '';
+	$parsed_path = wp_parse_url( $raw_uri, PHP_URL_PATH );
+	if ( ! is_string( $parsed_path ) ) {
+		return;
+	}
+	$path = trailingslashit( $parsed_path );
 
 	if ( isset( $redirects[ $path ] ) ) {
 		wp_redirect( $redirects[ $path ], 301 );
@@ -167,6 +171,21 @@ function sf_doc_sidebar( array $sections ): void {
 		);
 	}
 	echo '</ul></aside>';
+}
+
+/**
+ * Default navigation fallback when no menu is assigned.
+ */
+if ( ! function_exists( 'sf_default_nav' ) ) {
+	function sf_default_nav(): void {
+		echo '<ul class="sf-nav-list">';
+		echo '<li><a href="' . esc_url( home_url( '/#features' ) ) . '">Features</a></li>';
+		echo '<li><a href="' . esc_url( home_url( '/pricing/' ) ) . '">Pricing</a></li>';
+		echo '<li><a href="' . esc_url( home_url( '/docs/' ) ) . '">Docs</a></li>';
+		echo '<li><a href="' . esc_url( home_url( '/changelog/' ) ) . '">Changelog</a></li>';
+		echo '<li><a href="' . esc_url( home_url( '/enterprise/' ) ) . '">Enterprise</a></li>';
+		echo '</ul>';
+	}
 }
 
 // Load includes.

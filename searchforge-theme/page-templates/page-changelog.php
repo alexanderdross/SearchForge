@@ -23,7 +23,7 @@ get_header();
 		<article class="sf-changelog-entry">
 			<div class="sf-changelog-entry__header">
 				<h2>v2.0.0 <span class="sf-badge sf-badge--accent">Latest</span></h2>
-				<time class="sf-text--muted">March 8, 2026</time>
+				<time class="sf-text--muted" datetime="2026-03-08">March 8, 2026</time>
 			</div>
 			<h3>Version 2.0 &mdash; Feature Complete</h3>
 			<ul>
@@ -38,7 +38,7 @@ get_header();
 		<article class="sf-changelog-entry">
 			<div class="sf-changelog-entry__header">
 				<h2>v1.9.0</h2>
-				<time class="sf-text--muted">March 6, 2026</time>
+				<time class="sf-text--muted" datetime="2026-03-06">March 6, 2026</time>
 			</div>
 			<h3>Competitor Tracking &amp; SERP Intelligence</h3>
 			<ul>
@@ -55,7 +55,7 @@ get_header();
 		<article class="sf-changelog-entry">
 			<div class="sf-changelog-entry__header">
 				<h2>v1.8.0</h2>
-				<time class="sf-text--muted">February 28, 2026</time>
+				<time class="sf-text--muted" datetime="2026-02-28">February 28, 2026</time>
 			</div>
 			<h3>Bulk Actions &amp; Weekly Digest</h3>
 			<ul>
@@ -69,7 +69,7 @@ get_header();
 		<article class="sf-changelog-entry">
 			<div class="sf-changelog-entry__header">
 				<h2>v1.7.0</h2>
-				<time class="sf-text--muted">February 21, 2026</time>
+				<time class="sf-text--muted" datetime="2026-02-21">February 21, 2026</time>
 			</div>
 			<h3>Page Detail View &amp; Charts</h3>
 			<ul>
@@ -83,7 +83,7 @@ get_header();
 		<article class="sf-changelog-entry">
 			<div class="sf-changelog-entry__header">
 				<h2>v1.6.0</h2>
-				<time class="sf-text--muted">February 14, 2026</time>
+				<time class="sf-text--muted" datetime="2026-02-14">February 14, 2026</time>
 			</div>
 			<h3>API Keys, Pagination &amp; Onboarding</h3>
 			<ul>
@@ -98,7 +98,7 @@ get_header();
 		<article class="sf-changelog-entry">
 			<div class="sf-changelog-entry__header">
 				<h2>v1.5.0</h2>
-				<time class="sf-text--muted">February 7, 2026</time>
+				<time class="sf-text--muted" datetime="2026-02-07">February 7, 2026</time>
 			</div>
 			<h3>Alert System &amp; Content Decay</h3>
 			<ul>
@@ -112,7 +112,7 @@ get_header();
 		<article class="sf-changelog-entry">
 			<div class="sf-changelog-entry__header">
 				<h2>v1.0.0</h2>
-				<time class="sf-text--muted">January 15, 2026</time>
+				<time class="sf-text--muted" datetime="2026-01-15">January 15, 2026</time>
 			</div>
 			<h3>Initial Release</h3>
 			<ul>
@@ -125,6 +125,14 @@ get_header();
 			</ul>
 		</article>
 
+	</div>
+</section>
+
+<section class="sf-section sf-section--light" style="text-align: center;">
+	<div class="sf-container sf-container--narrow">
+		<p class="sf-text--muted">
+			<a href="<?php echo esc_url( home_url( '/docs/' ) ); ?>">&larr; Back to Documentation</a>
+		</p>
 	</div>
 </section>
 

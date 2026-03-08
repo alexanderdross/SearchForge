@@ -25,6 +25,6 @@
 			</p>
 		</div>
 
-		<a href="/bundle/" class="sf-btn sf-btn--accent sf-btn--lg">Get the Bundle</a>
+		<a href="<?php echo esc_url( home_url( '/bundle/' ) ); ?>" class="sf-btn sf-btn--accent sf-btn--lg">Get the Bundle</a>
 	</div>
 </section>

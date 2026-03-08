@@ -98,13 +98,13 @@ get_header();
 				<h3>Lifetime Pro</h3>
 				<p style="font-size: 2.5rem; font-family: 'Outfit', sans-serif; font-weight: 700; margin: var(--space-md) 0;">&euro;249</p>
 				<p class="sf-text--muted">One-time payment. All Pro features forever for 1 site.</p>
-				<a href="/checkout/?tier=lifetime-pro" class="sf-btn sf-btn--primary" style="margin-top: var(--space-md);">Get Lifetime Pro</a>
+				<a href="<?php echo esc_url( home_url( '/checkout/?tier=lifetime-pro' ) ); ?>" class="sf-btn sf-btn--primary" style="margin-top: var(--space-md);" rel="noopener">Get Lifetime Pro</a>
 			</div>
 			<div class="sf-card sf-card--bordered" style="text-align: center;">
 				<h3>Lifetime Agency</h3>
 				<p style="font-size: 2.5rem; font-family: 'Outfit', sans-serif; font-weight: 700; margin: var(--space-md) 0;">&euro;599</p>
 				<p class="sf-text--muted">One-time payment. All Agency features forever for 10 sites.</p>
-				<a href="/checkout/?tier=lifetime-agency" class="sf-btn sf-btn--primary" style="margin-top: var(--space-md);">Get Lifetime Agency</a>
+				<a href="<?php echo esc_url( home_url( '/checkout/?tier=lifetime-agency' ) ); ?>" class="sf-btn sf-btn--primary" style="margin-top: var(--space-md);" rel="noopener">Get Lifetime Agency</a>
 			</div>
 		</div>
 	</div>
@@ -145,6 +145,7 @@ get_header();
 				</div>
 			<?php endforeach; ?>
 		</div>
+		<noscript><style>.sf-faq__answer[hidden] { display: block !important; }</style></noscript>
 	</div>
 </section>
 

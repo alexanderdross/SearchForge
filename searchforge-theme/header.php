@@ -36,7 +36,7 @@
 		</nav>
 
 		<div class="sf-header__actions">
-			<a href="/pricing/" class="sf-btn sf-btn--primary sf-btn--sm">Get Pro</a>
+			<a href="<?php echo esc_url( home_url( '/pricing/' ) ); ?>" class="sf-btn sf-btn--primary sf-btn--sm">Get Pro</a>
 		</div>
 
 		<button class="sf-header__toggle" aria-expanded="false" aria-controls="sf-mobile-menu" aria-label="<?php esc_attr_e( 'Toggle navigation', 'searchforge-theme' ); ?>">
@@ -53,7 +53,7 @@
 			'depth'          => 1,
 		] );
 		?>
-		<a href="/pricing/" class="sf-btn sf-btn--primary sf-btn--block">Get Pro</a>
+		<a href="<?php echo esc_url( home_url( '/pricing/' ) ); ?>" class="sf-btn sf-btn--primary sf-btn--block">Get Pro</a>
 	</nav>
 </header>
 
@@ -62,15 +62,3 @@
 <main id="main-content" role="main">
 <?php
 
-/**
- * Default navigation fallback.
- */
-function sf_default_nav(): void {
-	echo '<ul class="sf-nav-list">';
-	echo '<li><a href="' . esc_url( home_url( '/#features' ) ) . '">Features</a></li>';
-	echo '<li><a href="/pricing/">Pricing</a></li>';
-	echo '<li><a href="/docs/">Docs</a></li>';
-	echo '<li><a href="/changelog/">Changelog</a></li>';
-	echo '<li><a href="/enterprise/">Enterprise</a></li>';
-	echo '</ul>';
-}

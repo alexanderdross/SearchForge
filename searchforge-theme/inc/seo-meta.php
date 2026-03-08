@@ -12,8 +12,8 @@ defined( 'ABSPATH' ) || exit;
  */
 function sf_theme_output_seo_meta(): void {
 	$site_name   = 'SearchForge';
-	$site_url    = 'https://searchforge.drossmedia.de';
-	$default_img = $site_url . '/wp-content/themes/searchforge-theme/assets/images/og-default.png';
+	$site_url    = home_url();
+	$default_img = get_template_directory_uri() . '/assets/images/searchforge-logo.png';
 	$twitter     = '@drossmedia';
 	$locale      = 'en_US';
 
@@ -76,8 +76,6 @@ function sf_theme_current_url(): string {
  * @return array{title: string, description: string, og_type?: string, image?: string, url?: string}
  */
 function sf_theme_get_page_meta(): array {
-	$site_url = 'https://searchforge.drossmedia.de';
-
 	// Front page.
 	if ( is_front_page() ) {
 		return [
@@ -105,7 +103,7 @@ function sf_theme_get_page_meta(): array {
 		case str_contains( $template, 'page-pricing' ) || $slug === 'pricing':
 			return [
 				'title'       => 'Pricing — SearchForge for WordPress',
-				'description' => 'SearchForge pricing plans: Free, Pro ($99/yr), Agency ($249/yr), and Enterprise. Compare features and choose the plan that fits your SEO workflow.',
+				'description' => 'SearchForge pricing plans: Free, Pro (€99/yr), Agency (€249/yr), and Enterprise. Compare features and choose the plan that fits your SEO workflow.',
 			];
 
 		case str_contains( $template, 'page-enterprise' ) || $slug === 'enterprise':
@@ -116,8 +114,8 @@ function sf_theme_get_page_meta(): array {
 
 		case str_contains( $template, 'page-bundle' ) || $slug === 'bundle':
 			return [
-				'title'       => 'SearchForge + CacheWarmer Bundle — Save 25%',
-				'description' => 'Get SearchForge and CacheWarmer together at 25% off. Detect SEO issues, generate AI briefs, and automatically warm caches across CDN, social media, and search engines.',
+				'title'       => 'SearchForge + CacheWarmer Bundle — Save 15%',
+				'description' => 'Get SearchForge and CacheWarmer together at 15% off. Detect SEO issues, generate AI briefs, and automatically warm caches across CDN, social media, and search engines.',
 			];
 
 		case str_contains( $template, 'page-changelog' ) || $slug === 'changelog':
@@ -180,7 +178,7 @@ function sf_theme_get_page_meta(): array {
 			$title = get_the_title();
 			return [
 				'title'       => $title . ' — SearchForge',
-				'description' => wp_strip_all_tags( get_the_excerpt() ) ?: 'SearchForge — the WordPress plugin that turns SEO data into LLM-ready intelligence.',
+				'description' => ( is_page() || is_singular() ? wp_strip_all_tags( get_the_excerpt() ) : '' ) ?: 'SearchForge — the WordPress plugin that turns SEO data into LLM-ready intelligence.',
 			];
 	}
 }

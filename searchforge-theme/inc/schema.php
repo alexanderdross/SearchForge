@@ -12,13 +12,14 @@ defined( 'ABSPATH' ) || exit;
  * Output WebPage schema on inner pages.
  */
 function sf_theme_output_schema(): void {
-	$site_url = 'https://searchforge.drossmedia.de';
+	$site_url  = home_url();
+	$theme_uri = get_template_directory_uri();
 
 	$org = [
 		'@type' => 'Organization',
 		'name'  => 'Dross:Media GmbH',
 		'url'   => 'https://drossmedia.de',
-		'logo'  => $site_url . '/wp-content/themes/searchforge-theme/assets/images/searchforge-logo.png',
+		'logo'  => $theme_uri . '/assets/images/searchforge-logo.png',
 	];
 
 	$schemas = [];
@@ -33,7 +34,7 @@ function sf_theme_output_schema(): void {
 			'applicationCategory'  => 'WebApplication',
 			'operatingSystem'      => 'WordPress',
 			'description'          => 'WordPress plugin that turns SEO data from Google Search Console, Bing, GA4 and Trends into LLM-ready markdown briefs.',
-			'screenshot'           => $site_url . '/wp-content/themes/searchforge-theme/assets/images/og-default.png',
+			'screenshot'           => $theme_uri . '/assets/images/searchforge-logo.png',
 			'offers'               => [
 				[
 					'@type'         => 'Offer',
@@ -67,7 +68,7 @@ function sf_theme_output_schema(): void {
 			'@type'    => 'Organization',
 			'name'     => 'Dross:Media GmbH',
 			'url'      => 'https://drossmedia.de',
-			'logo'     => $site_url . '/wp-content/themes/searchforge-theme/assets/images/searchforge-logo.png',
+			'logo'     => $theme_uri . '/assets/images/searchforge-logo.png',
 		];
 	} else {
 		// WebPage schema for inner pages.
@@ -130,7 +131,7 @@ add_action( 'wp_head', 'sf_theme_output_breadcrumb_schema' );
  * Output SiteNavigationElement JSON-LD listing every page.
  */
 function sf_theme_output_navigation_schema(): void {
-	$site_url = 'https://searchforge.drossmedia.de';
+	$site_url = home_url();
 
 	$nav_items = [
 		[ 'name' => 'Home',             'url' => $site_url . '/' ],

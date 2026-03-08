@@ -25,19 +25,12 @@
 	gap: 0.5rem;
 	text-decoration: none;
 }
-.sf-header__logo-icon {
-	display: flex;
-	align-items: center;
-	justify-content: center;
+.sf-header__logo-img {
 	width: 2.5rem;
 	height: 2.5rem;
 	border-radius: 0.5rem;
-	background: var(--sf-primary);
-	color: #fff;
-	font-family: var(--font-heading, 'Outfit', sans-serif);
-	font-size: 0.875rem;
-	font-weight: 700;
 	flex-shrink: 0;
+	object-fit: cover;
 }
 .sf-header__logo-brand {
 	display: flex;
@@ -51,7 +44,7 @@
 	color: var(--sf-text, #1e293b);
 }
 .sf-header__logo-search {
-	color: var(--sf-primary, #0f766e);
+	color: var(--sf-primary, #5B7D9E);
 }
 .sf-header__logo-claim {
 	font-family: var(--font-heading, 'Outfit', sans-serif);
@@ -650,19 +643,12 @@
 	gap: 0.625rem;
 	margin-bottom: var(--space-lg);
 }
-.sf-footer__logo-icon {
-	display: flex;
-	align-items: center;
-	justify-content: center;
+.sf-footer__logo-img {
 	width: 2.25rem;
 	height: 2.25rem;
 	border-radius: 0.5rem;
-	background: var(--sf-primary);
-	color: #fff;
-	font-family: var(--font-heading, 'Outfit', sans-serif);
-	font-size: 0.8125rem;
-	font-weight: 700;
 	flex-shrink: 0;
+	object-fit: cover;
 }
 .sf-footer__logo-text {
 	display: flex;

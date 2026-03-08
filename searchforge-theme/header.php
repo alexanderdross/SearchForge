@@ -3,7 +3,7 @@
 <head>
 	<meta charset="<?php bloginfo( 'charset' ); ?>">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='6' fill='%230f766e'/><text x='16' y='22' text-anchor='middle' fill='white' font-family='sans-serif' font-size='14' font-weight='bold'>SF</text></svg>">
+	<link rel="icon" type="image/png" href="<?php echo esc_url( get_template_directory_uri() ); ?>/assets/images/searchforge-logo.png">
 	<?php wp_head(); ?>
 </head>
 <body <?php body_class(); ?>>
@@ -16,7 +16,7 @@
 <header class="sf-header" role="banner">
 	<div class="sf-container sf-header__inner">
 		<a href="<?php echo esc_url( home_url( '/' ) ); ?>" class="sf-header__logo" aria-label="<?php esc_attr_e( 'SearchForge Home', 'searchforge-theme' ); ?>">
-			<span class="sf-header__logo-icon" aria-hidden="true">SF</span>
+			<img class="sf-header__logo-img" src="<?php echo esc_url( get_template_directory_uri() ); ?>/assets/images/searchforge-logo.png" alt="" aria-hidden="true" width="40" height="40">
 			<span class="sf-header__logo-brand">
 				<span class="sf-header__logo-text"><span class="sf-header__logo-search">Search</span>Forge</span>
 				<span class="sf-header__logo-claim">for WordPress</span>

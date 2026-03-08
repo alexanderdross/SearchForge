@@ -18,7 +18,7 @@ function sf_theme_output_schema(): void {
 		'@type' => 'Organization',
 		'name'  => 'Dross:Media GmbH',
 		'url'   => 'https://drossmedia.de',
-		'logo'  => $site_url . '/wp-content/themes/searchforge-theme/assets/images/logo.svg',
+		'logo'  => $site_url . '/wp-content/themes/searchforge-theme/assets/images/searchforge-logo.png',
 	];
 
 	$schemas = [];
@@ -77,7 +77,7 @@ function sf_theme_output_schema(): void {
 			'@type'    => 'Organization',
 			'name'     => 'Dross:Media GmbH',
 			'url'      => 'https://drossmedia.de',
-			'logo'     => $site_url . '/wp-content/themes/searchforge-theme/assets/images/logo.svg',
+			'logo'     => $site_url . '/wp-content/themes/searchforge-theme/assets/images/searchforge-logo.png',
 		];
 	} else {
 		// WebPage schema for inner pages.

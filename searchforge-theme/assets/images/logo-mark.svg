@@ -1,13 +1,13 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" fill="none">
   <!-- Anvil body (forge) -->
-  <path d="M6 20h20v4a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2v-4z" fill="#0f766e"/>
-  <path d="M4 18h24a2 2 0 0 1 0 4H4a2 2 0 0 1 0-4z" fill="#0d5f59"/>
+  <path d="M6 20h20v4a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2v-4z" fill="#5B7D9E"/>
+  <path d="M4 18h24a2 2 0 0 1 0 4H4a2 2 0 0 1 0-4z" fill="#4A6A88"/>
   <!-- Anvil horn -->
-  <path d="M8 14h12a2 2 0 0 1 2 2v2H6v-2a2 2 0 0 1 2-2z" fill="#0f766e"/>
+  <path d="M8 14h12a2 2 0 0 1 2 2v2H6v-2a2 2 0 0 1 2-2z" fill="#5B7D9E"/>
   <!-- Magnifying glass (search) -->
-  <circle cx="20" cy="10" r="5.5" stroke="#14b8a6" stroke-width="2.5" fill="none"/>
-  <line x1="24" y1="14" x2="28" y2="18" stroke="#14b8a6" stroke-width="2.5" stroke-linecap="round"/>
+  <circle cx="20" cy="10" r="5.5" stroke="#7B9DB8" stroke-width="2.5" fill="none"/>
+  <line x1="24" y1="14" x2="28" y2="18" stroke="#7B9DB8" stroke-width="2.5" stroke-linecap="round"/>
   <!-- Spark (forge heat) -->
-  <circle cx="14" cy="8" r="1.5" fill="#f59e0b"/>
-  <circle cx="11" cy="11" r="1" fill="#f59e0b" opacity="0.7"/>
+  <circle cx="14" cy="8" r="1.5" fill="#D94F3D"/>
+  <circle cx="11" cy="11" r="1" fill="#D94F3D" opacity="0.7"/>
 </svg>

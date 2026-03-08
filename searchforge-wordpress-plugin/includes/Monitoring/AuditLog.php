@@ -147,10 +147,33 @@ class AuditLog {
 	}
 
 	/**
-	 * Get the client IP address.
+	 * Get the client IP address (GDPR-anonymized).
+	 *
+	 * Zeroes the last octet for IPv4 and the last 80 bits for IPv6.
 	 */
 	private static function get_ip(): string {
 		$ip = $_SERVER['REMOTE_ADDR'] ?? '';
-		return filter_var( $ip, FILTER_VALIDATE_IP ) ?: '';
+		$ip = filter_var( $ip, FILTER_VALIDATE_IP ) ?: '';
+
+		if ( empty( $ip ) ) {
+			return '';
+		}
+
+		// IPv4: zero last octet.
+		if ( filter_var( $ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4 ) ) {
+			return preg_replace( '/\.\d+$/', '.0', $ip );
+		}
+
+		// IPv6: zero last 80 bits (keep first 48 bits).
+		if ( filter_var( $ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6 ) ) {
+			$packed = inet_pton( $ip );
+			// Zero bytes 6-15 (last 80 bits).
+			for ( $i = 6; $i < 16; $i++ ) {
+				$packed[ $i ] = "\0";
+			}
+			return inet_ntop( $packed );
+		}
+
+		return '';
 	}
 }

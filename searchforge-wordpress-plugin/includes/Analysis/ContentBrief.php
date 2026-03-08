@@ -351,7 +351,7 @@ class ContentBrief {
 				'Content-Type'      => 'application/json',
 			],
 			'body'    => wp_json_encode( [
-				'model'      => 'claude-sonnet-4-5-20250514',
+				'model'      => 'claude-sonnet-4-6',
 				'max_tokens' => 2000,
 				'messages'   => [
 					[ 'role' => 'user', 'content' => $prompt ],

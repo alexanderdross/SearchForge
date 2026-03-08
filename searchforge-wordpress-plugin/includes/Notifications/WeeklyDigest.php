@@ -89,7 +89,7 @@ class WeeklyDigest {
 			<style>
 				body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; color: #1d2327; margin: 0; padding: 0; background: #f0f0f1; }
 				.container { max-width: 600px; margin: 20px auto; background: #fff; border-radius: 6px; overflow: hidden; }
-				.header { background: #2271b1; color: #fff; padding: 24px 30px; }
+				.header { background: #0f766e; color: #fff; padding: 24px 30px; }
 				.header h1 { margin: 0; font-size: 22px; font-weight: 600; }
 				.header p { margin: 8px 0 0; opacity: 0.85; font-size: 14px; }
 				.content { padding: 30px; }
@@ -110,7 +110,7 @@ class WeeklyDigest {
 				.score-low { background: #fef1f1; color: #d63638; }
 				.alert-count { color: #d63638; font-weight: 600; }
 				.footer { padding: 20px 30px; background: #f6f7f7; font-size: 12px; color: #646970; text-align: center; }
-				.btn { display: inline-block; padding: 8px 20px; background: #2271b1; color: #fff; text-decoration: none; border-radius: 4px; font-weight: 500; }
+				.btn { display: inline-block; padding: 8px 20px; background: #0f766e; color: #fff; text-decoration: none; border-radius: 4px; font-weight: 500; }
 			</style>
 		</head>
 		<body>

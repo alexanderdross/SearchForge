@@ -210,8 +210,6 @@ class Ajax {
 		$type   = sanitize_text_field( $_POST['export_type'] ?? 'pages' );
 		$format = sanitize_text_field( $_POST['export_format'] ?? 'csv' );
 
-		$exporter = new \SearchForge\Export\CsvExporter();
-
 		switch ( $type ) {
 			case 'keywords':
 				$data     = $format === 'json' ? \SearchForge\Export\CsvExporter::export_keywords_json() : \SearchForge\Export\CsvExporter::export_keywords_csv();

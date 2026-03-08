@@ -167,8 +167,6 @@ class Competitors {
 			return [];
 		}
 
-		$args = array_merge( [ $comp_latest ], $comp_ids, [ $latest_date ?: '1970-01-01' ], [ $limit ] );
-
 		$results = $wpdb->get_results( $wpdb->prepare(
 			"SELECT
 				ck.query,

@@ -13,7 +13,7 @@ defined( 'ABSPATH' ) || exit;
 function sf_theme_output_seo_meta(): void {
 	$site_name   = 'SearchForge';
 	$site_url    = home_url();
-	$default_img = get_template_directory_uri() . '/assets/images/searchforge-logo.png';
+	$default_img = 'https://lovable.dross.net/images/searchforge-logo.png';
 	$twitter     = '@drossmedia';
 	$locale      = 'en_US';
 

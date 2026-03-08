@@ -43,27 +43,27 @@ function sf_theme_enqueue_assets(): void {
 		null
 	);
 
-	// Stylesheets.
+	// Stylesheets — all depend on variables only (allows parallel loading).
 	$css_files = [ 'variables', 'base', 'components', 'sections', 'responsive' ];
 	foreach ( $css_files as $file ) {
 		wp_enqueue_style(
 			"sf-{$file}",
 			SF_THEME_URI . "/assets/css/{$file}.css",
-			$file === 'variables' ? [ 'sf-fonts' ] : [ "sf-" . $css_files[ array_search( $file, $css_files ) - 1 ] ],
+			$file === 'variables' ? [ 'sf-fonts' ] : [ 'sf-variables' ],
 			SF_THEME_VERSION
 		);
 	}
 
-	// Scripts.
-	$js_files = [ 'navigation', 'faq', 'pricing', 'animations', 'doc-nav' ];
-	foreach ( $js_files as $file ) {
-		wp_enqueue_script(
-			"sf-{$file}",
-			SF_THEME_URI . "/assets/js/{$file}.js",
-			[],
-			SF_THEME_VERSION,
-			[ 'strategy' => 'defer', 'in_footer' => true ]
-		);
+	// Scripts — conditionally load only what the current page needs.
+	wp_enqueue_script( 'sf-navigation', SF_THEME_URI . '/assets/js/navigation.js', [], SF_THEME_VERSION, [ 'strategy' => 'defer', 'in_footer' => true ] );
+	wp_enqueue_script( 'sf-animations', SF_THEME_URI . '/assets/js/animations.js', [], SF_THEME_VERSION, [ 'strategy' => 'defer', 'in_footer' => true ] );
+
+	if ( is_front_page() ) {
+		wp_enqueue_script( 'sf-faq', SF_THEME_URI . '/assets/js/faq.js', [], SF_THEME_VERSION, [ 'strategy' => 'defer', 'in_footer' => true ] );
+	}
+
+	if ( is_page_template( array_map( fn( $t ) => "page-templates/page-docs-{$t}.php", [ 'getting-started', 'data-sources', 'features', 'export-output', 'developer', 'integrations' ] ) ) ) {
+		wp_enqueue_script( 'sf-doc-nav', SF_THEME_URI . '/assets/js/doc-nav.js', [], SF_THEME_VERSION, [ 'strategy' => 'defer', 'in_footer' => true ] );
 	}
 }
 add_action( 'wp_enqueue_scripts', 'sf_theme_enqueue_assets' );
@@ -94,7 +94,8 @@ function sf_theme_legal_redirects(): void {
 		'/contact/'  => 'https://dross.net/contact/?topic=searchforge',
 	];
 
-	$path = trailingslashit( wp_parse_url( $_SERVER['REQUEST_URI'] ?? '', PHP_URL_PATH ) );
+	$raw_uri = isset( $_SERVER['REQUEST_URI'] ) ? sanitize_text_field( wp_unslash( $_SERVER['REQUEST_URI'] ) ) : '';
+	$path    = trailingslashit( wp_parse_url( $raw_uri, PHP_URL_PATH ) );
 
 	if ( isset( $redirects[ $path ] ) ) {
 		wp_redirect( $redirects[ $path ], 301 );

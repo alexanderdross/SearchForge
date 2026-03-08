@@ -11,7 +11,7 @@ defined( 'ABSPATH' ) || exit;
  * Preload critical fonts.
  */
 function sf_theme_preload_fonts(): void {
-	echo '<link rel="preconnect" href="https://fonts.googleapis.com">' . "\n";
+	echo '<link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>' . "\n";
 	echo '<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>' . "\n";
 }
 add_action( 'wp_head', 'sf_theme_preload_fonts', 1 );

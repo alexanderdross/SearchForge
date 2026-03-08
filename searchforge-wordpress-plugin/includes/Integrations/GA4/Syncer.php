@@ -42,30 +42,40 @@ class Syncer {
 
 		$synced = 0;
 
-		foreach ( $page_metrics as $path => $metrics ) {
-			$organic = $landing_data[ $path ] ?? [];
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
+		$wpdb->query( 'START TRANSACTION' );
 
-			// Delete existing data for this date + path.
-			$wpdb->delete( $table, [
-				'page_path'     => $path,
-				'snapshot_date' => $today,
-			] );
+		try {
+			foreach ( $page_metrics as $path => $metrics ) {
+				$organic = $landing_data[ $path ] ?? [];
 
-			$wpdb->insert( $table, [
-				'page_path'         => $path,
-				'snapshot_date'     => $today,
-				'sessions'          => $metrics['sessions'],
-				'bounce_rate'       => $metrics['bounce_rate'],
-				'avg_session_dur'   => $metrics['avg_session_dur'],
-				'engaged_sessions'  => $metrics['engaged_sessions'],
-				'conversions'       => $metrics['conversions'],
-				'pageviews'         => $metrics['pageviews'],
-				'organic_sessions'  => $organic['organic_sessions'] ?? 0,
-				'organic_bounce'    => $organic['bounce_rate'] ?? null,
-				'organic_conversions' => $organic['conversions'] ?? 0,
-			] );
+				// Delete existing data for this date + path.
+				$wpdb->delete( $table, [
+					'page_path'     => $path,
+					'snapshot_date' => $today,
+				] );
 
-			$synced++;
+				$wpdb->insert( $table, [
+					'page_path'         => $path,
+					'snapshot_date'     => $today,
+					'sessions'          => $metrics['sessions'],
+					'bounce_rate'       => $metrics['bounce_rate'],
+					'avg_session_dur'   => $metrics['avg_session_dur'],
+					'engaged_sessions'  => $metrics['engaged_sessions'],
+					'conversions'       => $metrics['conversions'],
+					'pageviews'         => $metrics['pageviews'],
+					'organic_sessions'  => $organic['organic_sessions'] ?? 0,
+					'organic_bounce'    => $organic['bounce_rate'] ?? null,
+					'organic_conversions' => $organic['conversions'] ?? 0,
+				] );
+
+				$synced++;
+			}
+
+			$wpdb->query( 'COMMIT' );
+		} catch ( \Throwable $e ) {
+			$wpdb->query( 'ROLLBACK' );
+			throw $e;
 		}
 
 		// Log the sync.

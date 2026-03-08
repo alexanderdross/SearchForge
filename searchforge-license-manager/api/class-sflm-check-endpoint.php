@@ -28,7 +28,7 @@ class SFLM_Check_Endpoint extends SFLM_REST_Controller {
         $license_key = sanitize_text_field( $request->get_param( 'license_key' ) ?? '' );
         $fingerprint = sanitize_text_field( $request->get_param( 'fingerprint' ) ?? '' );
         $token       = sanitize_text_field( $request->get_param( 'token' ) ?? '' );
-        $cw_version  = sanitize_text_field( $request->get_param( 'product_version' ) ?? '' );
+        $product_version  = sanitize_text_field( $request->get_param( 'product_version' ) ?? '' );
 
         // Validierung
         if ( ! SFLM_License_Manager::validate_key_format( $license_key ) ) {
@@ -72,7 +72,7 @@ class SFLM_Check_Endpoint extends SFLM_REST_Controller {
 
         // Heartbeat aktualisieren
         $tracker = new SFLM_Installation_Tracker();
-        $tracker->update_heartbeat( (int) $license->id, $fingerprint, $cw_version ?: null );
+        $tracker->update_heartbeat( (int) $license->id, $fingerprint, $product_version ?: null );
 
         // Features und neuen Token ermitteln
         $features  = ( new SFLM_Feature_Flags() )->get_features( $license );

@@ -36,7 +36,7 @@ class BrokenLinks {
 
 		foreach ( $pages as $page_path ) {
 			$url      = $site_url . $page_path;
-			$response = wp_remote_get( $url, [
+			$response = wp_safe_remote_get( $url, [
 				'timeout'    => 15,
 				'user-agent' => 'SearchForge/' . SEARCHFORGE_VERSION,
 				'sslverify'  => false,

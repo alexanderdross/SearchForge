@@ -24,10 +24,7 @@ function sf_theme_output_schema(): void {
 	$schemas = [];
 
 	if ( is_front_page() ) {
-		// Product schema with AggregateRating for rich results.
-		$review_count = wp_rand( 150, 214 );
-		$rating_value = number_format( wp_rand( 48, 49 ) / 10, 1 );
-
+		// SoftwareApplication schema (without fake AggregateRating to comply with Google policies).
 		$schemas[] = [
 			'@context'             => 'https://schema.org',
 			'@type'                => 'SoftwareApplication',
@@ -61,13 +58,6 @@ function sf_theme_output_schema(): void {
 					'billingDuration'  => 'P1Y',
 					'availability'     => 'https://schema.org/InStock',
 				],
-			],
-			'aggregateRating' => [
-				'@type'       => 'AggregateRating',
-				'ratingValue' => $rating_value,
-				'bestRating'  => '5',
-				'worstRating' => '1',
-				'ratingCount' => $review_count,
 			],
 			'author' => $org,
 		];

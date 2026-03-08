@@ -2,6 +2,8 @@
  * Doc sidebar scroll-spy: highlights the active section link.
  */
 (function () {
+	'use strict';
+
 	const links = document.querySelectorAll('.sf-doc-nav__link');
 	if (!links.length) return;
 
@@ -12,6 +14,8 @@
 		if (el) sections.push({ el: el, link: link });
 	});
 
+	var ticking = false;
+
 	function update() {
 		let current = sections[0];
 		for (let i = 0; i < sections.length; i++) {
@@ -21,8 +25,15 @@
 		}
 		links.forEach(function (l) { l.classList.remove('active'); });
 		if (current) current.link.classList.add('active');
+		ticking = false;
 	}
 
-	window.addEventListener('scroll', update, { passive: true });
+	window.addEventListener('scroll', function () {
+		if (!ticking) {
+			requestAnimationFrame(update);
+			ticking = true;
+		}
+	}, { passive: true });
+
 	update();
 })();

@@ -194,7 +194,7 @@ $cannibal     = $is_pro ? SearchForge\Admin\PageDetail::get_page_cannibalization
 					</div>
 					<div class="sf-card">
 						<h3><?php esc_html_e( 'Avg Duration', 'searchforge' ); ?></h3>
-						<span class="sf-card-value"><?php echo esc_html( gmdate( 'i:s', (int) $ga4_data['avg_session_duration'] ) ); ?></span>
+						<span class="sf-card-value"><?php echo esc_html( gmdate( 'i:s', (int) $ga4_data['avg_session_dur'] ) ); ?></span>
 					</div>
 					<div class="sf-card">
 						<h3><?php esc_html_e( 'Conversions', 'searchforge' ); ?></h3>

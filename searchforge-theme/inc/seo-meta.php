@@ -66,7 +66,8 @@ function sf_theme_current_url(): string {
 	if ( is_page() ) {
 		return get_permalink();
 	}
-	return home_url( $_SERVER['REQUEST_URI'] ?? '/' );
+	$request_uri = isset( $_SERVER['REQUEST_URI'] ) ? sanitize_text_field( wp_unslash( $_SERVER['REQUEST_URI'] ) ) : '/';
+	return home_url( $request_uri );
 }
 
 /**

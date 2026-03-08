@@ -68,7 +68,7 @@
 	<!-- Bottom bar -->
 	<div class="sf-footer__bottom">
 		<div class="sf-container sf-footer__bottom-inner">
-			<p>&copy; <?php echo esc_html( date( 'Y' ) ); ?> SearchForge. All rights reserved.</p>
+			<p>&copy; <?php echo esc_html( wp_date( 'Y' ) ); ?> SearchForge. All rights reserved.</p>
 			<ul class="sf-footer__legal">
 				<li><a href="https://dross.net/imprint/?ref=searchforge" target="_blank" rel="noopener">Imprint</a></li>
 				<li><a href="https://dross.net/privacy-policy/?ref=searchforge" target="_blank" rel="noopener">Privacy Policy</a></li>

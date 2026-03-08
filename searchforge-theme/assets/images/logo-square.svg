@@ -4,74 +4,52 @@
       <stop offset="0%" stop-color="#0f766e"/>
       <stop offset="100%" stop-color="#094842"/>
     </linearGradient>
-    <filter id="shadow" x="-10%" y="-10%" width="120%" height="120%">
-      <feDropShadow dx="0" dy="3" stdDeviation="6" flood-color="#000000" flood-opacity="0.2"/>
+    <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="2" stdDeviation="4" flood-color="#000000" flood-opacity="0.18"/>
     </filter>
+    <clipPath id="lens-clip">
+      <circle cx="232" cy="208" r="96"/>
+    </clipPath>
   </defs>
 
   <!-- Background -->
   <rect width="512" height="512" rx="96" ry="96" fill="url(#bg)"/>
 
-  <!-- === ANVIL — proper side-profile silhouette === -->
-  <g filter="url(#shadow)">
-    <!-- Anvil body: classic shape with horn on left, heel on right -->
-    <path d="
-      M 110 300
-      L 110 280
-      Q 110 268 122 268
-      L 160 268
-      L 160 248
-      Q 160 236 172 236
-      L 340 236
-      Q 352 236 352 248
-      L 352 268
-      L 390 268
-      Q 402 268 402 280
-      L 402 300
-      Z
-    " fill="#ffffff"/>
+  <!-- === MAGNIFYING GLASS — primary element === -->
+  <g filter="url(#glow)">
+    <!-- Glass lens background -->
+    <circle cx="232" cy="208" r="96" fill="rgba(255,255,255,0.1)"/>
 
-    <!-- Anvil horn (pointed left extension) -->
-    <path d="
-      M 110 280
-      L 72 272
-      Q 60 270 60 278
-      L 60 284
-      Q 60 292 72 290
-      L 110 284
-      Z
-    " fill="#ffffff" opacity="0.92"/>
+    <!-- Data bars inside the lens (SEO data being "forged") -->
+    <g clip-path="url(#lens-clip)">
+      <rect x="172" y="244" width="24" height="60" rx="4" fill="#14b8a6" opacity="0.8"/>
+      <rect x="204" y="212" width="24" height="92" rx="4" fill="#14b8a6" opacity="0.9"/>
+      <rect x="236" y="228" width="24" height="76" rx="4" fill="#14b8a6"/>
+      <rect x="268" y="192" width="24" height="112" rx="4" fill="#f59e0b"/>
+    </g>
 
-    <!-- Anvil base / pedestal -->
-    <path d="
-      M 152 300
-      L 152 320
-      Q 152 340 172 340
-      L 188 340
-      L 188 370
-      Q 188 384 202 384
-      L 310 384
-      Q 324 384 324 370
-      L 324 340
-      L 340 340
-      Q 360 340 360 320
-      L 360 300
-      Z
-    " fill="#ffffff" opacity="0.88"/>
+    <!-- Glass ring -->
+    <circle cx="232" cy="208" r="96" stroke="#ffffff" stroke-width="20" fill="none"/>
 
-    <!-- Anvil face highlight -->
-    <rect x="160" y="236" width="192" height="6" rx="3" fill="#ffffff" opacity="0.4"/>
+    <!-- Glass highlight arc -->
+    <path d="M 172 148 A 80 80 0 0 1 280 140" stroke="#ffffff" stroke-width="4" fill="none" opacity="0.35" stroke-linecap="round"/>
+
+    <!-- Handle -->
+    <line x1="304" y1="282" x2="380" y2="362" stroke="#ffffff" stroke-width="28" stroke-linecap="round"/>
+    <line x1="304" y1="282" x2="380" y2="362" stroke="rgba(255,255,255,0.5)" stroke-width="34" stroke-linecap="round"/>
   </g>
 
-  <!-- === MAGNIFYING GLASS (search) — overlapping top-right === -->
-  <g filter="url(#shadow)">
-    <circle cx="320" cy="148" r="64" stroke="#14b8a6" stroke-width="24" fill="rgba(20,184,166,0.1)"/>
-    <circle cx="320" cy="148" r="44" stroke="#ffffff" stroke-width="2.5" fill="none" opacity="0.2"/>
-    <line x1="366" y1="196" x2="404" y2="237" stroke="#14b8a6" stroke-width="24" stroke-linecap="round"/>
-  </g>
+  <!-- === FORGE SPARKS — rising from the data === -->
+  <circle cx="188" cy="118" r="10" fill="#f59e0b"/>
+  <circle cx="216" cy="98" r="14" fill="#f59e0b" opacity="0.9"/>
+  <circle cx="252" cy="108" r="8" fill="#f59e0b" opacity="0.6"/>
+  <circle cx="168" cy="138" r="6" fill="#f59e0b" opacity="0.45"/>
 
-  <!-- === SPARKS (forge heat) — amber accents === -->
-  <circle cx="196" cy="140" r="18" fill="#f59e0b"/>
-  <circle cx="164" cy="176" r="12" fill="#f59e0b" opacity="0.75"/>
-  <circle cx="220" cy="184" r="8" fill="#f59e0b" opacity="0.5"/>
+  <!-- === HAMMER — small forge accent, top-right === -->
+  <g transform="translate(360, 88) rotate(30)" filter="url(#glow)">
+    <!-- Hammer head -->
+    <rect x="-28" y="-14" width="56" height="28" rx="6" fill="#ffffff"/>
+    <!-- Hammer handle -->
+    <rect x="-4" y="14" width="8" height="52" rx="4" fill="#ffffff" opacity="0.85"/>
+  </g>
 </svg>

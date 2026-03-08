@@ -4,41 +4,74 @@
       <stop offset="0%" stop-color="#0f766e"/>
       <stop offset="100%" stop-color="#094842"/>
     </linearGradient>
-    <!-- Subtle inner shadow for depth -->
     <filter id="shadow" x="-10%" y="-10%" width="120%" height="120%">
-      <feDropShadow dx="0" dy="4" stdDeviation="8" flood-color="#000000" flood-opacity="0.15"/>
+      <feDropShadow dx="0" dy="3" stdDeviation="6" flood-color="#000000" flood-opacity="0.2"/>
     </filter>
   </defs>
 
   <!-- Background -->
   <rect width="512" height="512" rx="96" ry="96" fill="url(#bg)"/>
 
-  <!-- === ANVIL (forge) — drawn natively at 512 scale === -->
-
-  <!-- Anvil base / pedestal -->
-  <rect x="140" y="340" width="232" height="52" rx="10" fill="#ffffff"/>
-
-  <!-- Anvil face (wide flat top) -->
-  <rect x="108" y="296" width="296" height="52" rx="12" fill="#ffffff"/>
-
-  <!-- Anvil horn (working surface) -->
-  <path d="M164 252 h160 a20 20 0 0 1 20 20 v24 H144 v-24 a20 20 0 0 1 20-20z" fill="#ffffff" opacity="0.92"/>
-
-  <!-- Subtle anvil edge highlight -->
-  <rect x="108" y="296" width="296" height="6" rx="3" fill="#ffffff" opacity="0.5"/>
-
-  <!-- === MAGNIFYING GLASS (search) — larger, bolder, overlapping anvil === -->
+  <!-- === ANVIL — proper side-profile silhouette === -->
   <g filter="url(#shadow)">
-    <!-- Glass circle -->
-    <circle cx="316" cy="168" r="72" stroke="#14b8a6" stroke-width="28" fill="rgba(20,184,166,0.08)"/>
-    <!-- Inner highlight ring -->
-    <circle cx="316" cy="168" r="52" stroke="#ffffff" stroke-width="3" fill="none" opacity="0.25"/>
-    <!-- Handle -->
-    <line x1="368" y1="220" x2="410" y2="266" stroke="#14b8a6" stroke-width="28" stroke-linecap="round"/>
+    <!-- Anvil body: classic shape with horn on left, heel on right -->
+    <path d="
+      M 110 300
+      L 110 280
+      Q 110 268 122 268
+      L 160 268
+      L 160 248
+      Q 160 236 172 236
+      L 340 236
+      Q 352 236 352 248
+      L 352 268
+      L 390 268
+      Q 402 268 402 280
+      L 402 300
+      Z
+    " fill="#ffffff"/>
+
+    <!-- Anvil horn (pointed left extension) -->
+    <path d="
+      M 110 280
+      L 72 272
+      Q 60 270 60 278
+      L 60 284
+      Q 60 292 72 290
+      L 110 284
+      Z
+    " fill="#ffffff" opacity="0.92"/>
+
+    <!-- Anvil base / pedestal -->
+    <path d="
+      M 152 300
+      L 152 320
+      Q 152 340 172 340
+      L 188 340
+      L 188 370
+      Q 188 384 202 384
+      L 310 384
+      Q 324 384 324 370
+      L 324 340
+      L 340 340
+      Q 360 340 360 320
+      L 360 300
+      Z
+    " fill="#ffffff" opacity="0.88"/>
+
+    <!-- Anvil face highlight -->
+    <rect x="160" y="236" width="192" height="6" rx="3" fill="#ffffff" opacity="0.4"/>
+  </g>
+
+  <!-- === MAGNIFYING GLASS (search) — overlapping top-right === -->
+  <g filter="url(#shadow)">
+    <circle cx="320" cy="148" r="64" stroke="#14b8a6" stroke-width="24" fill="rgba(20,184,166,0.1)"/>
+    <circle cx="320" cy="148" r="44" stroke="#ffffff" stroke-width="2.5" fill="none" opacity="0.2"/>
+    <line x1="366" y1="196" x2="404" y2="237" stroke="#14b8a6" stroke-width="24" stroke-linecap="round"/>
   </g>
 
   <!-- === SPARKS (forge heat) — amber accents === -->
-  <circle cx="204" cy="152" r="20" fill="#f59e0b"/>
-  <circle cx="168" cy="192" r="13" fill="#f59e0b" opacity="0.7"/>
-  <circle cx="224" cy="200" r="9" fill="#f59e0b" opacity="0.5"/>
+  <circle cx="196" cy="140" r="18" fill="#f59e0b"/>
+  <circle cx="164" cy="176" r="12" fill="#f59e0b" opacity="0.75"/>
+  <circle cx="220" cy="184" r="8" fill="#f59e0b" opacity="0.5"/>
 </svg>

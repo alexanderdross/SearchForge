@@ -19,7 +19,7 @@ function sf_theme_output_schema(): void {
 		'@type' => 'Organization',
 		'name'  => 'Dross:Media GmbH',
 		'url'   => 'https://drossmedia.de',
-		'logo'  => 'https://lovable.dross.net/images/searchforge-logo.png',
+		'logo'  => $theme_uri . '/assets/images/searchforge-logo.png',
 	];
 
 	$schemas = [];
@@ -34,7 +34,7 @@ function sf_theme_output_schema(): void {
 			'applicationCategory'  => 'WebApplication',
 			'operatingSystem'      => 'WordPress',
 			'description'          => 'WordPress plugin that turns SEO data from Google Search Console, Bing, GA4 and Trends into LLM-ready markdown briefs.',
-			'screenshot'           => 'https://lovable.dross.net/images/searchforge-logo.png',
+			'screenshot'           => $theme_uri . '/assets/images/searchforge-logo.png',
 			'offers'               => [
 				[
 					'@type'         => 'Offer',
@@ -68,7 +68,7 @@ function sf_theme_output_schema(): void {
 			'@type'    => 'Organization',
 			'name'     => 'Dross:Media GmbH',
 			'url'      => 'https://drossmedia.de',
-			'logo'     => 'https://lovable.dross.net/images/searchforge-logo.png',
+			'logo'     => $theme_uri . '/assets/images/searchforge-logo.png',
 		];
 	} else {
 		// WebPage schema for inner pages.

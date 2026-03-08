@@ -231,19 +231,7 @@ searchforge-wordpress-plugin/
 └── assets/                      # Admin CSS/JS (Chart.js)
 ```
 
-### Database Tables
-
-| Table | Purpose |
-|-------|---------|
-| `sf_snapshots` | Daily page-level metrics (clicks, impressions, position, CTR) |
-| `sf_keywords` | Keyword performance + search volume |
-| `sf_sync_log` | Sync execution history |
-| `sf_briefs_cache` | Generated brief content with expiration |
-| `sf_alerts` | Alert history with severity and metadata |
-| `sf_ga4_metrics` | GA4 behavior data (sessions, bounce, conversions) |
-| `sf_settings` | Plugin configuration |
-
-### Database Tables (Full List — 10 tables)
+### Database Tables (10 tables)
 
 | Table | Purpose |
 |-------|---------|

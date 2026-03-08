@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="none">
+  <!-- Rounded rectangle background with brand gradient -->
+  <defs>
+    <linearGradient id="bg-grad" x1="0" y1="0" x2="512" y2="512" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#0f766e"/>
+      <stop offset="100%" stop-color="#0d5f59"/>
+    </linearGradient>
+  </defs>
+  <rect width="512" height="512" rx="80" ry="80" fill="url(#bg-grad)"/>
+
+  <!-- Centered logo mark, scaled from 32x32 to ~320x320, offset to center -->
+  <g transform="translate(96, 76) scale(10)">
+    <!-- Anvil body (forge) -->
+    <path d="M6 20h20v4a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2v-4z" fill="#ffffff" opacity="0.95"/>
+    <path d="M4 18h24a2 2 0 0 1 0 4H4a2 2 0 0 1 0-4z" fill="#ffffff"/>
+    <!-- Anvil horn -->
+    <path d="M8 14h12a2 2 0 0 1 2 2v2H6v-2a2 2 0 0 1 2-2z" fill="#ffffff" opacity="0.9"/>
+    <!-- Magnifying glass (search) -->
+    <circle cx="20" cy="10" r="5.5" stroke="#14b8a6" stroke-width="2.5" fill="none"/>
+    <line x1="24" y1="14" x2="28" y2="18" stroke="#14b8a6" stroke-width="2.5" stroke-linecap="round"/>
+    <!-- Spark (forge heat) -->
+    <circle cx="14" cy="8" r="1.5" fill="#f59e0b"/>
+    <circle cx="11" cy="11" r="1" fill="#f59e0b" opacity="0.7"/>
+  </g>
+</svg>

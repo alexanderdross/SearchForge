@@ -14,7 +14,7 @@
 		if (el) sections.push({ el: el, link: link });
 	});
 
-	var ticking = false;
+	let ticking = false;
 
 	function update() {
 		let current = sections[0];

@@ -37,7 +37,7 @@
 			} else {
 				openItem( this );
 				// Update URL hash without scrolling.
-				var item = this.closest( '.sf-faq__item' );
+				const item = this.closest( '.sf-faq__item' );
 				if ( item && item.id ) {
 					history.replaceState( null, '', '#' + item.id );
 				}
@@ -47,16 +47,16 @@
 
 	// Open FAQ item matching URL hash on page load.
 	function openFromHash() {
-		var hash = window.location.hash.substring( 1 );
+		const hash = window.location.hash.substring( 1 );
 		if ( ! hash ) return;
 
-		var target = document.getElementById( hash );
+		const target = document.getElementById( hash );
 		if ( ! target || ! target.classList.contains( 'sf-faq__item' ) ) return;
 
-		var btn = target.querySelector( '.sf-faq__question' );
+		const btn = target.querySelector( '.sf-faq__question' );
 		if ( btn ) {
 			openItem( btn );
-			var scrollBehavior = window.matchMedia( '(prefers-reduced-motion: reduce)' ).matches ? 'auto' : 'smooth';
+			const scrollBehavior = window.matchMedia( '(prefers-reduced-motion: reduce)' ).matches ? 'auto' : 'smooth';
 			target.scrollIntoView( { behavior: scrollBehavior, block: 'center' } );
 		}
 	}

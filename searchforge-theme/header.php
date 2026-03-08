@@ -44,7 +44,7 @@
 		</button>
 	</div>
 
-	<div id="sf-mobile-menu" class="sf-mobile-menu" hidden>
+	<nav id="sf-mobile-menu" class="sf-mobile-menu" hidden aria-label="<?php esc_attr_e( 'Mobile Navigation', 'searchforge-theme' ); ?>">
 		<?php
 		wp_nav_menu( [
 			'theme_location' => 'primary',
@@ -54,7 +54,7 @@
 		] );
 		?>
 		<a href="/pricing/" class="sf-btn sf-btn--primary sf-btn--block">Get Pro</a>
-	</div>
+	</nav>
 </header>
 
 <?php get_template_part( 'template-parts/breadcrumb' ); ?>

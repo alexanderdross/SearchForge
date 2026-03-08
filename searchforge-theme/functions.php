@@ -153,7 +153,7 @@ function sf_get_breadcrumbs(): array {
  * @param array<int, array{id: string, label: string}> $sections Section ID and label pairs.
  */
 function sf_doc_sidebar( array $sections ): void {
-	echo '<aside class="sf-doc-sidebar"><p class="sf-doc-sidebar__title">On this page</p><ul class="sf-doc-nav">';
+	echo '<aside class="sf-doc-sidebar" aria-label="' . esc_attr__( 'On this page', 'searchforge-theme' ) . '"><p class="sf-doc-sidebar__title">On this page</p><ul class="sf-doc-nav">';
 	foreach ( $sections as $section ) {
 		$title_attr = '';
 		if ( ! empty( $section['title'] ) ) {

@@ -28,12 +28,12 @@
 
 | Category | Critical | High | Medium | Low | Info | Total |
 |----------|----------|------|--------|-----|------|-------|
-| Accessibility | 0 | 2 | 5 | 4 | 6 | 17 |
+| Accessibility | 4 | 6 | 10 | 5 | 8 | 33 |
 | QA | 1 | 3 | 6 | 4 | 3 | 17 |
 | UAT | 0 | 1 | 4 | 3 | 2 | 10 |
 | Performance | 2 | 5 | 10 | 6 | 8 | 31 |
 | Security | 0 | 0 | 6 | 2 | 3 | 11 |
-| **Total** | **3** | **11** | **31** | **19** | **22** | **86** |
+| **Total** | **7** | **15** | **36** | **20** | **24** | **102** |
 
 ### Fixes Applied in This Audit
 
@@ -53,6 +53,16 @@
 | SEC-10: Replace `wp_remote_get()` with `wp_safe_remote_get()` for SSRF protection | Plugin | Critical | Fixed |
 | DATA-01: Wrap GA4 Syncer delete-then-insert in transaction | Plugin | High | Fixed |
 | MIGRATION remnant: Rename `$cw_version` → `$product_version` | License Manager | Low | Fixed |
+| A11Y: Fix `--sf-text-muted` contrast ratio (#64748b → #566779) for 4.5:1 on white | Theme | Critical | Fixed |
+| A11Y: Fix `--sf-text-inverse-muted` contrast (#b0bdd0 → #c8d0de) for 4.5:1 on dark | Theme | Critical | Fixed |
+| A11Y: Add `<th scope="row">` to comparison and pricing table row headers | Theme | Critical | Fixed |
+| A11Y: Add `<caption>` to comparison and pricing tables | Theme | Critical | Fixed |
+| A11Y: Add `<th scope="colgroup">` for pricing table category rows | Theme | Critical | Fixed |
+| A11Y: Add `aria-label` to doc sidebar `<aside>` element | Theme | High | Fixed |
+| A11Y: Wrap mobile menu in `<nav>` with `aria-label` | Theme | Medium | Fixed |
+| A11Y: Add `aria-hidden="true"` to footer SVG icon | Theme | Medium | Fixed |
+| A11Y: Set min 44x44px touch target on hamburger toggle | Theme | Medium | Fixed |
+| A11Y: Respect `prefers-reduced-motion` in FAQ `scrollIntoView` | Theme | High | Fixed |
 
 ---
 
@@ -73,42 +83,63 @@
 
 ### Findings
 
+**CRITICAL**
+
+| ID | WCAG | File:Line | Finding | Status |
+|----|------|-----------|---------|--------|
+| A11Y-C01 | 1.3.1 | `comparison.php:37`, `page-pricing.php:42` | Table row headers use `<td>` instead of `<th scope="row">`. Screen readers cannot associate data cells with row labels. | **Fixed** |
+| A11Y-C02 | 1.3.1 | `page-pricing.php:41,52,60,70,77` | Category separator rows use `<td colspan>` instead of `<th colspan scope="colgroup">`. No semantic meaning for screen readers. | **Fixed** |
+| A11Y-C03 | 1.4.3 | `variables.css:23` | `--sf-text-inverse-muted: #b0bdd0` on `--sf-bg-dark: #2C3E50` yields ~3.2:1 contrast, failing 4.5:1 minimum. Used for all subtitle text in dark sections. | **Fixed** (#c8d0de) |
+| A11Y-C04 | 1.4.3 | `variables.css:21` | `--sf-text-muted: #64748b` on `--sf-bg-card: #ffffff` yields ~4.4:1, marginally failing 4.5:1. Used for card descriptions, stat labels, footer links, breadcrumbs. | **Fixed** (#566779) |
+
 **HIGH**
 
-| ID | WCAG | File:Line | Finding |
-|----|------|-----------|---------|
-| A11Y-01 | 1.4.3 | `variables.css:10` | Color contrast concern: `--sf-accent: #D94F3D` (red-orange) on white background may not meet 4.5:1 ratio for normal text. Calculated ratio ~3.8:1. Used in `.sf-btn--accent` with dark text `#1e293b` (passes), but link hover states using accent on white need verification. |
-| A11Y-02 | 2.4.4 | `footer.php:30-36` | Multiple identical link texts pointing to same URL. Six "Data Sources" links all go to `/docs/data-sources/` with different visible text but identical destinations. Screen readers will announce six identical link targets. Consider using `aria-label` to differentiate. |
+| ID | WCAG | File:Line | Finding | Status |
+|----|------|-----------|---------|--------|
+| A11Y-H01 | 2.4.4 | `footer.php:73-77` | External links to dross.net open in new tabs (`target="_blank"`) without screen reader indication. | Noted |
+| A11Y-H02 | 1.3.1 | `functions.php:155` | Doc sidebar `<aside>` lacks `aria-label`. Multiple landmarks of same type must be uniquely labeled. | **Fixed** |
+| A11Y-H03 | 1.3.1 | `page-pricing.php:30`, `comparison.php:26` | Data tables missing `<caption>` element. Screen readers need caption for table context. | **Fixed** |
+| A11Y-H04 | 1.3.1 | `page-bundle.php:34,39,44` | Step number spans lack `aria-hidden="true"` (inconsistent with `setup-steps.php:17` which has it). | Noted |
+| A11Y-H05 | 2.3.3 | `faq.js:59` | `scrollIntoView({ behavior: 'smooth' })` does not check `prefers-reduced-motion`. | **Fixed** |
+| A11Y-H06 | 1.3.1 | Multiple tables | No `<caption>` on data tables across comparison, pricing, enterprise, and bundle pages. | **Fixed** (comparison + pricing) |
 
 **MEDIUM**
 
-| ID | WCAG | File:Line | Finding |
-|----|------|-----------|---------|
-| A11Y-03 | 1.1.1 | Multiple template-parts | SVG icons in `<img>` tags across template-parts (solutions.php, features.php, data-sources.php) use empty `alt=""` treating them as decorative. While appropriate for decorative icons, icons that convey meaning (e.g., data source type icons) should have descriptive alt text. |
-| A11Y-04 | 4.1.1 | `header.php:16` | Redundant `role="banner"` on `<header>` element. The `<header>` element already has implicit banner role. Similarly `role="navigation"` on `<nav>` (line 26) and `role="main"` on `<main>` (line 62). These are harmless but redundant. |
-| A11Y-05 | 2.4.6 | `header.php:39` | "Get Pro" CTA button (`<a>` tag) lacks context for screen readers. Consider `aria-label="Get SearchForge Pro"`. |
-| A11Y-06 | 1.3.1 | `page-templates/` | Documentation pages use `<section>` elements without accessible names. Sections should have `aria-labelledby` pointing to their heading. |
-| A11Y-07 | 2.4.7 | `base.css:75-78` | `:focus-visible` outline uses `--sf-primary` (#5B7D9E). On dark backgrounds (`.sf-section--dark`), this may lack sufficient contrast. Consider a brighter focus indicator for dark sections. |
+| ID | WCAG | File:Line | Finding | Status |
+|----|------|-----------|---------|--------|
+| A11Y-M01 | 1.1.1 | `hero.php:25-44` | Decorative code blocks in hero lack `aria-hidden="true"` or `role="img"`. | Noted |
+| A11Y-M02 | 1.1.1 | `footer.php:21` | Inline SVG icon lacks `aria-hidden="true"`. | **Fixed** |
+| A11Y-M03 | 2.4.4 | `breadcrumb.php:22` | External breadcrumb link opens in new tab without indication. | Noted |
+| A11Y-M04 | 4.1.2 | `header.php:47` | Mobile menu uses `<div>` instead of `<nav>` element. | **Fixed** |
+| A11Y-M05 | 1.3.1 | `sections.css:325-329` | CSS `content: '\2713'` checkmark inconsistently announced by screen readers. | Noted |
+| A11Y-M06 | 4.1.2 | `header.php:16,26,62` | Redundant ARIA roles on semantic HTML5 elements (harmless but unnecessary). | Noted |
+| A11Y-M07 | 4.1.2 | `faq.php:54,58` | FAQ uses `role="list"/"listitem"` on `<div>` instead of native `<ul>/<li>`. | Noted |
+| A11Y-M08 | 2.5.8 | `sections.css:74-80` | Hamburger toggle touch target ~40x32px, below 44x44px minimum. | **Fixed** |
+| A11Y-M09 | 3.1.1 | `header.php:2` | `<html>` lang attribute relies on WordPress config. Low risk but should be verified. | Noted |
+| A11Y-M10 | 1.3.1 | `page-changelog.php:27+` | `<time>` elements lack `datetime` attribute for machine-readable format. | Noted |
 
 **LOW**
 
 | ID | WCAG | File:Line | Finding |
 |----|------|-----------|---------|
-| A11Y-08 | 1.3.2 | `sections.css:243-248` | Breadcrumb separator uses CSS `content: '\203A'` (single right angle). Screen readers may or may not announce this. Consider `aria-hidden="true"` on the pseudo-element or using an explicit separator element. |
-| A11Y-09 | 3.2.2 | `footer.php:73-75` | External links to dross.net open in new tabs (`target="_blank"`) without indicating this to the user. Consider adding "(opens in new tab)" in visually hidden text. |
-| A11Y-10 | 1.4.12 | `sections.css:81-84` | `.sf-hamburger` touch target is only the span width (24px). The button container (`header.php:42`) has `padding: var(--space-sm)` (8px), making total target ~40x36px, below the recommended 44x44px. |
-| A11Y-11 | 2.4.3 | `front-page.php` | Front page has 13 template parts loaded sequentially. No landmarks or heading hierarchy issues, but tab order through 13 sections may be lengthy. The skip link only jumps to `#main-content`. |
+| A11Y-L01 | 1.3.1 | Multiple page-templates | Inline `style=""` attributes harder for users with custom stylesheets to override. |
+| A11Y-L02 | 2.4.4 | Doc sub-pages | `&larr;` arrow in "Back to Documentation" link text announced as "leftwards arrow". |
+| A11Y-L03 | 1.3.1 | `pricing.php:82` | "Most Popular" badge has no programmatic association with card heading. |
+| A11Y-L04 | — | FAQ templates | `title` attributes on FAQ buttons duplicate visible text (redundant). |
+| A11Y-L05 | 1.3.1 | Doc sub-pages | Bottom "Back to Documentation" section lacks `aria-label` or heading. |
 
 **INFO**
 
-| ID | WCAG | File:Line | Finding |
-|----|------|-----------|---------|
-| A11Y-I01 | — | `base.css:81-91` | `.screen-reader-text` class properly implemented with clip technique. |
-| A11Y-I02 | — | `header.php:19` | Logo image correctly uses `aria-hidden="true"` with `alt=""` since the parent `<a>` has `aria-label`. |
-| A11Y-I03 | — | `template-parts/faq.php` | FAQ accordion uses proper `aria-expanded` and `aria-controls` pattern. |
-| A11Y-I04 | — | `navigation.js:18-19` | Focus management: first link receives focus when mobile menu opens. |
-| A11Y-I05 | — | `navigation.js:28` | Focus returns to toggle button when Escape closes menu. |
-| A11Y-I06 | — | `breadcrumb.php:16` | Breadcrumb nav uses `aria-label="Breadcrumb"` correctly. |
+| ID | Finding |
+|----|---------|
+| A11Y-I01 | `.screen-reader-text` class properly implemented with clip technique (`base.css:81-91`). |
+| A11Y-I02 | Logo image correctly uses `aria-hidden="true"` with `alt=""` since parent `<a>` has `aria-label`. |
+| A11Y-I03 | FAQ accordion uses proper `aria-expanded` and `aria-controls` pattern. |
+| A11Y-I04 | Focus management: first link receives focus when mobile menu opens (`navigation.js:18-19`). |
+| A11Y-I05 | Focus returns to toggle button when Escape closes menu (`navigation.js:28`). |
+| A11Y-I06 | Breadcrumb nav uses `aria-label="Breadcrumb"` and `aria-current="page"` correctly. |
+| A11Y-I07 | Viewport meta does not restrict `user-scalable` or `maximum-scale`, allowing zoom. |
+| A11Y-I08 | Decorative images consistently use `alt="" aria-hidden="true"` across template-parts. |
 
 ---
 
@@ -377,6 +408,15 @@
 | `base.css:148-157` | Add `.sf-animate` / `.sf-visible` rules | Fix broken animations |
 | `performance.php:14` | Add `crossorigin` to preconnect | Correct font preconnect |
 | `doc-nav.js` | Throttle scroll with `requestAnimationFrame` | Performance |
+
+| `variables.css:21,23` | Fix contrast: `--sf-text-muted` #566779, `--sf-text-inverse-muted` #c8d0de | WCAG 1.4.3 AA compliance |
+| `comparison.php:26-41` | Add `<caption>`, `<th scope="row">` | Table accessibility |
+| `page-pricing.php:30-79` | Add `<caption>`, `<th scope="row">`, `<th scope="colgroup">` | Table accessibility |
+| `functions.php:156` | Add `aria-label` to doc sidebar `<aside>` | Landmark identification |
+| `header.php:47` | `<div>` → `<nav>` with `aria-label` for mobile menu | Navigation landmark |
+| `footer.php:21` | Add `aria-hidden="true"` to SVG icon | Decorative content |
+| `sections.css:80-81` | Add `min-width: 44px; min-height: 44px` to toggle | Touch target size |
+| `faq.js:59` | Check `prefers-reduced-motion` before smooth scroll | Motion sensitivity |
 
 ### Plugin Fixes Applied
 

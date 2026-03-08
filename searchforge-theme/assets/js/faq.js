@@ -56,7 +56,8 @@
 		var btn = target.querySelector( '.sf-faq__question' );
 		if ( btn ) {
 			openItem( btn );
-			target.scrollIntoView( { behavior: 'smooth', block: 'center' } );
+			var scrollBehavior = window.matchMedia( '(prefers-reduced-motion: reduce)' ).matches ? 'auto' : 'smooth';
+			target.scrollIntoView( { behavior: scrollBehavior, block: 'center' } );
 		}
 	}
 

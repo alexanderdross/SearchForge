@@ -77,6 +77,8 @@
 	border: none;
 	cursor: pointer;
 	padding: var(--space-sm);
+	min-width: 44px;
+	min-height: 44px;
 }
 .sf-hamburger {
 	display: block;

@@ -366,7 +366,7 @@ class Score {
 	/**
 	 * Expected CTR for a given SERP position (industry benchmarks).
 	 */
-	private static function expected_ctr_for_position( float $position ): float {
+	public static function expected_ctr_for_position( float $position ): float {
 		return match ( true ) {
 			$position <= 1  => 0.316,
 			$position <= 2  => 0.241,

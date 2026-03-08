@@ -373,15 +373,11 @@ class ContentBrief {
 
 	/**
 	 * Expected CTR for a given position (industry benchmarks).
+	 *
+	 * Delegates to Score::expected_ctr_for_position() as the single source of truth.
 	 */
 	private static function expected_ctr( float $position ): float {
-		$benchmarks = [
-			1 => 0.316, 2 => 0.241, 3 => 0.186, 4 => 0.133, 5 => 0.095,
-			6 => 0.063, 7 => 0.046, 8 => 0.033, 9 => 0.028, 10 => 0.022,
-		];
-
-		$rounded = max( 1, min( 10, (int) round( $position ) ) );
-		return $benchmarks[ $rounded ] ?? 0.01;
+		return \SearchForge\Scoring\Score::expected_ctr_for_position( $position );
 	}
 
 	/**

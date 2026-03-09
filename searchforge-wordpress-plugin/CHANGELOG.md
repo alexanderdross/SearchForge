@@ -8,10 +8,19 @@ All notable changes to the SearchForge WordPress plugin will be documented in th
 - Comprehensive SEO metadata across the marketing site (meta tags, Open Graph, Twitter Cards).
 - Product schema markup with AggregateRating for rich search results.
 - SiteNavigationElement structured data for all site pages.
+- WebPage schema on every inner page with breadcrumb support.
+- Canonical URLs and robots meta on all pages.
 - URL normalization for deduplication in CacheWarmer bundle integration.
+- FAQ schema auto-generated from all FAQ accordion sections.
 
 ### Changed
 - Version bump from 1.9.0 to 2.0.0 marking feature completeness.
+- Unified JSON-LD output via single @graph array for all schema types.
+- Improved data source sync reliability with retry logic.
+
+### Fixed
+- Organization schema name corrected to "Dross:Media".
+- Schema URL references now point to correct production domain.
 
 ## [1.9.0] - 2026-03-06
 
@@ -20,55 +29,116 @@ All notable changes to the SearchForge WordPress plugin will be documented in th
 - SERP snapshot capture for top keywords (positions 1-10).
 - Content gap analysis vs. competitors.
 - SERP feature tracking (featured snippets, PAA, video packs).
+- Competitor keyword overlap and visibility comparison.
 - Competitor markdown export for LLM context.
+- REST API endpoints: `/competitors`, `/competitors/overlap`, `/competitors/gaps`, `/competitors/visibility`.
 
 ### Fixed
-- GA4 column name mismatch in page detail view.
+- GA4 column name mismatch (`avg_session_dur` vs. `avg_session_duration`) in page detail view.
 - Weekly digest email array path alignment.
 
 ## [1.8.0] - 2026-02-28
 
 ### Added
 - Bulk page selection for batch brief export.
-- Weekly digest email with key metric changes.
-- Dashboard chart for clicks/impressions over time.
+- Weekly digest email with key metric changes (clicks, impressions, position shifts).
+- Dashboard chart for clicks/impressions over time (Chart.js).
+- ZIP bulk export containing all page briefs in one download.
+- Webhook support for Slack-formatted notifications.
 
 ### Improved
-- Export ZIP now includes all brief formats.
+- Export ZIP now includes all brief formats (Markdown, CSV, JSON).
+- Dashboard KPI cards show percentage change vs. previous period.
 
 ## [1.7.0] - 2026-02-21
 
 ### Added
 - Detailed per-page view with Chart.js visualizations.
-- Keyword table with sorting and filtering.
-- Position tracking chart per keyword.
-- GA4 behavior metrics integration on page detail.
+- Keyword table with sorting and filtering per page.
+- Position tracking chart per keyword over time.
+- GA4 behavior metrics integration (sessions, bounce rate, conversions) on page detail.
+- SearchForge Score breakdown (Technical, Content, Authority, Momentum).
+- REST API endpoint: `/page-detail`.
 
 ## [1.6.0] - 2026-02-14
 
 ### Added
-- API key authentication for external access.
-- Pagination and search on pages/keywords lists.
-- Onboarding wizard for first-time setup.
+- API key authentication for external access via `Authorization: Bearer` or `X-SearchForge-Key` headers.
+- Pagination and search on pages/keywords admin lists.
+- 3-step onboarding wizard for first-time setup (license → data source → first sync).
 - Response caching for dashboard performance.
 
 ### Security
-- API keys accepted via headers only (not query parameters).
+- API keys accepted via headers only — query parameter authentication removed to prevent credential exposure in server logs.
 
 ## [1.5.0] - 2026-02-07
 
 ### Added
-- Ranking drop alerts (email notifications).
-- Content decay detection with 7d/30d/90d trends.
-- New keyword detection alerts.
-- Monitoring dashboard with alert history.
+- Ranking drop alerts with configurable threshold (default: 3+ positions).
+- Content decay detection with 7-day, 30-day, and 90-day trend analysis.
+- New keyword detection alerts (keywords entering the top 100).
+- Monitoring dashboard with alert history and severity levels.
+- Traffic anomaly detection (significant drops or spikes).
+- SSL certificate monitoring with expiry warnings.
+- Broken link scanning (Pro only).
+
+## [1.4.0] - 2026-01-31
+
+### Added
+- Google Trends integration via SerpAPI (interest over time, related queries, rising topics).
+- AI content brief generation using OpenAI or Anthropic APIs.
+- Heuristic content briefs (no API key required) based on keyword clustering and performance data.
+- Content brief caching with configurable expiration.
+- REST API endpoint: `/content-brief`.
+- REST API endpoint: `/trends`.
+
+## [1.3.0] - 2026-01-28
+
+### Added
+- N-gram Jaccard similarity keyword clustering.
+- Keyword cannibalization detection (multiple pages ranking for same keyword).
+- Cluster visualization in admin dashboard.
+- REST API endpoints: `/clusters`, `/cannibalization`.
+
+## [1.2.0] - 2026-01-24
+
+### Added
+- Google Analytics 4 integration (sessions, bounce rate, avg. session duration, conversions).
+- Google Keyword Planner integration (search volume, competition level, CPC data).
+- GA4 metrics table (`sf_ga4_metrics`) for behavior data storage.
+- Keyword volume enrichment in keyword tables and exports.
+- Combined data source sync with `wp searchforge sync --source=all`.
+
+## [1.1.0] - 2026-01-20
+
+### Added
+- Bing Webmaster Tools integration (API key authentication).
+- CSV export for pages, keywords, and alerts.
+- Data retention enforcement with configurable retention period.
+- WP-CLI commands: `wp searchforge sync`, `wp searchforge status`, `wp searchforge export`.
+- WP-Cron scheduler for automated daily/weekly syncs.
 
 ## [1.0.0] - 2026-01-15
 
 ### Added
-- Google Search Console integration with OAuth.
-- Per-page markdown brief export.
-- Dashboard with GSC overview.
-- llms.txt auto-generation.
-- SearchForge Score (basic).
-- Free tier with 10-page limit.
+- Google Search Console integration with OAuth 2.0 (clicks, impressions, position, CTR).
+- Per-page markdown brief export with keyword data, performance metrics, and recommendations.
+- Combined site-wide markdown master brief export.
+- Admin dashboard with top pages, top keywords, and KPI summary cards.
+- SearchForge Score (0–100) with 4 components: Technical, Content, Authority, Momentum.
+- Auto-generated recommendations based on score analysis.
+- `llms.txt` and `llms-full.txt` auto-generation for AI crawler discovery.
+- Sitemap discovery via `robots.txt` parsing.
+- 10 database tables for snapshots, keywords, sync logs, briefs cache, alerts, and settings.
+- Free tier with 10-page limit, 30-day data retention.
+- Pro tier with unlimited pages, 365-day retention, full scoring, and REST API access.
+- WordPress dashboard widget with quick SEO summary.
+- PSR-4 autoloading and WordPress coding standards compliance.
+
+### REST API
+- `GET /searchforge/v1/status` — Plugin health and version.
+- `GET /searchforge/v1/pages` — Top pages with metrics.
+- `GET /searchforge/v1/keywords` — Top keywords.
+- `GET /searchforge/v1/export/page` — Single page markdown brief.
+- `GET /searchforge/v1/export/site` — Full site export.
+- `POST /searchforge/v1/sync` — Manual sync trigger.

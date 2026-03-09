@@ -10,7 +10,7 @@
 <body <?php body_class(); ?>>
 <?php wp_body_open(); ?>
 
-<a class="skip-link screen-reader-text" href="#main-content">
+<a class="skip-link screen-reader-text" href="#main-content" title="Skip to main content">
 	<?php esc_html_e( 'Skip to content', 'searchforge-theme' ); ?>
 </a>
 

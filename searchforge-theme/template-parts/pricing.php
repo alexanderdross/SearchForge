@@ -95,7 +95,7 @@ $tiers = [
 						<?php endforeach; ?>
 					</ul>
 
-					<a href="<?php echo esc_url( $tier['cta_url'] ); ?>" class="sf-btn <?php echo esc_attr( $tier['cta_class'] ); ?> sf-btn--block">
+					<a href="<?php echo esc_url( $tier['cta_url'] ); ?>" class="sf-btn <?php echo esc_attr( $tier['cta_class'] ); ?> sf-btn--block" title="<?php echo esc_attr( sprintf( 'SearchForge %s — %s', $tier['name'], $tier['cta_text'] ) ); ?>">
 						<?php echo esc_html( $tier['cta_text'] ); ?>
 					</a>
 				</div>

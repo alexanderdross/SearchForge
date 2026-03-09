@@ -19,7 +19,7 @@ if ( empty( $crumbs ) ) {
 		<?php foreach ( $crumbs as $i => $crumb ) : ?>
 			<li class="sf-breadcrumb__item">
 				<?php if ( ! empty( $crumb['url'] ) ) : ?>
-					<a href="<?php echo esc_url( $crumb['url'] ); ?>"<?php echo ! empty( $crumb['external'] ) ? ' target="_blank" rel="noopener"' : ''; ?>><?php echo esc_html( $crumb['label'] ); ?></a>
+					<a href="<?php echo esc_url( $crumb['url'] ); ?>"<?php echo ! empty( $crumb['external'] ) ? ' target="_blank" rel="noopener"' : ''; ?> title="<?php echo esc_attr( $crumb['label'] ); ?>"><?php echo esc_html( $crumb['label'] ); ?></a>
 				<?php else : ?>
 					<span aria-current="page"><?php echo esc_html( $crumb['label'] ); ?></span>
 				<?php endif; ?>

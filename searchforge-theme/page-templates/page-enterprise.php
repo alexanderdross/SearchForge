@@ -15,8 +15,8 @@ get_header();
 			Unlimited sites, unlimited scale. For agencies and organizations managing SEO across a portfolio.
 		</p>
 		<div class="sf-hero__actions" style="justify-content: center; margin-top: var(--space-xl);">
-			<a href="<?php echo esc_url( home_url( '/checkout/?tier=enterprise' ) ); ?>" class="sf-btn sf-btn--primary sf-btn--lg" rel="noopener">Get Enterprise</a>
-			<a href="https://dross.net/contact/?topic=searchforge-enterprise" class="sf-btn sf-btn--outline-light sf-btn--lg">Contact Sales</a>
+			<a href="<?php echo esc_url( home_url( '/checkout/?tier=enterprise' ) ); ?>" class="sf-btn sf-btn--primary sf-btn--lg" rel="noopener" title="Buy SearchForge Enterprise — Unlimited Sites &amp; White-Label">Get Enterprise</a>
+			<a href="https://dross.net/contact/?topic=searchforge-enterprise" class="sf-btn sf-btn--outline-light sf-btn--lg" title="Contact Dross:Media Sales — SearchForge Enterprise Inquiries">Contact Sales</a>
 		</div>
 	</div>
 </section>
@@ -129,8 +129,8 @@ get_header();
 		</p>
 
 		<div style="display: flex; gap: var(--space-md); justify-content: center; flex-wrap: wrap;">
-			<a href="<?php echo esc_url( home_url( '/checkout/?tier=enterprise' ) ); ?>" class="sf-btn sf-btn--primary sf-btn--lg" rel="noopener">Get Enterprise &euro;599/yr</a>
-			<a href="<?php echo esc_url( home_url( '/checkout/?tier=lifetime-enterprise' ) ); ?>" class="sf-btn sf-btn--outline sf-btn--lg" rel="noopener">Lifetime &euro;1,499</a>
+			<a href="<?php echo esc_url( home_url( '/checkout/?tier=enterprise' ) ); ?>" class="sf-btn sf-btn--primary sf-btn--lg" rel="noopener" title="Buy SearchForge Enterprise — Annual Subscription">Get Enterprise &euro;599/yr</a>
+			<a href="<?php echo esc_url( home_url( '/checkout/?tier=lifetime-enterprise' ) ); ?>" class="sf-btn sf-btn--outline sf-btn--lg" rel="noopener" title="Buy SearchForge Enterprise — Lifetime License">Lifetime &euro;1,499</a>
 		</div>
 
 		<p class="sf-text--muted" style="margin-top: var(--space-lg); font-size: 0.875rem;">
@@ -207,8 +207,8 @@ echo wp_json_encode(
 		<h2>Ready to Scale Your SEO Intelligence?</h2>
 		<p class="sf-text--inverse-muted">Start with a 14-day free trial of all Enterprise features. No credit card required.</p>
 		<div class="sf-hero__actions" style="justify-content: center; margin-top: var(--space-xl);">
-			<a href="<?php echo esc_url( home_url( '/checkout/?tier=enterprise' ) ); ?>" class="sf-btn sf-btn--primary sf-btn--lg" rel="noopener">Get Enterprise</a>
-			<a href="https://dross.net/contact/?topic=searchforge-enterprise" class="sf-btn sf-btn--outline-light sf-btn--lg">Talk to Sales</a>
+			<a href="<?php echo esc_url( home_url( '/checkout/?tier=enterprise' ) ); ?>" class="sf-btn sf-btn--primary sf-btn--lg" rel="noopener" title="Start SearchForge Enterprise Free Trial">Get Enterprise</a>
+			<a href="https://dross.net/contact/?topic=searchforge-enterprise" class="sf-btn sf-btn--outline-light sf-btn--lg" title="Contact Dross:Media Sales — SearchForge Enterprise Inquiries">Talk to Sales</a>
 		</div>
 	</div>
 </section>

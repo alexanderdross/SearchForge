@@ -17,7 +17,7 @@ function sf_theme_output_schema(): void {
 
 	$org = [
 		'@type' => 'Organization',
-		'name'  => 'Dross:Media GmbH',
+		'name'  => 'Dross:Media',
 		'url'   => 'https://dross.net',
 		'logo'  => $theme_uri . '/assets/images/searchforge-logo.png',
 	];

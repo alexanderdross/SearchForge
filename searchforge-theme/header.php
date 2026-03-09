@@ -38,7 +38,7 @@
 			<a href="<?php echo esc_url( home_url( '/pricing/' ) ); ?>" class="sf-btn sf-btn--primary sf-btn--sm" title="SearchForge Pro — Pricing Plans &amp; License Options">Get Pro</a>
 		</div>
 
-		<button class="sf-header__toggle" aria-expanded="false" aria-controls="sf-mobile-menu" aria-label="<?php esc_attr_e( 'Toggle navigation', 'searchforge-theme' ); ?>">
+		<button class="sf-header__toggle" aria-expanded="false" aria-controls="sf-mobile-menu" aria-label="<?php esc_attr_e( 'Toggle navigation', 'searchforge-theme' ); ?>" title="<?php esc_attr_e( 'Toggle navigation menu', 'searchforge-theme' ); ?>">
 			<span class="sf-hamburger"></span>
 		</button>
 	</div>

@@ -199,7 +199,7 @@ function sf_render_faq( array $faqs, string $id_prefix = 'faq' ): void {
 			$slug = sanitize_title( $faq['q'] );
 		?>
 			<div class="sf-faq__item" id="<?php echo esc_attr( $slug ); ?>" role="listitem">
-				<button class="sf-faq__question" aria-expanded="false" aria-controls="<?php echo esc_attr( $id_prefix ); ?>-<?php echo esc_attr( $i ); ?>">
+				<button class="sf-faq__question" aria-expanded="false" aria-controls="<?php echo esc_attr( $id_prefix ); ?>-<?php echo esc_attr( $i ); ?>" aria-label="<?php echo esc_attr( $faq['q'] ); ?>" title="<?php echo esc_attr( $faq['q'] ); ?>">
 					<span><?php echo esc_html( $faq['q'] ); ?></span>
 					<span class="sf-faq__chevron" aria-hidden="true"></span>
 				</button>

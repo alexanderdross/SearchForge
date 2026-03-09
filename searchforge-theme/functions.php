@@ -173,11 +173,11 @@ function sf_doc_sidebar( array $sections ): void {
 if ( ! function_exists( 'sf_default_nav' ) ) {
 	function sf_default_nav(): void {
 		echo '<ul class="sf-nav-list">';
-		echo '<li><a href="' . esc_url( home_url( '/#features' ) ) . '">Features</a></li>';
-		echo '<li><a href="' . esc_url( home_url( '/pricing/' ) ) . '">Pricing</a></li>';
-		echo '<li><a href="' . esc_url( home_url( '/docs/' ) ) . '">Docs</a></li>';
-		echo '<li><a href="' . esc_url( home_url( '/changelog/' ) ) . '">Changelog</a></li>';
-		echo '<li><a href="' . esc_url( home_url( '/enterprise/' ) ) . '">Enterprise</a></li>';
+		echo '<li><a href="' . esc_url( home_url( '/#features' ) ) . '" title="SearchForge Features — SEO Score, AI Briefs, Competitor Analysis &amp; More">Features</a></li>';
+		echo '<li><a href="' . esc_url( home_url( '/pricing/' ) ) . '" title="SearchForge Pricing — Compare Free, Pro &amp; Agency Plans">Pricing</a></li>';
+		echo '<li><a href="' . esc_url( home_url( '/docs/' ) ) . '" title="SearchForge Documentation — Setup, Configuration &amp; API Reference">Docs</a></li>';
+		echo '<li><a href="' . esc_url( home_url( '/changelog/' ) ) . '" title="SearchForge Changelog — Version History &amp; Release Notes">Changelog</a></li>';
+		echo '<li><a href="' . esc_url( home_url( '/enterprise/' ) ) . '" title="SearchForge Enterprise — Multi-Site, White-Label &amp; Priority Support">Enterprise</a></li>';
 		echo '</ul>';
 	}
 }
@@ -199,7 +199,7 @@ function sf_render_faq( array $faqs, string $id_prefix = 'faq' ): void {
 			$slug = sanitize_title( $faq['q'] );
 		?>
 			<div class="sf-faq__item" id="<?php echo esc_attr( $slug ); ?>" role="listitem">
-				<button class="sf-faq__question" aria-expanded="false" aria-controls="<?php echo esc_attr( $id_prefix ); ?>-<?php echo esc_attr( $i ); ?>">
+				<button class="sf-faq__question" aria-expanded="false" aria-controls="<?php echo esc_attr( $id_prefix ); ?>-<?php echo esc_attr( $i ); ?>" aria-label="<?php echo esc_attr( $faq['q'] ); ?>" title="<?php echo esc_attr( $faq['q'] ); ?>">
 					<span><?php echo esc_html( $faq['q'] ); ?></span>
 					<span class="sf-faq__chevron" aria-hidden="true"></span>
 				</button>

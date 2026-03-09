@@ -179,11 +179,11 @@ function sf_doc_sidebar( array $sections ): void {
 if ( ! function_exists( 'sf_default_nav' ) ) {
 	function sf_default_nav(): void {
 		echo '<ul class="sf-nav-list">';
-		echo '<li><a href="' . esc_url( home_url( '/#features' ) ) . '">Features</a></li>';
-		echo '<li><a href="' . esc_url( home_url( '/pricing/' ) ) . '">Pricing</a></li>';
-		echo '<li><a href="' . esc_url( home_url( '/docs/' ) ) . '">Docs</a></li>';
-		echo '<li><a href="' . esc_url( home_url( '/changelog/' ) ) . '">Changelog</a></li>';
-		echo '<li><a href="' . esc_url( home_url( '/enterprise/' ) ) . '">Enterprise</a></li>';
+		echo '<li><a href="' . esc_url( home_url( '/#features' ) ) . '" title="SearchForge Features — SEO Score, AI Briefs, Keyword Clustering &amp; More">Features</a></li>';
+		echo '<li><a href="' . esc_url( home_url( '/pricing/' ) ) . '" title="SearchForge Pricing — Free, Pro &amp; Agency Plans">Pricing</a></li>';
+		echo '<li><a href="' . esc_url( home_url( '/docs/' ) ) . '" title="SearchForge Documentation — Setup, Configuration &amp; API Reference">Docs</a></li>';
+		echo '<li><a href="' . esc_url( home_url( '/changelog/' ) ) . '" title="SearchForge Changelog — Version History &amp; Release Notes">Changelog</a></li>';
+		echo '<li><a href="' . esc_url( home_url( '/enterprise/' ) ) . '" title="SearchForge Enterprise — Multi-Site, White-Label &amp; Priority Support">Enterprise</a></li>';
 		echo '</ul>';
 	}
 }

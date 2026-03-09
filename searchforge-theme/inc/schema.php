@@ -18,7 +18,7 @@ function sf_theme_output_schema(): void {
 	$org = [
 		'@type' => 'Organization',
 		'name'  => 'Dross:Media GmbH',
-		'url'   => 'https://drossmedia.de',
+		'url'   => 'https://dross.net',
 		'logo'  => $theme_uri . '/assets/images/searchforge-logo.png',
 	];
 
@@ -67,7 +67,7 @@ function sf_theme_output_schema(): void {
 			'@context' => 'https://schema.org',
 			'@type'    => 'Organization',
 			'name'     => 'Dross:Media GmbH',
-			'url'      => 'https://drossmedia.de',
+			'url'      => 'https://dross.net',
 			'logo'     => $theme_uri . '/assets/images/searchforge-logo.png',
 		];
 	} else {

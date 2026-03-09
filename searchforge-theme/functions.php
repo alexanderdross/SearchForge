@@ -58,7 +58,7 @@ function sf_theme_enqueue_assets(): void {
 	wp_enqueue_script( 'sf-navigation', SF_THEME_URI . '/assets/js/navigation.js', [], SF_THEME_VERSION, [ 'strategy' => 'defer', 'in_footer' => true ] );
 	wp_enqueue_script( 'sf-animations', SF_THEME_URI . '/assets/js/animations.js', [], SF_THEME_VERSION, [ 'strategy' => 'defer', 'in_footer' => true ] );
 
-	if ( is_front_page() ) {
+	if ( is_front_page() || is_page_template( [ 'page-templates/page-pricing.php', 'page-templates/page-bundle.php' ] ) ) {
 		wp_enqueue_script( 'sf-faq', SF_THEME_URI . '/assets/js/faq.js', [], SF_THEME_VERSION, [ 'strategy' => 'defer', 'in_footer' => true ] );
 	}
 

@@ -13,7 +13,8 @@
 				<span class="sf-gradient-text">SEO Data, LLM-Ready.</span>
 			</h1>
 			<div class="sf-hero__highlight">
-				<p>Connects <strong>Google Search Console</strong>, <strong>Bing Webmaster Tools</strong>, <strong>Google Business Profile</strong>, <strong>Bing Places</strong>, <strong>Google Keyword Planner</strong>, <strong>GA4</strong> &amp; <strong>Google Trends</strong> &mdash; continuously collects your SEO data over time and turns it into structured markdown briefs that LLMs can use to (re)design, optimize, and evolve your website in any modern framework. Directly in WordPress.</p>
+				<p>Connects <strong>Google Search Console</strong>, <strong>Bing Webmaster Tools</strong>, <strong>Google Business Profile</strong>, <strong>Bing Places</strong>, <strong>Google Keyword Planner</strong>, <strong>GA4</strong> &amp; <strong>Google Trends</strong> &mdash; continuously collecting your SEO data and turning it into structured markdown briefs for LLMs to design, optimize, and evolve your website.</p>
+				<p>Perfect for vibe coding: instead of letting an LLM guess your content and information architecture, this plugin feeds it real, historically collected web data &mdash; boosting your new website&rsquo;s SEO, GEO, and AEO.</p>
 			</div>
 			<div class="sf-hero__actions">
 				<a href="https://wordpress.org/plugins/searchforge/" class="sf-btn sf-btn--primary sf-btn--lg" title="Download SearchForge Free from WordPress.org">Get Started Free</a>

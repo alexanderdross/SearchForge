@@ -189,6 +189,10 @@ if ( ! function_exists( 'sf_default_nav' ) ) {
  * @param string                                    $id_prefix Unique prefix for ARIA IDs.
  */
 function sf_render_faq( array $faqs, string $id_prefix = 'faq' ): void {
+	// Collect FAQ data for centralized FAQPage schema output (see inc/schema.php).
+	global $sf_collected_faqs;
+	$sf_collected_faqs = array_merge( $sf_collected_faqs, $faqs );
+
 	?>
 	<div class="sf-faq" role="list">
 		<?php foreach ( $faqs as $i => $faq ) :
@@ -206,31 +210,6 @@ function sf_render_faq( array $faqs, string $id_prefix = 'faq' ): void {
 		<?php endforeach; ?>
 	</div>
 	<noscript><style>.sf-faq__answer[hidden] { display: block !important; }</style></noscript>
-
-	<script type="application/ld+json">
-	<?php
-	echo wp_json_encode(
-		[
-			'@context'   => 'https://schema.org',
-			'@type'      => 'FAQPage',
-			'mainEntity' => array_map(
-				function ( $faq ) {
-					return [
-						'@type'          => 'Question',
-						'name'           => $faq['q'],
-						'acceptedAnswer' => [
-							'@type' => 'Answer',
-							'text'  => $faq['a'],
-						],
-					];
-				},
-				$faqs
-			),
-		],
-		JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE
-	);
-	?>
-	</script>
 	<?php
 }
 

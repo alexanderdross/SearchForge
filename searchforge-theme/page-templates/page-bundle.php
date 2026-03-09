@@ -8,15 +8,15 @@
 get_header();
 ?>
 
-<section class="sf-section sf-section--dark sf-hero" style="padding: var(--space-3xl) 0;">
-	<div class="sf-container" style="text-align: center;">
+<section class="sf-section sf-section--dark sf-hero sf-page-hero">
+	<div class="sf-container">
 		<h1><span class="sf-gradient-text">SearchForge + CacheWarmer Bundle</span></h1>
-		<p class="sf-text--inverse-muted" style="font-size: 1.25rem; max-width: 640px; margin: var(--space-md) auto 0;">
+		<p class="sf-text--inverse-muted sf-page-hero__subtitle sf-page-hero__subtitle--narrow">
 			SEO intelligence meets cache warming. Two plugins, one price, 15% off.
 		</p>
-		<div class="sf-hero__actions" style="justify-content: center; margin-top: var(--space-xl);">
-			<a href="<?php echo esc_url( home_url( '/checkout/?tier=bundle' ) ); ?>" class="sf-btn sf-btn--primary sf-btn--lg" rel="noopener" title="Buy SearchForge + CacheWarmer Bundle — Save 15%">Get the Bundle &euro;169/yr</a>
-			<a href="#how-it-works" class="sf-btn sf-btn--outline sf-btn--lg" title="Learn How SearchForge and CacheWarmer Work Together">How It Works</a>
+		<div class="sf-hero__actions sf-page-hero__actions">
+			<a href="<?php echo esc_url( home_url( '/checkout/?tier=bundle' ) ); ?>" class="sf-btn sf-btn--primary sf-btn--lg" rel="noopener">Get the Bundle &euro;169/yr</a>
+			<a href="#how-it-works" class="sf-btn sf-btn--outline sf-btn--lg">How It Works</a>
 		</div>
 	</div>
 </section>
@@ -59,33 +59,33 @@ get_header();
 		<div class="sf-grid sf-grid--2">
 			<div class="sf-card sf-card--bordered">
 				<h3 class="sf-card__title">SearchForge Pro</h3>
-				<p class="sf-card__desc" style="margin-bottom: var(--space-md);">Full SEO intelligence for one WordPress site.</p>
-				<ul style="list-style: none; padding: 0; font-size: 0.9375rem;">
-					<li style="padding: var(--space-xs) 0;">&#10003; Google Search Console &amp; Bing Webmaster</li>
-					<li style="padding: var(--space-xs) 0;">&#10003; Google Analytics 4 &amp; Keyword Planner</li>
-					<li style="padding: var(--space-xs) 0;">&#10003; Google Trends &amp; Business Profile</li>
-					<li style="padding: var(--space-xs) 0;">&#10003; AI Visibility Monitor (20 queries/mo)</li>
-					<li style="padding: var(--space-xs) 0;">&#10003; AI Content Briefs &amp; Keyword Clustering</li>
-					<li style="padding: var(--space-xs) 0;">&#10003; Content Decay Alerts</li>
-					<li style="padding: var(--space-xs) 0;">&#10003; Markdown Export &amp; llms.txt</li>
-					<li style="padding: var(--space-xs) 0;">&#10003; 12-month data retention</li>
+				<p class="sf-card__desc">Full SEO intelligence for one WordPress site.</p>
+				<ul class="sf-bundle-features">
+					<li>&#10003; Google Search Console &amp; Bing Webmaster</li>
+					<li>&#10003; Google Analytics 4 &amp; Keyword Planner</li>
+					<li>&#10003; Google Trends &amp; Business Profile</li>
+					<li>&#10003; AI Visibility Monitor (20 queries/mo)</li>
+					<li>&#10003; AI Content Briefs &amp; Keyword Clustering</li>
+					<li>&#10003; Content Decay Alerts</li>
+					<li>&#10003; Markdown Export &amp; llms.txt</li>
+					<li>&#10003; 12-month data retention</li>
 				</ul>
-				<p class="sf-text--muted" style="margin-top: var(--space-md); font-size: 0.875rem;">Standalone: &euro;99/yr</p>
+				<p class="sf-text--muted sf-section__fine-print">Standalone: &euro;99/yr</p>
 			</div>
 			<div class="sf-card sf-card--bordered">
 				<h3 class="sf-card__title">CacheWarmer Premium</h3>
-				<p class="sf-card__desc" style="margin-bottom: var(--space-md);">Automated cache warming for one WordPress site.</p>
-				<ul style="list-style: none; padding: 0; font-size: 0.9375rem;">
-					<li style="padding: var(--space-xs) 0;">&#10003; All 11 warming targets</li>
-					<li style="padding: var(--space-xs) 0;">&#10003; CDN warming (Cloudflare, Akamai, Imperva)</li>
-					<li style="padding: var(--space-xs) 0;">&#10003; Search engines (Google, Bing, IndexNow)</li>
-					<li style="padding: var(--space-xs) 0;">&#10003; Social platforms (Facebook, LinkedIn, X)</li>
-					<li style="padding: var(--space-xs) 0;">&#10003; Up to 10,000 URLs per job</li>
-					<li style="padding: var(--space-xs) 0;">&#10003; 50 warming jobs daily</li>
-					<li style="padding: var(--space-xs) 0;">&#10003; Automatic scheduler</li>
-					<li style="padding: var(--space-xs) 0;">&#10003; Smart warming (diff-detection)</li>
+				<p class="sf-card__desc">Automated cache warming for one WordPress site.</p>
+				<ul class="sf-bundle-features">
+					<li>&#10003; All 11 warming targets</li>
+					<li>&#10003; CDN warming (Cloudflare, Akamai, Imperva)</li>
+					<li>&#10003; Search engines (Google, Bing, IndexNow)</li>
+					<li>&#10003; Social platforms (Facebook, LinkedIn, X)</li>
+					<li>&#10003; Up to 10,000 URLs per job</li>
+					<li>&#10003; 50 warming jobs daily</li>
+					<li>&#10003; Automatic scheduler</li>
+					<li>&#10003; Smart warming (diff-detection)</li>
 				</ul>
-				<p class="sf-text--muted" style="margin-top: var(--space-md); font-size: 0.875rem;">Standalone: &euro;99/yr</p>
+				<p class="sf-text--muted sf-section__fine-print">Standalone: &euro;99/yr</p>
 			</div>
 		</div>
 	</div>
@@ -93,24 +93,24 @@ get_header();
 
 <!-- Pricing -->
 <section class="sf-section" id="pricing">
-	<div class="sf-container sf-container--narrow" style="text-align: center;">
+	<div class="sf-container sf-container--narrow sf-section--centered">
 		<h2>Bundle Pricing</h2>
-		<p class="sf-text--muted" style="margin-bottom: var(--space-xl);">Both plugins, one license key, one renewal date.</p>
+		<p class="sf-text--muted sf-section__subtitle">Both plugins, one license key, one renewal date.</p>
 
-		<div class="sf-card sf-card--bordered" style="max-width: 480px; margin: 0 auto; text-align: center; padding: var(--space-2xl);">
-			<div class="sf-comparison-table-wrapper" style="margin-bottom: var(--space-lg);">
-				<table class="sf-comparison-table" style="text-align: left;">
+		<div class="sf-card sf-card--bordered sf-bundle-pricing-box">
+			<div class="sf-comparison-table-wrapper">
+				<table class="sf-comparison-table">
 					<tbody>
-						<tr><td>SearchForge Pro</td><td style="text-align: right;">&euro;99/yr</td></tr>
-						<tr><td>CacheWarmer Premium</td><td style="text-align: right;">&euro;99/yr</td></tr>
-						<tr style="border-top: 2px solid var(--sf-border);"><td>Separate total</td><td style="text-align: right; text-decoration: line-through; color: var(--sf-text-muted);">&euro;198/yr</td></tr>
-						<tr><td><strong>Bundle price</strong></td><td style="text-align: right;"><strong>&euro;169/yr</strong> <span class="sf-badge sf-badge--accent">Save 15%</span></td></tr>
+						<tr><td>SearchForge Pro</td><td class="sf-text--right">&euro;99/yr</td></tr>
+						<tr><td>CacheWarmer Premium</td><td class="sf-text--right">&euro;99/yr</td></tr>
+						<tr class="sf-comparison-table__separator"><td>Separate total</td><td class="sf-text--right sf-text--muted sf-text--line-through">&euro;198/yr</td></tr>
+						<tr><td><strong>Bundle price</strong></td><td class="sf-text--right"><strong>&euro;169/yr</strong> <span class="sf-badge sf-badge--accent">Save 15%</span></td></tr>
 					</tbody>
 				</table>
 			</div>
 
-			<a href="<?php echo esc_url( home_url( '/checkout/?tier=bundle' ) ); ?>" class="sf-btn sf-btn--primary sf-btn--lg sf-btn--block" rel="noopener" title="Buy SearchForge + CacheWarmer Bundle — Save 15%">Get the Bundle &euro;169/yr</a>
-			<p class="sf-text--muted" style="margin-top: var(--space-md); font-size: 0.875rem;">
+			<a href="<?php echo esc_url( home_url( '/checkout/?tier=bundle' ) ); ?>" class="sf-btn sf-btn--primary sf-btn--lg sf-btn--block" rel="noopener">Get the Bundle &euro;169/yr</a>
+			<p class="sf-text--muted sf-section__fine-print">
 				30-day money-back guarantee. Cancel anytime.
 			</p>
 		</div>
@@ -149,65 +149,26 @@ get_header();
 			<h2>Bundle FAQ</h2>
 		</div>
 
-		<div class="sf-faq" role="list">
-			<?php
-			$bundle_faqs = [
-				[ 'q' => 'Can I upgrade to the bundle from an existing license?', 'a' => 'Yes. If you already have SearchForge Pro or CacheWarmer Premium, contact us at support@drossmedia.de and we\'ll credit your remaining subscription toward the bundle price.' ],
-				[ 'q' => 'Does the bundle work on multisite?',                    'a' => 'The bundle covers one WordPress installation. For multisite or multiple domains, consider SearchForge Agency + CacheWarmer Enterprise.' ],
-				[ 'q' => 'What if I only need one of the plugins?',               'a' => 'Each plugin is available separately at €99/yr. The bundle is purely a cost-saving option if you want both.' ],
-				[ 'q' => 'Is there a lifetime bundle option?',                    'a' => 'Not currently. Lifetime licenses are available for each plugin separately: SearchForge Lifetime Pro (€249) and CacheWarmer Lifetime Premium (€249).' ],
-			];
-			foreach ( $bundle_faqs as $i => $faq ) :
-				$slug = sanitize_title( $faq['q'] );
-			?>
-				<div class="sf-faq__item" id="<?php echo esc_attr( $slug ); ?>" role="listitem">
-					<button class="sf-faq__question" aria-expanded="false" aria-controls="bundle-faq-<?php echo esc_attr( $i ); ?>" title="<?php echo esc_attr( $faq['q'] ); ?>">
-						<span><?php echo esc_html( $faq['q'] ); ?></span>
-						<span class="sf-faq__chevron" aria-hidden="true"></span>
-					</button>
-					<div class="sf-faq__answer" id="bundle-faq-<?php echo esc_attr( $i ); ?>" hidden>
-						<p><?php echo esc_html( $faq['a'] ); ?></p>
-					</div>
-				</div>
-			<?php endforeach; ?>
-		</div>
-		<noscript><style>.sf-faq__answer[hidden] { display: block !important; }</style></noscript>
+		<?php
+		$bundle_faqs = [
+			[ 'q' => 'Can I upgrade to the bundle from an existing license?', 'a' => 'Yes. If you already have SearchForge Pro or CacheWarmer Premium, contact us at support@drossmedia.de and we\'ll credit your remaining subscription toward the bundle price.' ],
+			[ 'q' => 'Does the bundle work on multisite?',                    'a' => 'The bundle covers one WordPress installation. For multisite or multiple domains, consider SearchForge Agency + CacheWarmer Enterprise.' ],
+			[ 'q' => 'What if I only need one of the plugins?',               'a' => 'Each plugin is available separately at €99/yr. The bundle is purely a cost-saving option if you want both.' ],
+			[ 'q' => 'Is there a lifetime bundle option?',                    'a' => 'Not currently. Lifetime licenses are available for each plugin separately: SearchForge Lifetime Pro (€249) and CacheWarmer Lifetime Premium (€249).' ],
+		];
+		sf_render_faq( $bundle_faqs, 'bundle-faq' );
+		?>
 	</div>
 </section>
 
-<script type="application/ld+json">
-<?php
-echo wp_json_encode(
-	[
-		'@context'   => 'https://schema.org',
-		'@type'      => 'FAQPage',
-		'mainEntity' => array_map(
-			function ( $faq ) {
-				return [
-					'@type' => 'Question',
-					'name'  => $faq['q'],
-					'acceptedAnswer' => [
-						'@type' => 'Answer',
-						'text'  => $faq['a'],
-					],
-				];
-			},
-			$bundle_faqs
-		),
-	],
-	JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT
-);
-?>
-</script>
-
 <!-- Final CTA -->
 <section class="sf-section sf-section--dark sf-final-cta">
-	<div class="sf-container" style="text-align: center;">
+	<div class="sf-container sf-section--centered">
 		<h2>Ready to Optimize Your Entire Workflow?</h2>
 		<p class="sf-text--inverse-muted">SEO intelligence + cache warming. Start with a 14-day free trial of both plugins.</p>
-		<div class="sf-hero__actions" style="justify-content: center; margin-top: var(--space-xl);">
-			<a href="<?php echo esc_url( home_url( '/checkout/?tier=bundle' ) ); ?>" class="sf-btn sf-btn--primary sf-btn--lg" rel="noopener" title="Buy SearchForge + CacheWarmer Bundle">Get the Bundle</a>
-			<a href="https://dross.net/contact/?topic=searchforge-bundle" class="sf-btn sf-btn--outline sf-btn--lg" target="_blank" rel="noopener" title="Contact Dross:Media — SearchForge Bundle Questions">Questions? Contact Us</a>
+		<div class="sf-hero__actions sf-section__actions">
+			<a href="<?php echo esc_url( home_url( '/checkout/?tier=bundle' ) ); ?>" class="sf-btn sf-btn--primary sf-btn--lg" rel="noopener">Get the Bundle</a>
+			<a href="https://dross.net/contact/?topic=searchforge-bundle" class="sf-btn sf-btn--outline sf-btn--lg" target="_blank" rel="noopener">Questions? Contact Us</a>
 		</div>
 	</div>
 </section>

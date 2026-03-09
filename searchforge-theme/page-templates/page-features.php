@@ -8,10 +8,10 @@
 get_header();
 ?>
 
-<section class="sf-section sf-section--dark sf-hero" style="padding: var(--space-3xl) 0;">
-	<div class="sf-container" style="text-align: center;">
+<section class="sf-section sf-section--dark sf-hero sf-page-hero">
+	<div class="sf-container">
 		<h1><span class="sf-gradient-text">Every Feature You Need</span></h1>
-		<p class="sf-text--inverse-muted" style="font-size: 1.25rem; max-width: 640px; margin: var(--space-md) auto 0;">
+		<p class="sf-text--inverse-muted sf-page-hero__subtitle sf-page-hero__subtitle--narrow">
 			SearchForge unifies 8 SEO data sources into LLM-ready intelligence. Here&rsquo;s everything included.
 		</p>
 	</div>
@@ -136,7 +136,7 @@ get_header();
 			</div>
 		</div>
 
-		<p style="text-align: center; margin-top: var(--space-xl); color: var(--sf-text-muted);">
+		<p class="sf-section__note">
 			Free tier shows the overall score. Pro unlocks the full breakdown with per-component recommendations.
 		</p>
 	</div>
@@ -290,12 +290,12 @@ get_header();
 
 <!-- CTA -->
 <section class="sf-section sf-section--dark sf-final-cta">
-	<div class="sf-container" style="text-align: center;">
+	<div class="sf-container sf-section--centered">
 		<h2>Ready to Try SearchForge?</h2>
 		<p class="sf-text--inverse-muted">Start free with Google Search Console. Upgrade to Pro when you need more.</p>
-		<div class="sf-hero__actions" style="justify-content: center; margin-top: var(--space-xl);">
-			<a href="<?php echo esc_url( home_url( '/pricing/' ) ); ?>" class="sf-btn sf-btn--primary sf-btn--lg" title="SearchForge Pricing — Free, Pro &amp; Agency Plans">View Pricing</a>
-			<a href="<?php echo esc_url( home_url( '/docs/' ) ); ?>" class="sf-btn sf-btn--outline-light sf-btn--lg" title="SearchForge Documentation — Setup, Configuration &amp; API Reference">Read the Docs</a>
+		<div class="sf-hero__actions sf-section__actions">
+			<a href="<?php echo esc_url( home_url( '/pricing/' ) ); ?>" class="sf-btn sf-btn--primary sf-btn--lg">View Pricing</a>
+			<a href="<?php echo esc_url( home_url( '/docs/' ) ); ?>" class="sf-btn sf-btn--outline-light sf-btn--lg">Read the Docs</a>
 		</div>
 	</div>
 </section>

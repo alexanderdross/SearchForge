@@ -8,15 +8,15 @@
 get_header();
 ?>
 
-<section class="sf-section sf-section--dark sf-hero" style="padding: var(--space-3xl) 0;">
-	<div class="sf-container" style="text-align: center;">
+<section class="sf-section sf-section--dark sf-hero sf-page-hero">
+	<div class="sf-container">
 		<h1><span class="sf-gradient-text">SearchForge Enterprise</span></h1>
-		<p class="sf-text--inverse-muted" style="font-size: 1.25rem; max-width: 640px; margin: var(--space-md) auto 0;">
+		<p class="sf-text--inverse-muted sf-page-hero__subtitle sf-page-hero__subtitle--narrow">
 			Unlimited sites, unlimited scale. For agencies and organizations managing SEO across a portfolio.
 		</p>
-		<div class="sf-hero__actions" style="justify-content: center; margin-top: var(--space-xl);">
-			<a href="<?php echo esc_url( home_url( '/checkout/?tier=enterprise' ) ); ?>" class="sf-btn sf-btn--primary sf-btn--lg" rel="noopener" title="Buy SearchForge Enterprise — Unlimited Sites &amp; White-Label">Get Enterprise</a>
-			<a href="https://dross.net/contact/?topic=searchforge-enterprise" class="sf-btn sf-btn--outline-light sf-btn--lg" title="Contact Dross:Media Sales — SearchForge Enterprise Inquiries">Contact Sales</a>
+		<div class="sf-hero__actions sf-page-hero__actions">
+			<a href="<?php echo esc_url( home_url( '/checkout/?tier=enterprise' ) ); ?>" class="sf-btn sf-btn--primary sf-btn--lg" rel="noopener">Get Enterprise</a>
+			<a href="https://dross.net/contact/?topic=searchforge-enterprise" class="sf-btn sf-btn--outline-light sf-btn--lg">Contact Sales</a>
 		</div>
 	</div>
 </section>
@@ -119,21 +119,21 @@ get_header();
 
 <!-- Pricing -->
 <section class="sf-section sf-section--light" id="pricing">
-	<div class="sf-container sf-container--narrow" style="text-align: center;">
+	<div class="sf-container sf-container--narrow sf-section--centered">
 		<h2>&euro;599/year</h2>
-		<p class="sf-text--muted" style="margin-bottom: var(--space-lg);">
+		<p class="sf-text--muted">
 			Or &euro;1,499 one-time for a lifetime Enterprise license.
 		</p>
-		<p class="sf-text--muted" style="margin-bottom: var(--space-xl);">
+		<p class="sf-text--muted sf-section__subtitle">
 			Volume discounts available for 5+ licenses. All prices exclude VAT where applicable.
 		</p>
 
-		<div style="display: flex; gap: var(--space-md); justify-content: center; flex-wrap: wrap;">
-			<a href="<?php echo esc_url( home_url( '/checkout/?tier=enterprise' ) ); ?>" class="sf-btn sf-btn--primary sf-btn--lg" rel="noopener" title="Buy SearchForge Enterprise — Annual Subscription">Get Enterprise &euro;599/yr</a>
-			<a href="<?php echo esc_url( home_url( '/checkout/?tier=lifetime-enterprise' ) ); ?>" class="sf-btn sf-btn--outline sf-btn--lg" rel="noopener" title="Buy SearchForge Enterprise — Lifetime License">Lifetime &euro;1,499</a>
+		<div class="sf-section__actions">
+			<a href="<?php echo esc_url( home_url( '/checkout/?tier=enterprise' ) ); ?>" class="sf-btn sf-btn--primary sf-btn--lg" rel="noopener">Get Enterprise &euro;599/yr</a>
+			<a href="<?php echo esc_url( home_url( '/checkout/?tier=lifetime-enterprise' ) ); ?>" class="sf-btn sf-btn--outline sf-btn--lg" rel="noopener">Lifetime &euro;1,499</a>
 		</div>
 
-		<p class="sf-text--muted" style="margin-top: var(--space-lg); font-size: 0.875rem;">
+		<p class="sf-text--muted sf-section__fine-print">
 			30-day money-back guarantee. Cancel anytime. Development domains are always free.
 		</p>
 	</div>
@@ -146,69 +146,30 @@ get_header();
 			<h2>Enterprise FAQ</h2>
 		</div>
 
-		<div class="sf-faq" role="list">
-			<?php
-			$enterprise_faqs = [
-				[ 'q' => 'What counts as a "site" for licensing?',             'a' => 'Each WordPress installation (domain) counts as one site. Subdomains count separately. Staging and development domains (localhost, *.local, *.dev, *.test) are always free and do not count toward your limit.' ],
-				[ 'q' => 'Can I share one Enterprise license across clients?',  'a' => 'Yes. Enterprise covers unlimited WordPress installations. You can use it across all your client sites, your own properties, and any staging environments.' ],
-				[ 'q' => 'Is there volume pricing for large deployments?',      'a' => 'Yes. Contact us at support@drossmedia.de for custom pricing on 5+ licenses, dedicated support SLAs, or custom feature development.' ],
-				[ 'q' => 'What does "priority support" include?',              'a' => 'Guaranteed 24-hour response time via email. Dedicated onboarding call for new installations. Direct access to the development team for bug reports and feature requests.' ],
-				[ 'q' => 'How does the audit log work?',                       'a' => 'Every action in SearchForge is logged: syncs, exports, setting changes, API key usage, and team member activity. Logs are stored in your WordPress database and can be exported as CSV.' ],
-				[ 'q' => 'Can I downgrade from Enterprise to Agency?',         'a' => 'Yes. Downgrade takes effect at the end of your billing period. Sites beyond the Agency limit (10) will become read-only. No data is deleted.' ],
-			];
-			foreach ( $enterprise_faqs as $i => $faq ) :
-				$slug = sanitize_title( $faq['q'] );
-			?>
-				<div class="sf-faq__item" id="<?php echo esc_attr( $slug ); ?>" role="listitem">
-					<button class="sf-faq__question" aria-expanded="false" aria-controls="enterprise-faq-<?php echo esc_attr( $i ); ?>" title="<?php echo esc_attr( $faq['q'] ); ?>">
-						<span><?php echo esc_html( $faq['q'] ); ?></span>
-						<span class="sf-faq__chevron" aria-hidden="true"></span>
-					</button>
-					<div class="sf-faq__answer" id="enterprise-faq-<?php echo esc_attr( $i ); ?>" hidden>
-						<p><?php echo esc_html( $faq['a'] ); ?></p>
-					</div>
-				</div>
-			<?php endforeach; ?>
-		</div>
-		<noscript><style>.sf-faq__answer[hidden] { display: block !important; }</style></noscript>
+		<?php
+		$enterprise_faqs = [
+			[ 'q' => 'What counts as a "site" for licensing?',             'a' => 'Each WordPress installation (domain) counts as one site. Subdomains count separately. Staging and development domains (localhost, *.local, *.dev, *.test) are always free and do not count toward your limit.' ],
+			[ 'q' => 'Can I share one Enterprise license across clients?',  'a' => 'Yes. Enterprise covers unlimited WordPress installations. You can use it across all your client sites, your own properties, and any staging environments.' ],
+			[ 'q' => 'Is there volume pricing for large deployments?',      'a' => 'Yes. Contact us at support@drossmedia.de for custom pricing on 5+ licenses, dedicated support SLAs, or custom feature development.' ],
+			[ 'q' => 'What does "priority support" include?',              'a' => 'Guaranteed 24-hour response time via email. Dedicated onboarding call for new installations. Direct access to the development team for bug reports and feature requests.' ],
+			[ 'q' => 'How does the audit log work?',                       'a' => 'Every action in SearchForge is logged: syncs, exports, setting changes, API key usage, and team member activity. Logs are stored in your WordPress database and can be exported as CSV.' ],
+			[ 'q' => 'Can I downgrade from Enterprise to Agency?',         'a' => 'Yes. Downgrade takes effect at the end of your billing period. Sites beyond the Agency limit (10) will become read-only. No data is deleted.' ],
+		];
+		sf_render_faq( $enterprise_faqs, 'enterprise-faq' );
+		?>
 	</div>
 </section>
-
-<script type="application/ld+json">
-<?php
-echo wp_json_encode(
-	[
-		'@context'   => 'https://schema.org',
-		'@type'      => 'FAQPage',
-		'mainEntity' => array_map(
-			function ( $faq ) {
-				return [
-					'@type' => 'Question',
-					'name'  => $faq['q'],
-					'acceptedAnswer' => [
-						'@type' => 'Answer',
-						'text'  => $faq['a'],
-					],
-				];
-			},
-			$enterprise_faqs
-		),
-	],
-	JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT
-);
-?>
-</script>
 
 <?php get_template_part( 'template-parts/cachewarmer-bundle' ); ?>
 
 <!-- Final CTA -->
 <section class="sf-section sf-section--dark sf-final-cta">
-	<div class="sf-container" style="text-align: center;">
+	<div class="sf-container sf-section--centered">
 		<h2>Ready to Scale Your SEO Intelligence?</h2>
 		<p class="sf-text--inverse-muted">Start with a 14-day free trial of all Enterprise features. No credit card required.</p>
-		<div class="sf-hero__actions" style="justify-content: center; margin-top: var(--space-xl);">
-			<a href="<?php echo esc_url( home_url( '/checkout/?tier=enterprise' ) ); ?>" class="sf-btn sf-btn--primary sf-btn--lg" rel="noopener" title="Start SearchForge Enterprise Free Trial">Get Enterprise</a>
-			<a href="https://dross.net/contact/?topic=searchforge-enterprise" class="sf-btn sf-btn--outline-light sf-btn--lg" title="Contact Dross:Media Sales — SearchForge Enterprise Inquiries">Talk to Sales</a>
+		<div class="sf-hero__actions sf-section__actions">
+			<a href="<?php echo esc_url( home_url( '/checkout/?tier=enterprise' ) ); ?>" class="sf-btn sf-btn--primary sf-btn--lg" rel="noopener">Get Enterprise</a>
+			<a href="https://dross.net/contact/?topic=searchforge-enterprise" class="sf-btn sf-btn--outline-light sf-btn--lg">Talk to Sales</a>
 		</div>
 	</div>
 </section>

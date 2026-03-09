@@ -16,8 +16,8 @@
 
 <header class="sf-header" role="banner">
 	<div class="sf-container sf-header__inner">
-		<a href="<?php echo esc_url( home_url( '/' ) ); ?>" class="sf-header__logo" aria-label="<?php esc_attr_e( 'SearchForge Home', 'searchforge-theme' ); ?>">
-			<img class="sf-header__logo-img" src="<?php echo esc_url( get_template_directory_uri() ); ?>/assets/images/searchforge-logo.png" alt="" aria-hidden="true" width="40" height="40">
+		<a href="<?php echo esc_url( home_url( '/' ) ); ?>" class="sf-header__logo" title="SearchForge for WordPress — SEO Data Aggregation &amp; LLM-Ready Intelligence Plugin" aria-label="<?php esc_attr_e( 'SearchForge Home', 'searchforge-theme' ); ?>">
+			<img class="sf-header__logo-img" src="<?php echo esc_url( get_template_directory_uri() ); ?>/assets/images/searchforge-logo.png" alt="SearchForge Logo — WordPress SEO Data Aggregation Plugin" width="40" height="40">
 			<span class="sf-header__logo-brand">
 				<span class="sf-header__logo-text"><span class="sf-header__logo-search">Search</span>Forge</span>
 				<span class="sf-header__logo-claim">for WordPress</span>
@@ -25,15 +25,13 @@
 		</a>
 
 		<nav class="sf-header__nav" role="navigation" aria-label="<?php esc_attr_e( 'Primary Navigation', 'searchforge-theme' ); ?>">
-			<?php
-			wp_nav_menu( [
-				'theme_location' => 'primary',
-				'container'      => false,
-				'menu_class'     => 'sf-nav-list',
-				'depth'          => 2,
-				'fallback_cb'    => 'sf_default_nav',
-			] );
-			?>
+			<ul class="sf-nav-list">
+				<li><a href="<?php echo esc_url( home_url( '/#features' ) ); ?>" title="SearchForge Features — SEO Score, AI Briefs, Competitor Analysis &amp; More">Features</a></li>
+				<li><a href="<?php echo esc_url( home_url( '/pricing/' ) ); ?>" title="SearchForge Pricing — Compare Free, Pro &amp; Agency Plans">Pricing</a></li>
+				<li><a href="<?php echo esc_url( home_url( '/docs/' ) ); ?>" title="SearchForge Documentation — Setup, Configuration &amp; API Reference">Docs</a></li>
+				<li><a href="<?php echo esc_url( home_url( '/changelog/' ) ); ?>" title="SearchForge Changelog — Version History &amp; Release Notes">Changelog</a></li>
+				<li><a href="<?php echo esc_url( home_url( '/enterprise/' ) ); ?>" title="SearchForge Enterprise — Multi-Site, White-Label &amp; Priority Support">Enterprise</a></li>
+			</ul>
 		</nav>
 
 		<div class="sf-header__actions">
@@ -46,14 +44,13 @@
 	</div>
 
 	<nav id="sf-mobile-menu" class="sf-mobile-menu" hidden aria-label="<?php esc_attr_e( 'Mobile Navigation', 'searchforge-theme' ); ?>">
-		<?php
-		wp_nav_menu( [
-			'theme_location' => 'primary',
-			'container'      => false,
-			'menu_class'     => 'sf-mobile-nav-list',
-			'depth'          => 1,
-		] );
-		?>
+		<ul class="sf-mobile-nav-list">
+			<li><a href="<?php echo esc_url( home_url( '/#features' ) ); ?>" title="SearchForge Features — SEO Score, AI Briefs, Competitor Analysis &amp; More">Features</a></li>
+			<li><a href="<?php echo esc_url( home_url( '/pricing/' ) ); ?>" title="SearchForge Pricing — Compare Free, Pro &amp; Agency Plans">Pricing</a></li>
+			<li><a href="<?php echo esc_url( home_url( '/docs/' ) ); ?>" title="SearchForge Documentation — Setup, Configuration &amp; API Reference">Docs</a></li>
+			<li><a href="<?php echo esc_url( home_url( '/changelog/' ) ); ?>" title="SearchForge Changelog — Version History &amp; Release Notes">Changelog</a></li>
+			<li><a href="<?php echo esc_url( home_url( '/enterprise/' ) ); ?>" title="SearchForge Enterprise — Multi-Site, White-Label &amp; Priority Support">Enterprise</a></li>
+		</ul>
 		<a href="<?php echo esc_url( home_url( '/pricing/' ) ); ?>" class="sf-btn sf-btn--primary sf-btn--block" title="SearchForge Pro — Pricing Plans &amp; License Options">Get Pro</a>
 	</nav>
 </header>

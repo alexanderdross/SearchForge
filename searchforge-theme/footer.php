@@ -10,7 +10,7 @@
 			<!-- Brand column -->
 			<div class="sf-footer__brand">
 				<div class="sf-footer__logo">
-					<img class="sf-footer__logo-img" src="<?php echo esc_url( get_template_directory_uri() ); ?>/assets/images/searchforge-logo.png" alt="" aria-hidden="true" width="36" height="36">
+					<img class="sf-footer__logo-img" src="<?php echo esc_url( get_template_directory_uri() ); ?>/assets/images/searchforge-logo.png" alt="SearchForge Logo — WordPress SEO Data Aggregation Plugin" width="36" height="36">
 					<span class="sf-footer__logo-text">
 						<strong>SearchForge</strong>
 						<small>for WordPress</small>

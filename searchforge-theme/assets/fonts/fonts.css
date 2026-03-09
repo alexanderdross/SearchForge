@@ -3,17 +3,6 @@
  *
  * GDPR compliance: Fonts are loaded locally instead of from Google's CDN
  * to avoid transmitting visitor IP addresses to third-party servers.
- *
- * To complete self-hosting:
- * 1. Download font files from https://gwfh.mranftl.com/fonts (google-webfonts-helper)
- *    - Inter: weights 400, 500, 600
- *    - Outfit: weights 600, 700
- *    - JetBrains Mono: weight 400
- * 2. Place .woff2 files in this directory (assets/fonts/)
- * 3. The @font-face declarations below will load them automatically.
- *
- * Until font files are added, the browser will fall back to system fonts
- * defined in the CSS custom properties.
  */
 
 /* Inter — Body text */
@@ -22,21 +11,21 @@
 	font-style: normal;
 	font-weight: 400;
 	font-display: swap;
-	src: url('inter-v18-latin-regular.woff2') format('woff2');
+	src: url('inter-v20-latin-regular.woff2') format('woff2');
 }
 @font-face {
 	font-family: 'Inter';
 	font-style: normal;
 	font-weight: 500;
 	font-display: swap;
-	src: url('inter-v18-latin-500.woff2') format('woff2');
+	src: url('inter-v20-latin-500.woff2') format('woff2');
 }
 @font-face {
 	font-family: 'Inter';
 	font-style: normal;
 	font-weight: 600;
 	font-display: swap;
-	src: url('inter-v18-latin-600.woff2') format('woff2');
+	src: url('inter-v20-latin-600.woff2') format('woff2');
 }
 
 /* Outfit — Headings */
@@ -45,14 +34,14 @@
 	font-style: normal;
 	font-weight: 600;
 	font-display: swap;
-	src: url('outfit-v11-latin-600.woff2') format('woff2');
+	src: url('outfit-v15-latin-600.woff2') format('woff2');
 }
 @font-face {
 	font-family: 'Outfit';
 	font-style: normal;
 	font-weight: 700;
 	font-display: swap;
-	src: url('outfit-v11-latin-700.woff2') format('woff2');
+	src: url('outfit-v15-latin-700.woff2') format('woff2');
 }
 
 /* JetBrains Mono — Code */
@@ -61,5 +50,5 @@
 	font-style: normal;
 	font-weight: 400;
 	font-display: swap;
-	src: url('jetbrains-mono-v18-latin-regular.woff2') format('woff2');
+	src: url('jetbrains-mono-v24-latin-regular.woff2') format('woff2');
 }

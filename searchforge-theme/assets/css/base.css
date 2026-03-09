@@ -163,3 +163,8 @@ code, pre {
 	background-clip: text;
 	-webkit-text-fill-color: transparent;
 }
+.sf-section--dark .sf-gradient-text {
+	background: linear-gradient(135deg, #7B9DB8 0%, #c8d0de 50%, #D94F3D 100%);
+	-webkit-background-clip: text;
+	background-clip: text;
+}

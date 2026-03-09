@@ -19,8 +19,8 @@ function sf_theme_security_headers(): void {
 	header( 'X-Frame-Options: SAMEORIGIN' );
 	header( 'Referrer-Policy: strict-origin-when-cross-origin' );
 	header( 'Permissions-Policy: camera=(), microphone=(), geolocation=(), payment=()' );
-	header( "Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; font-src 'self'; img-src 'self' data:; connect-src 'self'; frame-ancestors 'self'" );
-	header( 'Strict-Transport-Security: max-age=31536000; includeSubDomains' );
+	header( "Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; font-src 'self' data:; img-src 'self' data:; connect-src 'self'; frame-ancestors 'self'" );
+	header( 'Strict-Transport-Security: max-age=63072000; includeSubDomains; preload' );
 	header( 'X-Permitted-Cross-Domain-Policies: none' );
 }
 add_action( 'send_headers', 'sf_theme_security_headers' );

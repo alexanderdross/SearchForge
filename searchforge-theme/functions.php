@@ -183,7 +183,7 @@ if ( ! function_exists( 'sf_default_nav' ) ) {
 }
 
 /**
- * Render an FAQ accordion section with FAQPage JSON-LD schema.
+ * Render an FAQ accordion section (FAQPage schema is output centrally via inc/schema.php).
  *
  * @param array<int, array{q: string, a: string}> $faqs     FAQ items.
  * @param string                                    $id_prefix Unique prefix for ARIA IDs.

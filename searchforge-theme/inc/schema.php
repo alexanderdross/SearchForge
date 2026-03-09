@@ -2,16 +2,22 @@
 /**
  * JSON-LD structured data for SEO.
  *
- * Outputs a single unified @graph containing:
+ * Outputs a single unified @graph containing (on every page):
  * 1. Organization
  * 2. WebSite
- * 3. SiteNavigationElement
- * 4. CollectionPage (front page) or WebPage (inner pages)
- * 5. SoftwareApplication (front page)
- * 6. Product with AggregateRating (front page)
- * 7. Article (front page hero highlight)
- * 8. FAQPage (collected from sf_render_faq calls)
- * 9. BreadcrumbList (inner pages)
+ * 3. SiteNavigationElement (all site links)
+ * 4. Product with AggregateRating
+ *
+ * Front page additionally:
+ * 5. CollectionPage
+ * 6. SoftwareApplication
+ * 7. Article (hero highlight)
+ *
+ * Inner pages additionally:
+ * 8. WebPage
+ * 9. BreadcrumbList
+ *
+ * FAQPage is output separately in wp_footer (collected from sf_render_faq calls).
  *
  * @package SearchForge_Theme
  */
@@ -26,21 +32,21 @@ function sf_theme_output_schema(): void {
 	$theme_uri = get_template_directory_uri();
 	$logo_url  = $theme_uri . '/assets/images/searchforge-logo.png';
 
-	// --- Shared nodes with @id for cross-referencing ---
-
 	$org_id  = $site_url . '/#organization';
 	$site_id = $site_url . '/#website';
 
-	$org = [
+	// --- Nodes present on every page ---
+
+	$organization = [
 		'@type' => 'Organization',
 		'@id'   => $org_id,
 		'name'  => 'Dross:Media GmbH',
 		'url'   => 'https://dross.net',
 		'logo'  => [
-			'@type'      => 'ImageObject',
-			'url'        => $logo_url,
-			'width'      => 512,
-			'height'     => 512,
+			'@type'  => 'ImageObject',
+			'url'    => $logo_url,
+			'width'  => 512,
+			'height' => 512,
 		],
 	];
 
@@ -52,46 +58,71 @@ function sf_theme_output_schema(): void {
 		'publisher' => [ '@id' => $org_id ],
 	];
 
-	// --- SiteNavigationElement ---
-
 	$nav_items = [
-		[ 'name' => 'Home',             'url' => $site_url . '/' ],
-		[ 'name' => 'Features',         'url' => $site_url . '/features/' ],
-		[ 'name' => 'Pricing',          'url' => $site_url . '/pricing/' ],
-		[ 'name' => 'Enterprise',       'url' => $site_url . '/enterprise/' ],
-		[ 'name' => 'Bundle',           'url' => $site_url . '/bundle/' ],
-		[ 'name' => 'Changelog',        'url' => $site_url . '/changelog/' ],
-		[ 'name' => 'Documentation',    'url' => $site_url . '/docs/' ],
-		[ 'name' => 'Getting Started',  'url' => $site_url . '/docs/getting-started/' ],
-		[ 'name' => 'Data Sources',     'url' => $site_url . '/docs/data-sources/' ],
-		[ 'name' => 'Features Guide',   'url' => $site_url . '/docs/features/' ],
-		[ 'name' => 'Export & Output',  'url' => $site_url . '/docs/export-output/' ],
-		[ 'name' => 'Developer Guide',  'url' => $site_url . '/docs/developer/' ],
-		[ 'name' => 'Integrations',     'url' => $site_url . '/docs/integrations/' ],
+		'Home'            => '/',
+		'Features'        => '/features/',
+		'Pricing'         => '/pricing/',
+		'Enterprise'      => '/enterprise/',
+		'Bundle'          => '/bundle/',
+		'Changelog'       => '/changelog/',
+		'Documentation'   => '/docs/',
+		'Getting Started' => '/docs/getting-started/',
+		'Data Sources'    => '/docs/data-sources/',
+		'Features Guide'  => '/docs/features/',
+		'Export & Output' => '/docs/export-output/',
+		'Developer Guide' => '/docs/developer/',
+		'Integrations'    => '/docs/integrations/',
 	];
 
 	$nav_elements = [];
-	foreach ( $nav_items as $item ) {
+	foreach ( $nav_items as $name => $path ) {
 		$nav_elements[] = [
 			'@type' => 'SiteNavigationElement',
-			'name'  => $item['name'],
-			'url'   => $item['url'],
+			'name'  => $name,
+			'url'   => $site_url . $path,
 		];
 	}
 
-	$site_nav = [
-		'@type'        => 'ItemList',
-		'@id'          => $site_url . '/#site-navigation',
-		'name'         => 'Site Navigation',
+	$site_navigation = [
+		'@type'           => 'ItemList',
+		'@id'             => $site_url . '/#site-navigation',
+		'name'            => 'Site Navigation',
 		'itemListElement' => $nav_elements,
 	];
 
-	// --- Build the @graph ---
+	$product = [
+		'@type'           => 'Product',
+		'@id'             => $site_url . '/#product',
+		'name'            => 'SearchForge',
+		'description'     => 'WordPress plugin that unifies SEO data from Google Search Console, Bing, GA4 and Trends into LLM-ready markdown briefs.',
+		'brand'           => [
+			'@type' => 'Brand',
+			'name'  => 'Dross:Media',
+		],
+		'image'           => $logo_url,
+		'url'             => $site_url . '/',
+		'aggregateRating' => [
+			'@type'       => 'AggregateRating',
+			'ratingValue' => '4.8',
+			'bestRating'  => '5',
+			'worstRating' => '1',
+			'reviewCount' => '312',
+		],
+		'offers'          => [
+			'@type'         => 'AggregateOffer',
+			'lowPrice'      => '0',
+			'highPrice'     => '249',
+			'priceCurrency' => 'EUR',
+			'offerCount'    => '3',
+			'availability'  => 'https://schema.org/InStock',
+		],
+	];
 
-	$graph = [ $org, $website, $site_nav ];
+	$graph = [ $organization, $website, $site_navigation, $product ];
+
+	// --- Front page specific nodes ---
 
 	if ( is_front_page() ) {
-		// CollectionPage — represents the front page as a collection of sections.
 		$graph[] = [
 			'@type'       => 'CollectionPage',
 			'@id'         => $site_url . '/#collection-page',
@@ -102,17 +133,16 @@ function sf_theme_output_schema(): void {
 			'publisher'   => [ '@id' => $org_id ],
 		];
 
-		// SoftwareApplication — the plugin itself.
 		$graph[] = [
-			'@type'                => 'SoftwareApplication',
-			'@id'                  => $site_url . '/#software',
-			'name'                 => 'SearchForge',
-			'url'                  => $site_url . '/',
-			'applicationCategory'  => 'WebApplication',
-			'operatingSystem'      => 'WordPress',
-			'description'          => 'WordPress plugin that turns SEO data from Google Search Console, Bing, GA4 and Trends into LLM-ready markdown briefs.',
-			'screenshot'           => $logo_url,
-			'offers'               => [
+			'@type'               => 'SoftwareApplication',
+			'@id'                 => $site_url . '/#software',
+			'name'                => 'SearchForge',
+			'url'                 => $site_url . '/',
+			'applicationCategory' => 'WebApplication',
+			'operatingSystem'     => 'WordPress',
+			'description'         => 'WordPress plugin that unifies SEO data from Google Search Console, Bing, GA4 and Trends into LLM-ready markdown briefs.',
+			'screenshot'          => $logo_url,
+			'offers'              => [
 				[
 					'@type'         => 'Offer',
 					'price'         => '0',
@@ -121,55 +151,25 @@ function sf_theme_output_schema(): void {
 					'availability'  => 'https://schema.org/InStock',
 				],
 				[
-					'@type'            => 'Offer',
-					'price'            => '99',
-					'priceCurrency'    => 'EUR',
-					'name'             => 'Pro',
-					'billingDuration'  => 'P1Y',
-					'availability'     => 'https://schema.org/InStock',
+					'@type'           => 'Offer',
+					'price'           => '99',
+					'priceCurrency'   => 'EUR',
+					'name'            => 'Pro',
+					'billingDuration' => 'P1Y',
+					'availability'    => 'https://schema.org/InStock',
 				],
 				[
-					'@type'            => 'Offer',
-					'price'            => '249',
-					'priceCurrency'    => 'EUR',
-					'name'             => 'Agency',
-					'billingDuration'  => 'P1Y',
-					'availability'     => 'https://schema.org/InStock',
+					'@type'           => 'Offer',
+					'price'           => '249',
+					'priceCurrency'   => 'EUR',
+					'name'            => 'Agency',
+					'billingDuration' => 'P1Y',
+					'availability'    => 'https://schema.org/InStock',
 				],
 			],
 			'author' => [ '@id' => $org_id ],
 		];
 
-		// Product with AggregateRating.
-		$graph[] = [
-			'@type'           => 'Product',
-			'@id'             => $site_url . '/#product',
-			'name'            => 'SearchForge',
-			'description'     => 'WordPress plugin that turns SEO data from Google Search Console, Bing, GA4 and Trends into LLM-ready markdown briefs.',
-			'brand'           => [
-				'@type' => 'Brand',
-				'name'  => 'Dross:Media',
-			],
-			'image'           => $logo_url,
-			'url'             => $site_url . '/',
-			'aggregateRating' => [
-				'@type'       => 'AggregateRating',
-				'ratingValue' => '4.8',
-				'bestRating'  => '5',
-				'worstRating' => '1',
-				'reviewCount' => '312',
-			],
-			'offers'          => [
-				'@type'         => 'AggregateOffer',
-				'lowPrice'      => '0',
-				'highPrice'     => '249',
-				'priceCurrency' => 'EUR',
-				'offerCount'    => '3',
-				'availability'  => 'https://schema.org/InStock',
-			],
-		];
-
-		// Article — the hero highlight text explaining the product purpose.
 		$graph[] = [
 			'@type'            => 'Article',
 			'@id'              => $site_url . '/#article',
@@ -184,19 +184,21 @@ function sf_theme_output_schema(): void {
 			'image'            => $logo_url,
 		];
 	} else {
-		// WebPage schema for inner pages.
-		$meta      = sf_theme_get_page_meta();
+		// --- Inner page nodes ---
+
+		$meta    = sf_theme_get_page_meta();
+		$page_url = sf_theme_current_url();
+
 		$graph[] = [
 			'@type'       => 'WebPage',
-			'@id'         => sf_theme_current_url() . '#webpage',
+			'@id'         => $page_url . '#webpage',
 			'name'        => $meta['title'],
 			'description' => $meta['description'],
-			'url'         => sf_theme_current_url(),
+			'url'         => $page_url,
 			'isPartOf'    => [ '@id' => $site_id ],
 			'publisher'   => [ '@id' => $org_id ],
 		];
 
-		// BreadcrumbList for inner pages.
 		$crumbs = sf_get_breadcrumbs();
 		if ( ! empty( $crumbs ) ) {
 			$breadcrumb_items = [];
@@ -224,7 +226,9 @@ function sf_theme_output_schema(): void {
 		'@graph'   => $graph,
 	];
 
-	echo '<script type="application/ld+json">' . wp_json_encode( $schema, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE ) . '</script>' . "\n";
+	echo '<script type="application/ld+json">' . "\n";
+	echo wp_json_encode( $schema, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT );
+	echo "\n" . '</script>' . "\n";
 }
 add_action( 'wp_head', 'sf_theme_output_schema' );
 
@@ -252,7 +256,7 @@ function sf_theme_output_faq_schema(): void {
 		'@context'   => 'https://schema.org',
 		'@type'      => 'FAQPage',
 		'mainEntity' => array_map(
-			function ( $faq ) {
+			static function ( array $faq ): array {
 				return [
 					'@type'          => 'Question',
 					'name'           => $faq['q'],
@@ -266,6 +270,8 @@ function sf_theme_output_faq_schema(): void {
 		),
 	];
 
-	echo '<script type="application/ld+json">' . wp_json_encode( $schema, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE ) . '</script>' . "\n";
+	echo '<script type="application/ld+json">' . "\n";
+	echo wp_json_encode( $schema, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT );
+	echo "\n" . '</script>' . "\n";
 }
 add_action( 'wp_footer', 'sf_theme_output_faq_schema', 99 );

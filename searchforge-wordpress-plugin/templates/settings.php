@@ -30,6 +30,25 @@ if ( isset( $_GET['gsc_connected'] ) ) : ?>
 	<form method="post" action="options.php">
 		<?php settings_fields( 'searchforge_settings' ); ?>
 
+		<!-- License -->
+		<h2><?php esc_html_e( 'License', 'searchforge' ); ?></h2>
+		<table class="form-table">
+			<tr>
+				<th scope="row">
+					<label for="license_key"><?php esc_html_e( 'License Key', 'searchforge' ); ?></label>
+				</th>
+				<td>
+					<input type="text" name="searchforge_settings[license_key]" id="license_key"
+						value="<?php echo esc_attr( $settings['license_key'] ); ?>" class="regular-text"
+						placeholder="SF-PRO-XXXXXXXXXXXXXXXX" />
+					<p class="description">
+						<?php esc_html_e( 'Current tier:', 'searchforge' ); ?>
+						<strong><?php echo esc_html( ucfirst( $settings['license_tier'] ) ); ?></strong>
+					</p>
+				</td>
+			</tr>
+		</table>
+
 		<!-- Google Search Console -->
 		<h2><?php esc_html_e( 'Google Search Console', 'searchforge' ); ?></h2>
 		<table class="form-table">
@@ -528,25 +547,6 @@ if ( isset( $_GET['gsc_connected'] ) ) : ?>
 						</p>
 						<code id="sf-api-key-value" style="font-size:14px;padding:4px 8px;"></code>
 					</div>
-				</td>
-			</tr>
-		</table>
-
-		<!-- License -->
-		<h2><?php esc_html_e( 'License', 'searchforge' ); ?></h2>
-		<table class="form-table">
-			<tr>
-				<th scope="row">
-					<label for="license_key"><?php esc_html_e( 'License Key', 'searchforge' ); ?></label>
-				</th>
-				<td>
-					<input type="text" name="searchforge_settings[license_key]" id="license_key"
-						value="<?php echo esc_attr( $settings['license_key'] ); ?>" class="regular-text"
-						placeholder="SF-PRO-XXXXXXXXXXXXXXXX" />
-					<p class="description">
-						<?php esc_html_e( 'Current tier:', 'searchforge' ); ?>
-						<strong><?php echo esc_html( ucfirst( $settings['license_tier'] ) ); ?></strong>
-					</p>
 				</td>
 			</tr>
 		</table>

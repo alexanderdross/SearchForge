@@ -133,7 +133,7 @@ class Settings {
 			? $input['sync_frequency']
 			: $current['sync_frequency'];
 		$sanitized['data_retention']  = absint( $input['data_retention'] ?? $current['data_retention'] );
-		$sanitized['license_tier']    = $current['license_tier']; // Set via license validation only.
+		$sanitized['license_tier']    = self::resolve_license_tier( $sanitized['license_key'], $current['license_tier'] );
 
 		return $sanitized;
 	}
@@ -157,6 +157,37 @@ class Settings {
 		$settings = self::get_all();
 		$settings = array_merge( $settings, $values );
 		return update_option( self::OPTION_KEY, $settings );
+	}
+
+	/**
+	 * Resolve license tier from key format or license manager API.
+	 */
+	private static function resolve_license_tier( string $key, string $fallback ): string {
+		if ( empty( $key ) ) {
+			return 'free';
+		}
+
+		// Try license manager API if the plugin is active.
+		if ( function_exists( 'sflm_validate_license' ) ) {
+			$result = sflm_validate_license( $key );
+			if ( ! empty( $result['tier'] ) ) {
+				return strtolower( $result['tier'] );
+			}
+		}
+
+		// Parse tier from key format: SF-{TIER}-{16 hex}.
+		$tier_map = [
+			'FREE' => 'free',
+			'PRO'  => 'pro',
+			'ENT'  => 'enterprise',
+			'DEV'  => 'pro',
+		];
+
+		if ( preg_match( '/^SF-(FREE|PRO|ENT|DEV)-[A-F0-9]{16}$/', $key, $matches ) ) {
+			return $tier_map[ $matches[1] ] ?? $fallback;
+		}
+
+		return $fallback;
 	}
 
 	public static function is_pro(): bool {

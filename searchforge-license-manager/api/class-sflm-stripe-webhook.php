@@ -154,7 +154,6 @@ class SFLM_Stripe_Webhook extends SFLM_REST_Controller {
 
         // Produkt-Mapping finden
         $product_id = $session->metadata->product_id ?? null;
-        $price_id   = $session->metadata->price_id ?? null;
 
         $product_map = null;
         if ( $product_id ) {

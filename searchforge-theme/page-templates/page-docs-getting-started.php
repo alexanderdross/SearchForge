@@ -40,7 +40,7 @@ $sections = [
 				<li>Click <strong>Install Now</strong>, then <strong>Activate</strong>.</li>
 				<li>The SearchForge menu appears in your admin sidebar.</li>
 			</ol>
-			<p>Requirements: WordPress 6.0+, PHP 8.0+, and a valid SSL certificate for OAuth connections.</p>
+			<p>Requirements: WordPress 6.0+, PHP 8.2+, and a valid SSL certificate for OAuth connections.</p>
 		</article>
 
 		<hr style="border: none; border-top: 1px solid var(--sf-border); margin: var(--space-2xl) 0;">
@@ -69,7 +69,7 @@ $sections = [
 				<li>Grant the requested permissions (read-only access to Search Console data).</li>
 				<li>Select your GSC property from the dropdown and click <strong>Save</strong>.</li>
 			</ol>
-			<p>SearchForge uses OAuth 2.0 &mdash; your credentials are never stored. The access token is encrypted in your WordPress database.</p>
+			<p>SearchForge uses OAuth 2.0 &mdash; your credentials are never stored. The access token is stored securely in your WordPress database.</p>
 		</article>
 
 		<hr style="border: none; border-top: 1px solid var(--sf-border); margin: var(--space-2xl) 0;">
@@ -108,7 +108,7 @@ $sections = [
 <section class="sf-section sf-section--light" style="text-align: center;">
 	<div class="sf-container sf-container--narrow">
 		<p class="sf-text--muted">
-			<a href="/docs/">&larr; Back to Documentation</a>
+			<a href="<?php echo esc_url( home_url( '/docs/' ) ); ?>">&larr; Back to Documentation</a>
 		</p>
 	</div>
 </section>

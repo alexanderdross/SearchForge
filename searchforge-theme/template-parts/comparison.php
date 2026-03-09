@@ -24,6 +24,7 @@ $rows = [
 
 		<div class="sf-comparison-table-wrapper">
 			<table class="sf-comparison-table">
+				<caption class="screen-reader-text"><?php esc_html_e( 'Comparison of manual SEO workflows versus SearchForge automation', 'searchforge-theme' ); ?></caption>
 				<thead>
 					<tr>
 						<th scope="col">Capability</th>
@@ -34,7 +35,7 @@ $rows = [
 				<tbody>
 					<?php foreach ( $rows as $row ) : ?>
 						<tr>
-							<td class="sf-comparison-table__capability"><?php echo esc_html( $row['capability'] ); ?></td>
+							<th scope="row" class="sf-comparison-table__capability"><?php echo esc_html( $row['capability'] ); ?></th>
 							<td class="sf-comparison-table__old"><?php echo esc_html( $row['old'] ); ?></td>
 							<td class="sf-comparison-table__new"><?php echo wp_kses_post( $row['sf'] ); ?></td>
 						</tr>

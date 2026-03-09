@@ -3,9 +3,8 @@
     bootstrap="bootstrap.php"
     backupGlobals="false"
     colors="true"
-    convertErrorsToExceptions="true"
-    convertNoticesToExceptions="true"
-    convertWarningsToExceptions="true"
+    displayDetailsOnTestsThatTriggerDeprecations="true"
+    displayDetailsOnTestsThatTriggerWarnings="true"
 >
     <testsuites>
         <testsuite name="unit">
@@ -13,6 +12,12 @@
         </testsuite>
         <testsuite name="regression">
             <directory suffix="Test.php">./regression</directory>
+        </testsuite>
+        <testsuite name="security">
+            <directory suffix="Test.php">./security</directory>
+        </testsuite>
+        <testsuite name="performance">
+            <directory suffix="Test.php">./performance</directory>
         </testsuite>
     </testsuites>
 </phpunit>

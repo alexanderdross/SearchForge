@@ -111,7 +111,31 @@ searchforge-theme/
 - Body: **Inter** (400, 1rem)
 - Code: **JetBrains Mono** (400)
 
+**Additional Colors:**
+| Token | Hex | Usage |
+|-------|-----|-------|
+| `--sf-primary-dark` | `#0d5f59` | Hover state |
+| `--sf-primary-light` | `#14b8a6` | Lighter variant |
+| `--sf-accent-dark` | `#d97706` | Hover state |
+| `--sf-bg-dark-alt` | `#1e293b` | Slate-800 |
+| `--sf-text` | `#1e293b` | Body text |
+| `--sf-text-muted` | `#64748b` | Secondary text |
+| `--sf-success` | `#10b981` | Green |
+| `--sf-error` | `#ef4444` | Red |
+
 **Hero Gradient:** `linear-gradient(135deg, #0f766e 0%, #14b8a6 50%, #f59e0b 100%)`
+
+**Spacing Scale:** `--space-xs` (0.25rem) through `--space-4xl` (6rem)
+**Container:** max 1280px, narrow 800px, padding 1.5rem
+**Border Radius:** sm (0.25rem), md (0.5rem), lg (0.75rem), xl (1rem), pill (9999px)
+**Breakpoints:** 1024px (mobile menu), 768px (grid collapse), 640px (mobile)
+
+**Theme Constants (functions.php):**
+```php
+SF_THEME_VERSION = '1.1.0'
+SF_THEME_DIR     = get_template_directory()
+SF_THEME_URI     = get_template_directory_uri()
+```
 
 ### Key Features
 
@@ -207,7 +231,7 @@ searchforge-wordpress-plugin/
 └── assets/                      # Admin CSS/JS (Chart.js)
 ```
 
-### Database Tables
+### Database Tables (10 tables)
 
 | Table | Purpose |
 |-------|---------|
@@ -218,30 +242,45 @@ searchforge-wordpress-plugin/
 | `sf_alerts` | Alert history with severity and metadata |
 | `sf_ga4_metrics` | GA4 behavior data (sessions, bounce, conversions) |
 | `sf_settings` | Plugin configuration |
+| `sf_audit_log` | User action audit trail (Pro only) |
+| `sf_competitors` | Competitor domain tracking |
+| `sf_competitor_keywords` | Competitor keyword rankings |
 
-### REST API Endpoints (namespace: `searchforge/v1`)
+### REST API Endpoints (namespace: `searchforge/v1` — 21 total)
 
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| GET | `/status` | Plugin health |
-| GET | `/pages` | Paginated page list |
-| GET | `/keywords` | Keyword data with filters |
-| GET | `/export/page` | Single page brief |
-| GET | `/export/site` | Full site export |
-| GET | `/cannibalization` | Cannibalization analysis |
-| GET | `/clusters` | Keyword clusters |
-| GET | `/content-brief` | Generated brief for page |
-| GET | `/content-gaps` | Competitor content gaps |
-| GET | `/performance` | Historical trends |
-| GET | `/quota` | API quota info |
-| POST | `/sync` | Trigger manual sync |
+| Method | Endpoint | Auth | Description |
+|--------|----------|------|-------------|
+| GET | `/status` | API key or Pro | Plugin health + version + tier |
+| GET | `/pages` | API key or Pro | Paginated top pages |
+| GET | `/keywords` | API key or Pro | Top keywords |
+| GET | `/export/page` | API key or Pro | Single page markdown brief |
+| GET | `/export/site` | API key or Pro | Full site export |
+| POST | `/sync` | Admin only | Manual sync trigger |
+| GET | `/cannibalization` | API key or Pro | Keyword overlap analysis |
+| GET | `/clusters` | API key or Pro | Keyword topic clusters |
+| GET | `/content-brief` | API key or Pro | AI/heuristic brief for page |
+| GET | `/content-gaps` | API key or Pro | Competitor content gaps |
+| GET | `/performance` | API key or Pro | Historical trends (7/30/90 days) |
+| GET | `/quota` | API key or Pro | API quota usage |
+| GET | `/ssl` | API key or Pro | SSL certificate status |
+| GET | `/audit-log` | Admin only | Activity log (Pro) |
+| GET | `/trends` | API key or Pro | Google Trends interest/related queries |
+| GET | `/page-detail` | API key or Pro | Full page metrics + GA4 + score |
+| GET | `/competitors` | API key or Pro | Registered competitor list |
+| GET | `/competitors/overlap` | API key or Pro | Shared keywords with competitors |
+| GET | `/competitors/gaps` | API key or Pro | Keywords competitors rank for |
+| GET | `/competitors/visibility` | API key or Pro | Competitor SERP visibility comparison |
+
+**API Key Auth:** via `Authorization: Bearer sf_xxx` or `X-SearchForge-Key: sf_xxx` headers
 
 ### WP-CLI Commands
 
 ```bash
-wp searchforge sync [--source=gsc|bing|ga4|kwp|all]
-wp searchforge status
-wp searchforge export pages [--format=csv|json]
+wp searchforge sync [--source=gsc|bing|ga4|kwp|all]    # Trigger manual sync
+wp searchforge status                                    # Show config + data summary
+wp searchforge export pages|keywords|alerts|brief [--format=csv|json|md] [--file=path] [--page=/path/]
+wp searchforge scan-links [--limit=20]                   # Broken link scanning (Pro)
+wp searchforge quota                                     # Show API quota usage
 ```
 
 ### Feature Tiers
@@ -265,10 +304,15 @@ wp searchforge export pages [--format=csv|json]
 ### SearchForge Score Algorithm
 
 Proprietary 0-100 score with 4 equal components (25% each):
-- **Technical:** Title optimization, meta description, headers, page depth
-- **Content:** Keyword relevance, content length, topic coherence
-- **Authority:** Backlink signals, domain authority
-- **Momentum:** Ranking trends, recent performance, growth trajectory
+
+- **Technical (25%):** Position quality (weight 0.4), keyword breadth (weight 0.3), CTR vs. position benchmarks (weight 0.3). Expected CTR curve: Position 1 = 31.6%, Position 10 = 2.2%.
+- **Content (25%):** Keyword diversity (weight 0.4), engagement/click ratio (weight 0.3), topic concentration penalty if top keyword >80% of clicks (weight 0.3).
+- **Authority (25%):** Click volume on log scale (weight 0.4), impression reach on log scale (weight 0.3), position authority — Top 3 = 100%, Top 10 = 70% (weight 0.3).
+- **Momentum (25%):** 14-day click trend (weight 0.6), position improvement (weight 0.4). Neutral baseline = 50 if insufficient data.
+
+**Site-Level:** Pages indexed coverage + position quality + keyword breadth + diversity + total clicks (log) + 14d vs 28d trend.
+
+**Auto-Generated Recommendations:** Position improvement, CTR optimization, content expansion, traffic concentration risk, authority building, momentum recovery, "almost page 1" opportunities (positions 11-15).
 
 ### Changelog Summary
 
@@ -513,6 +557,48 @@ define('SFLM_MAXMIND_DB_PATH', '/path/to/GeoLite2-City.mmdb');
 | Plugin → GSC/Bing/GA4 | Data sync via OAuth/API keys | REST APIs |
 | License Manager → Stripe | Payment processing, subscription lifecycle | Webhooks |
 | Plugin → llms.txt | AI crawler discovery | Rewrite rules |
+
+---
+
+## Plugin Settings Configuration
+
+Key settings with defaults (stored in `sf_settings` table):
+
+```php
+'gsc_client_id'/'gsc_client_secret'/'gsc_access_token'/'gsc_refresh_token' => ''  // OAuth (plaintext!)
+'gsc_property'               => ''           // GSC site URL
+'gsc_max_pages'              => 0            // 0 = unlimited (Pro), capped at 10 (Free)
+'bing_api_key'/'bing_site_url'/'bing_enabled' => ''|false
+'kwp_customer_id'/'kwp_developer_token'       => ''
+'kwp_language_id'            => '1000'       // English (US)
+'kwp_geo_target'             => '2840'       // US
+'serpapi_key'/'trends_enabled'/'ga4_property_id'/'ga4_enabled' => ''|false
+'ai_api_key'                 => ''
+'ai_provider'                => 'openai'     // or 'anthropic'
+'webhook_url'/'webhook_format' => ''|'json'  // or 'slack'
+'api_key'                    => ''           // wp_hash() of generated key
+'alert_ranking_drop_threshold' => 3          // positions
+'data_retention'             => 30           // days (365 for Pro)
+'sync_frequency'             => 'daily'
+'llms_txt_enabled'           => true
+'license_key'/'license_tier' => ''|'free'
+'competitors'                => []           // Domain list
+```
+
+### Admin Menu (9 pages)
+
+Dashboard, Pages, Keywords, Analysis, Competitors, Monitoring, Export, Page Detail, Settings
+
+### Integration Details
+
+| Source | Auth Method | Rate Limit | Scope |
+|--------|------------|------------|-------|
+| Google Search Console | OAuth 2.0 refresh token | 25,000/day | `webmasters.readonly` |
+| Bing Webmaster Tools | API key | 10,000/day | Page + query stats |
+| Google Analytics 4 | Data API | 10,000 tokens/day | Sessions, bounce, conversions |
+| Keyword Planner | Developer token + customer ID | 10,000 ops/day | Search volume, competition |
+| Google Trends | SerpAPI key | 100/day | Interest over time, related queries |
+| Sitemap Discovery | None | N/A | robots.txt → sitemap.xml parsing |
 
 ---
 

@@ -7,7 +7,7 @@
 
 defined( 'ABSPATH' ) || exit;
 
-define( 'SF_THEME_VERSION', '1.1.0' );
+define( 'SF_THEME_VERSION', '1.2.0' );
 define( 'SF_THEME_DIR', get_template_directory() );
 define( 'SF_THEME_URI', get_template_directory_uri() );
 
@@ -35,35 +35,35 @@ add_action( 'after_setup_theme', 'sf_theme_setup' );
  * Enqueue styles and scripts.
  */
 function sf_theme_enqueue_assets(): void {
-	// Fonts.
+	// Fonts — self-hosted for GDPR compliance (no Google CDN requests).
 	wp_enqueue_style(
 		'sf-fonts',
-		'https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Outfit:wght@600;700&family=JetBrains+Mono:wght@400&display=swap',
+		SF_THEME_URI . '/assets/fonts/fonts.css',
 		[],
-		null
+		SF_THEME_VERSION
 	);
 
-	// Stylesheets.
+	// Stylesheets — all depend on variables only (allows parallel loading).
 	$css_files = [ 'variables', 'base', 'components', 'sections', 'responsive' ];
 	foreach ( $css_files as $file ) {
 		wp_enqueue_style(
 			"sf-{$file}",
 			SF_THEME_URI . "/assets/css/{$file}.css",
-			$file === 'variables' ? [ 'sf-fonts' ] : [ "sf-" . $css_files[ array_search( $file, $css_files ) - 1 ] ],
+			$file === 'variables' ? [ 'sf-fonts' ] : [ 'sf-variables' ],
 			SF_THEME_VERSION
 		);
 	}
 
-	// Scripts.
-	$js_files = [ 'navigation', 'faq', 'pricing', 'animations', 'doc-nav' ];
-	foreach ( $js_files as $file ) {
-		wp_enqueue_script(
-			"sf-{$file}",
-			SF_THEME_URI . "/assets/js/{$file}.js",
-			[],
-			SF_THEME_VERSION,
-			[ 'strategy' => 'defer', 'in_footer' => true ]
-		);
+	// Scripts — conditionally load only what the current page needs.
+	wp_enqueue_script( 'sf-navigation', SF_THEME_URI . '/assets/js/navigation.js', [], SF_THEME_VERSION, [ 'strategy' => 'defer', 'in_footer' => true ] );
+	wp_enqueue_script( 'sf-animations', SF_THEME_URI . '/assets/js/animations.js', [], SF_THEME_VERSION, [ 'strategy' => 'defer', 'in_footer' => true ] );
+
+	if ( is_front_page() ) {
+		wp_enqueue_script( 'sf-faq', SF_THEME_URI . '/assets/js/faq.js', [], SF_THEME_VERSION, [ 'strategy' => 'defer', 'in_footer' => true ] );
+	}
+
+	if ( is_page_template( array_map( fn( $t ) => "page-templates/page-docs-{$t}.php", [ 'getting-started', 'data-sources', 'features', 'export-output', 'developer', 'integrations' ] ) ) ) {
+		wp_enqueue_script( 'sf-doc-nav', SF_THEME_URI . '/assets/js/doc-nav.js', [], SF_THEME_VERSION, [ 'strategy' => 'defer', 'in_footer' => true ] );
 	}
 }
 add_action( 'wp_enqueue_scripts', 'sf_theme_enqueue_assets' );
@@ -94,7 +94,12 @@ function sf_theme_legal_redirects(): void {
 		'/contact/'  => 'https://dross.net/contact/?topic=searchforge',
 	];
 
-	$path = trailingslashit( wp_parse_url( $_SERVER['REQUEST_URI'] ?? '', PHP_URL_PATH ) );
+	$raw_uri    = isset( $_SERVER['REQUEST_URI'] ) ? sanitize_text_field( wp_unslash( $_SERVER['REQUEST_URI'] ) ) : '';
+	$parsed_path = wp_parse_url( $raw_uri, PHP_URL_PATH );
+	if ( ! is_string( $parsed_path ) ) {
+		return;
+	}
+	$path = trailingslashit( $parsed_path );
 
 	if ( isset( $redirects[ $path ] ) ) {
 		wp_redirect( $redirects[ $path ], 301 );
@@ -152,7 +157,7 @@ function sf_get_breadcrumbs(): array {
  * @param array<int, array{id: string, label: string}> $sections Section ID and label pairs.
  */
 function sf_doc_sidebar( array $sections ): void {
-	echo '<aside class="sf-doc-sidebar"><p class="sf-doc-sidebar__title">On this page</p><ul class="sf-doc-nav">';
+	echo '<aside class="sf-doc-sidebar" aria-label="' . esc_attr__( 'On this page', 'searchforge-theme' ) . '"><p class="sf-doc-sidebar__title">On this page</p><ul class="sf-doc-nav">';
 	foreach ( $sections as $section ) {
 		$title_attr = '';
 		if ( ! empty( $section['title'] ) ) {
@@ -166,6 +171,21 @@ function sf_doc_sidebar( array $sections ): void {
 		);
 	}
 	echo '</ul></aside>';
+}
+
+/**
+ * Default navigation fallback when no menu is assigned.
+ */
+if ( ! function_exists( 'sf_default_nav' ) ) {
+	function sf_default_nav(): void {
+		echo '<ul class="sf-nav-list">';
+		echo '<li><a href="' . esc_url( home_url( '/#features' ) ) . '">Features</a></li>';
+		echo '<li><a href="' . esc_url( home_url( '/pricing/' ) ) . '">Pricing</a></li>';
+		echo '<li><a href="' . esc_url( home_url( '/docs/' ) ) . '">Docs</a></li>';
+		echo '<li><a href="' . esc_url( home_url( '/changelog/' ) ) . '">Changelog</a></li>';
+		echo '<li><a href="' . esc_url( home_url( '/enterprise/' ) ) . '">Enterprise</a></li>';
+		echo '</ul>';
+	}
 }
 
 // Load includes.

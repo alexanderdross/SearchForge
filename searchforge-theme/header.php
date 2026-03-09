@@ -3,7 +3,8 @@
 <head>
 	<meta charset="<?php bloginfo( 'charset' ); ?>">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='6' fill='%230f766e'/><text x='16' y='22' text-anchor='middle' fill='white' font-family='sans-serif' font-size='14' font-weight='bold'>SF</text></svg>">
+	<link rel="icon" type="image/png" sizes="32x32" href="<?php echo esc_url( get_template_directory_uri() ); ?>/assets/images/searchforge-logo.png">
+	<link rel="apple-touch-icon" sizes="180x180" href="<?php echo esc_url( get_template_directory_uri() ); ?>/assets/images/searchforge-logo.png">
 	<?php wp_head(); ?>
 </head>
 <body <?php body_class(); ?>>
@@ -16,7 +17,7 @@
 <header class="sf-header" role="banner">
 	<div class="sf-container sf-header__inner">
 		<a href="<?php echo esc_url( home_url( '/' ) ); ?>" class="sf-header__logo" aria-label="<?php esc_attr_e( 'SearchForge Home', 'searchforge-theme' ); ?>">
-			<span class="sf-header__logo-icon" aria-hidden="true">SF</span>
+			<img class="sf-header__logo-img" src="<?php echo esc_url( get_template_directory_uri() ); ?>/assets/images/searchforge-logo.png" alt="" aria-hidden="true" width="40" height="40">
 			<span class="sf-header__logo-brand">
 				<span class="sf-header__logo-text"><span class="sf-header__logo-search">Search</span>Forge</span>
 				<span class="sf-header__logo-claim">for WordPress</span>
@@ -36,7 +37,7 @@
 		</nav>
 
 		<div class="sf-header__actions">
-			<a href="/pricing/" class="sf-btn sf-btn--primary sf-btn--sm">Get Pro</a>
+			<a href="<?php echo esc_url( home_url( '/pricing/' ) ); ?>" class="sf-btn sf-btn--primary sf-btn--sm">Get Pro</a>
 		</div>
 
 		<button class="sf-header__toggle" aria-expanded="false" aria-controls="sf-mobile-menu" aria-label="<?php esc_attr_e( 'Toggle navigation', 'searchforge-theme' ); ?>">
@@ -44,7 +45,7 @@
 		</button>
 	</div>
 
-	<div id="sf-mobile-menu" class="sf-mobile-menu" hidden>
+	<nav id="sf-mobile-menu" class="sf-mobile-menu" hidden aria-label="<?php esc_attr_e( 'Mobile Navigation', 'searchforge-theme' ); ?>">
 		<?php
 		wp_nav_menu( [
 			'theme_location' => 'primary',
@@ -53,8 +54,8 @@
 			'depth'          => 1,
 		] );
 		?>
-		<a href="/pricing/" class="sf-btn sf-btn--primary sf-btn--block">Get Pro</a>
-	</div>
+		<a href="<?php echo esc_url( home_url( '/pricing/' ) ); ?>" class="sf-btn sf-btn--primary sf-btn--block">Get Pro</a>
+	</nav>
 </header>
 
 <?php get_template_part( 'template-parts/breadcrumb' ); ?>
@@ -62,15 +63,3 @@
 <main id="main-content" role="main">
 <?php
 
-/**
- * Default navigation fallback.
- */
-function sf_default_nav(): void {
-	echo '<ul class="sf-nav-list">';
-	echo '<li><a href="' . esc_url( home_url( '/#features' ) ) . '">Features</a></li>';
-	echo '<li><a href="/pricing/">Pricing</a></li>';
-	echo '<li><a href="/docs/">Docs</a></li>';
-	echo '<li><a href="/changelog/">Changelog</a></li>';
-	echo '<li><a href="/enterprise/">Enterprise</a></li>';
-	echo '</ul>';
-}

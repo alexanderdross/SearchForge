@@ -66,13 +66,6 @@ class SFLM_Database {
             )
         );
 
-        // Abgelaufene Rate-Limits
-        $wpdb->query(
-            $wpdb->prepare(
-                "DELETE FROM {$this->prefix}rate_limits WHERE window_end < %s",
-                gmdate( 'Y-m-d H:i:s' )
-            )
-        );
     }
 
     /**

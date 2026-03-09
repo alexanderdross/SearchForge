@@ -15,7 +15,7 @@ get_header();
 			Unlimited sites, unlimited scale. For agencies and organizations managing SEO across a portfolio.
 		</p>
 		<div class="sf-hero__actions" style="justify-content: center; margin-top: var(--space-xl);">
-			<a href="/checkout/?tier=enterprise" class="sf-btn sf-btn--primary sf-btn--lg">Get Enterprise</a>
+			<a href="<?php echo esc_url( home_url( '/checkout/?tier=enterprise' ) ); ?>" class="sf-btn sf-btn--primary sf-btn--lg" rel="noopener">Get Enterprise</a>
 			<a href="https://dross.net/contact/?topic=searchforge-enterprise" class="sf-btn sf-btn--outline-light sf-btn--lg">Contact Sales</a>
 		</div>
 	</div>
@@ -129,8 +129,8 @@ get_header();
 		</p>
 
 		<div style="display: flex; gap: var(--space-md); justify-content: center; flex-wrap: wrap;">
-			<a href="/checkout/?tier=enterprise" class="sf-btn sf-btn--primary sf-btn--lg">Get Enterprise &euro;599/yr</a>
-			<a href="/checkout/?tier=lifetime-enterprise" class="sf-btn sf-btn--outline sf-btn--lg">Lifetime &euro;1,499</a>
+			<a href="<?php echo esc_url( home_url( '/checkout/?tier=enterprise' ) ); ?>" class="sf-btn sf-btn--primary sf-btn--lg" rel="noopener">Get Enterprise &euro;599/yr</a>
+			<a href="<?php echo esc_url( home_url( '/checkout/?tier=lifetime-enterprise' ) ); ?>" class="sf-btn sf-btn--outline sf-btn--lg" rel="noopener">Lifetime &euro;1,499</a>
 		</div>
 
 		<p class="sf-text--muted" style="margin-top: var(--space-lg); font-size: 0.875rem;">
@@ -170,6 +170,7 @@ get_header();
 				</div>
 			<?php endforeach; ?>
 		</div>
+		<noscript><style>.sf-faq__answer[hidden] { display: block !important; }</style></noscript>
 	</div>
 </section>
 
@@ -206,7 +207,7 @@ echo wp_json_encode(
 		<h2>Ready to Scale Your SEO Intelligence?</h2>
 		<p class="sf-text--inverse-muted">Start with a 14-day free trial of all Enterprise features. No credit card required.</p>
 		<div class="sf-hero__actions" style="justify-content: center; margin-top: var(--space-xl);">
-			<a href="/checkout/?tier=enterprise" class="sf-btn sf-btn--primary sf-btn--lg">Start Free Trial</a>
+			<a href="<?php echo esc_url( home_url( '/checkout/?tier=enterprise' ) ); ?>" class="sf-btn sf-btn--primary sf-btn--lg" rel="noopener">Get Enterprise</a>
 			<a href="https://dross.net/contact/?topic=searchforge-enterprise" class="sf-btn sf-btn--outline-light sf-btn--lg">Talk to Sales</a>
 		</div>
 	</div>

@@ -3,24 +3,29 @@
  */
 
 :root {
-	/* Brand colors */
-	--sf-primary: #0f766e;
-	--sf-primary-dark: #0d5f59;
-	--sf-primary-light: #14b8a6;
-	--sf-accent: #f59e0b;
-	--sf-accent-dark: #d97706;
+	/* Fonts */
+	--font-heading: 'Outfit', sans-serif;
+	--font-body: 'Inter', sans-serif;
+	--font-mono: 'JetBrains Mono', monospace;
+
+	/* Brand colors — steel blue palette from logo */
+	--sf-primary: #5B7D9E;
+	--sf-primary-dark: #4A6A88;
+	--sf-primary-light: #7B9DB8;
+	--sf-accent: #D94F3D;
+	--sf-accent-dark: #C4432F;
 
 	/* Backgrounds */
-	--sf-bg-dark: #0f172a;
-	--sf-bg-dark-alt: #1e293b;
+	--sf-bg-dark: #2C3E50;
+	--sf-bg-dark-alt: #34495E;
 	--sf-bg-light: #f8fafc;
 	--sf-bg-card: #ffffff;
 
 	/* Text */
 	--sf-text: #1e293b;
-	--sf-text-muted: #64748b;
+	--sf-text-muted: #566779;
 	--sf-text-inverse: #f1f5f9;
-	--sf-text-inverse-muted: #b0bdd0;
+	--sf-text-inverse-muted: #c8d0de;
 
 	/* Borders */
 	--sf-border: #e2e8f0;
@@ -28,11 +33,11 @@
 
 	/* Status */
 	--sf-success: #10b981;
-	--sf-warning: #f59e0b;
+	--sf-warning: #E8913A;
 	--sf-error: #ef4444;
 
-	/* Gradient */
-	--sf-gradient: linear-gradient(135deg, #0f766e 0%, #14b8a6 50%, #f59e0b 100%);
+	/* Gradient — steel blue to red-orange spark */
+	--sf-gradient: linear-gradient(135deg, #2C3E50 0%, #5B7D9E 50%, #D94F3D 100%);
 
 	/* Spacing */
 	--space-xs: 0.25rem;

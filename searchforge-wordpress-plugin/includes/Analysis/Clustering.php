@@ -173,7 +173,8 @@ class Clustering {
 			$ngrams[] = $word;
 		}
 
-		for ( $i = 0; $i < count( $words ) - 1; $i++ ) {
+		$word_count = count( $words );
+		for ( $i = 0; $i < $word_count - 1; $i++ ) {
 			$ngrams[] = $words[ $i ] . ' ' . $words[ $i + 1 ];
 		}
 

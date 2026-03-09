@@ -15,7 +15,7 @@ get_header();
 			SEO intelligence meets cache warming. Two plugins, one price, 15% off.
 		</p>
 		<div class="sf-hero__actions" style="justify-content: center; margin-top: var(--space-xl);">
-			<a href="/checkout/?tier=bundle" class="sf-btn sf-btn--primary sf-btn--lg">Get the Bundle &euro;169/yr</a>
+			<a href="<?php echo esc_url( home_url( '/checkout/?tier=bundle' ) ); ?>" class="sf-btn sf-btn--primary sf-btn--lg" rel="noopener">Get the Bundle &euro;169/yr</a>
 			<a href="#how-it-works" class="sf-btn sf-btn--outline sf-btn--lg">How It Works</a>
 		</div>
 	</div>
@@ -109,7 +109,7 @@ get_header();
 				</table>
 			</div>
 
-			<a href="/checkout/?tier=bundle" class="sf-btn sf-btn--primary sf-btn--lg sf-btn--block">Get the Bundle &euro;169/yr</a>
+			<a href="<?php echo esc_url( home_url( '/checkout/?tier=bundle' ) ); ?>" class="sf-btn sf-btn--primary sf-btn--lg sf-btn--block" rel="noopener">Get the Bundle &euro;169/yr</a>
 			<p class="sf-text--muted" style="margin-top: var(--space-md); font-size: 0.875rem;">
 				30-day money-back guarantee. Cancel anytime.
 			</p>
@@ -171,6 +171,7 @@ get_header();
 				</div>
 			<?php endforeach; ?>
 		</div>
+		<noscript><style>.sf-faq__answer[hidden] { display: block !important; }</style></noscript>
 	</div>
 </section>
 
@@ -205,7 +206,7 @@ echo wp_json_encode(
 		<h2>Ready to Optimize Your Entire Workflow?</h2>
 		<p class="sf-text--inverse-muted">SEO intelligence + cache warming. Start with a 14-day free trial of both plugins.</p>
 		<div class="sf-hero__actions" style="justify-content: center; margin-top: var(--space-xl);">
-			<a href="/checkout/?tier=bundle" class="sf-btn sf-btn--primary sf-btn--lg">Start Free Trial</a>
+			<a href="<?php echo esc_url( home_url( '/checkout/?tier=bundle' ) ); ?>" class="sf-btn sf-btn--primary sf-btn--lg" rel="noopener">Get the Bundle</a>
 			<a href="https://dross.net/contact/?topic=searchforge-bundle" class="sf-btn sf-btn--outline sf-btn--lg" target="_blank" rel="noopener">Questions? Contact Us</a>
 		</div>
 	</div>

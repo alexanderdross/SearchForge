@@ -28,6 +28,7 @@ get_header();
 
 		<div class="sf-comparison-table-wrapper">
 			<table class="sf-comparison-table">
+				<caption class="screen-reader-text"><?php esc_html_e( 'Feature comparison across SearchForge pricing tiers', 'searchforge-theme' ); ?></caption>
 				<thead>
 					<tr>
 						<th scope="col">Feature</th>
@@ -38,45 +39,45 @@ get_header();
 					</tr>
 				</thead>
 				<tbody>
-					<tr><td colspan="5" style="background: var(--sf-bg-light); font-weight: 600;">Data Sources</td></tr>
-					<tr><td>Google Search Console</td><td>10 pages</td><td>Unlimited</td><td>Unlimited</td><td>Unlimited</td></tr>
-					<tr><td>Bing Webmaster Tools</td><td>&mdash;</td><td>Unlimited</td><td>Unlimited</td><td>Unlimited</td></tr>
-					<tr><td>Google Analytics 4</td><td>&mdash;</td><td>Unlimited</td><td>Unlimited</td><td>Unlimited</td></tr>
-					<tr><td>Keyword Planner</td><td>&mdash;</td><td>Unlimited</td><td>Unlimited</td><td>Unlimited</td></tr>
-					<tr><td>Google Trends</td><td>&mdash;</td><td>Unlimited</td><td>Unlimited</td><td>Unlimited</td></tr>
-					<tr><td>Google Business Profile</td><td>&mdash;</td><td>1 location</td><td>10 locations</td><td>Unlimited</td></tr>
-					<tr><td>Bing Places</td><td>&mdash;</td><td>1 location</td><td>10 locations</td><td>Unlimited</td></tr>
-					<tr><td>AI Visibility Monitor</td><td>&mdash;</td><td>20 queries/mo</td><td>200 queries/mo</td><td>Unlimited</td></tr>
-					<tr><td>Competitor Intelligence</td><td>&mdash;</td><td>10 keywords/mo</td><td>100 keywords/mo</td><td>Unlimited</td></tr>
+					<tr><th colspan="5" scope="colgroup" style="background: var(--sf-bg-light); font-weight: 600;">Data Sources</th></tr>
+					<tr><th scope="row">Google Search Console</th><td>10 pages</td><td>Unlimited</td><td>Unlimited</td><td>Unlimited</td></tr>
+					<tr><th scope="row">Bing Webmaster Tools</th><td>&mdash;</td><td>Unlimited</td><td>Unlimited</td><td>Unlimited</td></tr>
+					<tr><th scope="row">Google Analytics 4</th><td>&mdash;</td><td>Unlimited</td><td>Unlimited</td><td>Unlimited</td></tr>
+					<tr><th scope="row">Keyword Planner</th><td>&mdash;</td><td>Unlimited</td><td>Unlimited</td><td>Unlimited</td></tr>
+					<tr><th scope="row">Google Trends</th><td>&mdash;</td><td>Unlimited</td><td>Unlimited</td><td>Unlimited</td></tr>
+					<tr><th scope="row">Google Business Profile</th><td>&mdash;</td><td>1 location</td><td>10 locations</td><td>Unlimited</td></tr>
+					<tr><th scope="row">Bing Places</th><td>&mdash;</td><td>1 location</td><td>10 locations</td><td>Unlimited</td></tr>
+					<tr><th scope="row">AI Visibility Monitor</th><td>&mdash;</td><td>20 queries/mo</td><td>200 queries/mo</td><td>Unlimited</td></tr>
+					<tr><th scope="row">Competitor Intelligence</th><td>&mdash;</td><td>10 keywords/mo</td><td>100 keywords/mo</td><td>Unlimited</td></tr>
 
-					<tr><td colspan="5" style="background: var(--sf-bg-light); font-weight: 600;">Analysis &amp; Intelligence</td></tr>
-					<tr><td>SearchForge Score</td><td>Overall only</td><td>Full breakdown</td><td>Full breakdown</td><td>Full breakdown</td></tr>
-					<tr><td>Content Gap Analysis</td><td>Top 3</td><td>Unlimited</td><td>Unlimited</td><td>Unlimited</td></tr>
-					<tr><td>AI Content Briefs</td><td>&mdash;</td><td>10/mo</td><td>50/mo</td><td>Unlimited</td></tr>
-					<tr><td>Keyword Clustering</td><td>&mdash;</td><td>&#10003;</td><td>&#10003;</td><td>&#10003;</td></tr>
-					<tr><td>Cannibalization Detection</td><td>&mdash;</td><td>&#10003;</td><td>&#10003;</td><td>&#10003;</td></tr>
-					<tr><td>Content Decay Alerts</td><td>&mdash;</td><td>Email</td><td>Email + Slack</td><td>All channels</td></tr>
+					<tr><th colspan="5" scope="colgroup" style="background: var(--sf-bg-light); font-weight: 600;">Analysis &amp; Intelligence</th></tr>
+					<tr><th scope="row">SearchForge Score</th><td>Overall only</td><td>Full breakdown</td><td>Full breakdown</td><td>Full breakdown</td></tr>
+					<tr><th scope="row">Content Gap Analysis</th><td>Top 3</td><td>Unlimited</td><td>Unlimited</td><td>Unlimited</td></tr>
+					<tr><th scope="row">AI Content Briefs</th><td>&mdash;</td><td>10/mo</td><td>50/mo</td><td>Unlimited</td></tr>
+					<tr><th scope="row">Keyword Clustering</th><td>&mdash;</td><td>&#10003;</td><td>&#10003;</td><td>&#10003;</td></tr>
+					<tr><th scope="row">Cannibalization Detection</th><td>&mdash;</td><td>&#10003;</td><td>&#10003;</td><td>&#10003;</td></tr>
+					<tr><th scope="row">Content Decay Alerts</th><td>&mdash;</td><td>Email</td><td>Email + Slack</td><td>All channels</td></tr>
 
-					<tr><td colspan="5" style="background: var(--sf-bg-light); font-weight: 600;">Export &amp; Output</td></tr>
-					<tr><td>Markdown Export</td><td>GSC only</td><td>All sources</td><td>All sources</td><td>All sources</td></tr>
-					<tr><td>Combined Master Brief</td><td>&mdash;</td><td>Per page</td><td>Per page</td><td>Per page</td></tr>
-					<tr><td>llms.txt</td><td>Basic</td><td>Advanced</td><td>Advanced</td><td>Advanced</td></tr>
-					<tr><td>WP-CLI</td><td>&mdash;</td><td>&#10003;</td><td>Multi-site</td><td>Multi-site</td></tr>
-					<tr><td>REST API</td><td>&mdash;</td><td>Read-only</td><td>Full CRUD</td><td>Full CRUD</td></tr>
-					<tr><td>GitHub / GitLab Push</td><td>&mdash;</td><td>&mdash;</td><td>Auto-push</td><td>Auto-push</td></tr>
-					<tr><td>Scheduled Exports</td><td>&mdash;</td><td>&mdash;</td><td>Email, cloud</td><td>Email, cloud</td></tr>
-					<tr><td>White-label Reports</td><td>&mdash;</td><td>&mdash;</td><td>PDF/HTML</td><td>PDF/HTML</td></tr>
+					<tr><th colspan="5" scope="colgroup" style="background: var(--sf-bg-light); font-weight: 600;">Export &amp; Output</th></tr>
+					<tr><th scope="row">Markdown Export</th><td>GSC only</td><td>All sources</td><td>All sources</td><td>All sources</td></tr>
+					<tr><th scope="row">Combined Master Brief</th><td>&mdash;</td><td>Per page</td><td>Per page</td><td>Per page</td></tr>
+					<tr><th scope="row">llms.txt</th><td>Basic</td><td>Advanced</td><td>Advanced</td><td>Advanced</td></tr>
+					<tr><th scope="row">WP-CLI</th><td>&mdash;</td><td>&#10003;</td><td>Multi-site</td><td>Multi-site</td></tr>
+					<tr><th scope="row">REST API</th><td>&mdash;</td><td>Read-only</td><td>Full CRUD</td><td>Full CRUD</td></tr>
+					<tr><th scope="row">GitHub / GitLab Push</th><td>&mdash;</td><td>&mdash;</td><td>Auto-push</td><td>Auto-push</td></tr>
+					<tr><th scope="row">Scheduled Exports</th><td>&mdash;</td><td>&mdash;</td><td>Email, cloud</td><td>Email, cloud</td></tr>
+					<tr><th scope="row">White-label Reports</th><td>&mdash;</td><td>&mdash;</td><td>PDF/HTML</td><td>PDF/HTML</td></tr>
 
-					<tr><td colspan="5" style="background: var(--sf-bg-light); font-weight: 600;">History &amp; Monitoring</td></tr>
-					<tr><td>Data Retention</td><td>30 days</td><td>12 months</td><td>24 months</td><td>24 months</td></tr>
-					<tr><td>Historical Snapshots</td><td>&mdash;</td><td>Weekly</td><td>Daily</td><td>Daily</td></tr>
-					<tr><td>YoY Comparison</td><td>&mdash;</td><td>&#10003;</td><td>&#10003;</td><td>&#10003;</td></tr>
-					<tr><td>Weekly Digest Email</td><td>&mdash;</td><td>Single site</td><td>All sites</td><td>All sites</td></tr>
-					<tr><td>Slack / Discord Alerts</td><td>&mdash;</td><td>&mdash;</td><td>&#10003;</td><td>&#10003;</td></tr>
+					<tr><th colspan="5" scope="colgroup" style="background: var(--sf-bg-light); font-weight: 600;">History &amp; Monitoring</th></tr>
+					<tr><th scope="row">Data Retention</th><td>30 days</td><td>12 months</td><td>24 months</td><td>24 months</td></tr>
+					<tr><th scope="row">Historical Snapshots</th><td>&mdash;</td><td>Weekly</td><td>Daily</td><td>Daily</td></tr>
+					<tr><th scope="row">YoY Comparison</th><td>&mdash;</td><td>&#10003;</td><td>&#10003;</td><td>&#10003;</td></tr>
+					<tr><th scope="row">Weekly Digest Email</th><td>&mdash;</td><td>Single site</td><td>All sites</td><td>All sites</td></tr>
+					<tr><th scope="row">Slack / Discord Alerts</th><td>&mdash;</td><td>&mdash;</td><td>&#10003;</td><td>&#10003;</td></tr>
 
-					<tr><td colspan="5" style="background: var(--sf-bg-light); font-weight: 600;">Scale &amp; Collaboration</td></tr>
-					<tr><td>Sites</td><td>1</td><td>1</td><td>10</td><td>Unlimited</td></tr>
-					<tr><td>Team Members</td><td>1</td><td>3</td><td>Unlimited</td><td>Unlimited</td></tr>
+					<tr><th colspan="5" scope="colgroup" style="background: var(--sf-bg-light); font-weight: 600;">Scale &amp; Collaboration</th></tr>
+					<tr><th scope="row">Sites</th><td>1</td><td>1</td><td>10</td><td>Unlimited</td></tr>
+					<tr><th scope="row">Team Members</th><td>1</td><td>3</td><td>Unlimited</td><td>Unlimited</td></tr>
 					<tr><td>Client Portal</td><td>&mdash;</td><td>&mdash;</td><td>&#10003;</td><td>&#10003;</td></tr>
 					<tr><td>CacheWarmer Integration</td><td>&mdash;</td><td>Manual</td><td>Auto-trigger</td><td>Auto-trigger</td></tr>
 					<tr><td>Audit Log</td><td>&mdash;</td><td>&mdash;</td><td>&mdash;</td><td>&#10003;</td></tr>
@@ -97,13 +98,13 @@ get_header();
 				<h3>Lifetime Pro</h3>
 				<p style="font-size: 2.5rem; font-family: 'Outfit', sans-serif; font-weight: 700; margin: var(--space-md) 0;">&euro;249</p>
 				<p class="sf-text--muted">One-time payment. All Pro features forever for 1 site.</p>
-				<a href="/checkout/?tier=lifetime-pro" class="sf-btn sf-btn--primary" style="margin-top: var(--space-md);">Get Lifetime Pro</a>
+				<a href="<?php echo esc_url( home_url( '/checkout/?tier=lifetime-pro' ) ); ?>" class="sf-btn sf-btn--primary" style="margin-top: var(--space-md);" rel="noopener">Get Lifetime Pro</a>
 			</div>
 			<div class="sf-card sf-card--bordered" style="text-align: center;">
 				<h3>Lifetime Agency</h3>
 				<p style="font-size: 2.5rem; font-family: 'Outfit', sans-serif; font-weight: 700; margin: var(--space-md) 0;">&euro;599</p>
 				<p class="sf-text--muted">One-time payment. All Agency features forever for 10 sites.</p>
-				<a href="/checkout/?tier=lifetime-agency" class="sf-btn sf-btn--primary" style="margin-top: var(--space-md);">Get Lifetime Agency</a>
+				<a href="<?php echo esc_url( home_url( '/checkout/?tier=lifetime-agency' ) ); ?>" class="sf-btn sf-btn--primary" style="margin-top: var(--space-md);" rel="noopener">Get Lifetime Agency</a>
 			</div>
 		</div>
 	</div>
@@ -144,6 +145,7 @@ get_header();
 				</div>
 			<?php endforeach; ?>
 		</div>
+		<noscript><style>.sf-faq__answer[hidden] { display: block !important; }</style></noscript>
 	</div>
 </section>
 

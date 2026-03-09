@@ -44,6 +44,16 @@
 		transform: none;
 	}
 
+	/* Footer responsive */
+	.sf-footer__grid {
+		grid-template-columns: 1fr 1fr;
+		gap: var(--space-xl);
+	}
+	.sf-footer__brand {
+		grid-column: 1 / -1;
+		padding-right: 0;
+	}
+
 	.sf-footer__bottom-inner {
 		flex-direction: column;
 		gap: var(--space-md);
@@ -62,6 +72,12 @@
 	}
 	.sf-stats-bar__inner {
 		gap: var(--space-md);
+	}
+}
+
+@media (max-width: 480px) {
+	.sf-footer__grid {
+		grid-template-columns: 1fr;
 	}
 }
 

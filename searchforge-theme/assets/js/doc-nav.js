@@ -9,7 +9,9 @@
 
 	const sections = [];
 	links.forEach(function (link) {
-		const id = link.getAttribute('href').slice(1);
+		const href = link.getAttribute('href');
+		if (!href || !href.startsWith('#')) return;
+		const id = href.slice(1);
 		const el = document.getElementById(id);
 		if (el) sections.push({ el: el, link: link });
 	});

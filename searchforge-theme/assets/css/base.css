@@ -129,6 +129,8 @@ code, pre {
 .sf-text--muted a { text-decoration: underline; text-underline-offset: 2px; }
 .sf-text--large { font-size: 1.25rem; }
 .sf-text--inverse-muted { color: var(--sf-text-inverse-muted); }
+.sf-text--right { text-align: right; }
+.sf-text--line-through { text-decoration: line-through; }
 
 /* Grid */
 .sf-grid {
@@ -164,7 +166,7 @@ code, pre {
 	-webkit-text-fill-color: transparent;
 }
 .sf-section--dark .sf-gradient-text {
-	background: linear-gradient(135deg, #7B9DB8 0%, #c8d0de 50%, #D94F3D 100%);
+	background: linear-gradient(135deg, #6B8DA8 0%, #c8d0de 50%, #D94F3D 100%);
 	-webkit-background-clip: text;
 	background-clip: text;
 }

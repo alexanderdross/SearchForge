@@ -9,9 +9,9 @@
 	--font-mono: 'JetBrains Mono', monospace;
 
 	/* Brand colors — steel blue palette from logo */
-	--sf-primary: #4A708E;
-	--sf-primary-dark: #3B5F7A;
-	--sf-primary-light: #7B9DB8;
+	--sf-primary: #395F7A;
+	--sf-primary-dark: #2D4F68;
+	--sf-primary-light: #6B8DA8;
 	--sf-accent: #D94F3D;
 	--sf-accent-dark: #C4432F;
 
@@ -22,8 +22,8 @@
 	--sf-bg-card: #ffffff;
 
 	/* Text */
-	--sf-text: #1e293b;
-	--sf-text-muted: #566779;
+	--sf-text: #000000;
+	--sf-text-muted: #3d4f5f;
 	--sf-text-inverse: #f1f5f9;
 	--sf-text-inverse-muted: #c8d0de;
 
@@ -37,7 +37,7 @@
 	--sf-error: #ef4444;
 
 	/* Gradient — steel blue to red-orange spark */
-	--sf-gradient: linear-gradient(135deg, #2C3E50 0%, #5B7D9E 50%, #D94F3D 100%);
+	--sf-gradient: linear-gradient(135deg, #2C3E50 0%, #4A708E 50%, #D94F3D 100%);
 
 	/* Spacing */
 	--space-xs: 0.25rem;

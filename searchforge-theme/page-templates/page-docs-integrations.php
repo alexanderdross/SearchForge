@@ -89,7 +89,7 @@ $sections = [
 				<li><strong>Auto-trigger (Agency/Enterprise)</strong> &mdash; Automatically warm cache when SearchForge detects content changes or after scheduled exports.</li>
 			</ul>
 			<h3>Setup</h3>
-			<p>Requires the <a href="https://cachewarmer.drossmedia.de/" rel="noopener">CacheWarmer plugin</a> installed and activated. Configure at <strong>SearchForge &rarr; Settings &rarr; Integrations &rarr; CacheWarmer</strong>.</p>
+			<p>Requires the <a href="https://cachewarmer.drossmedia.de/" rel="noopener" title="CacheWarmer — Automated Cache Warming Plugin for WordPress">CacheWarmer plugin</a> installed and activated. Configure at <strong>SearchForge &rarr; Settings &rarr; Integrations &rarr; CacheWarmer</strong>.</p>
 		</article>
 
 		<hr style="border: none; border-top: 1px solid var(--sf-border); margin: var(--space-2xl) 0;">
@@ -114,7 +114,7 @@ $sections = [
 			<p>Export SEO data directly to Notion databases for custom dashboards and team collaboration.</p>
 			<h3>Setup</h3>
 			<ol class="sf-content">
-				<li>Create a Notion integration at <a href="https://www.notion.so/my-integrations" rel="noopener">notion.so/my-integrations</a>.</li>
+				<li>Create a Notion integration at <a href="https://www.notion.so/my-integrations" rel="noopener" title="Notion Integrations — Create API Tokens for SearchForge Export">notion.so/my-integrations</a>.</li>
 				<li>Share your target database with the integration.</li>
 				<li>Paste the integration token and database ID into <strong>SearchForge &rarr; Settings &rarr; Integrations &rarr; Notion</strong>.</li>
 			</ol>
@@ -145,7 +145,7 @@ $sections = [
 <section class="sf-section sf-section--light" style="text-align: center;">
 	<div class="sf-container sf-container--narrow">
 		<p class="sf-text--muted">
-			<a href="<?php echo esc_url( home_url( '/docs/' ) ); ?>">&larr; Back to Documentation</a>
+			<a href="<?php echo esc_url( home_url( '/docs/' ) ); ?>" title="SearchForge Documentation — Setup, Configuration &amp; API Reference">&larr; Back to Documentation</a>
 		</p>
 	</div>
 </section>

@@ -7,7 +7,7 @@
 
 defined( 'ABSPATH' ) || exit;
 
-define( 'SF_THEME_VERSION', '1.2.0' );
+define( 'SF_THEME_VERSION', '1.3.0' );
 define( 'SF_THEME_DIR', get_template_directory() );
 define( 'SF_THEME_URI', get_template_directory_uri() );
 
@@ -35,13 +35,7 @@ add_action( 'after_setup_theme', 'sf_theme_setup' );
  * Enqueue styles and scripts.
  */
 function sf_theme_enqueue_assets(): void {
-	// Fonts — self-hosted for GDPR compliance (no Google CDN requests).
-	wp_enqueue_style(
-		'sf-fonts',
-		SF_THEME_URI . '/assets/fonts/fonts.css',
-		[],
-		SF_THEME_VERSION
-	);
+	// Fonts are inlined in <head> via sf_theme_inline_fonts() — no external CSS file needed.
 
 	// Stylesheets — all depend on variables only (allows parallel loading).
 	$css_files = [ 'variables', 'base', 'components', 'sections', 'responsive' ];
@@ -49,7 +43,7 @@ function sf_theme_enqueue_assets(): void {
 		wp_enqueue_style(
 			"sf-{$file}",
 			SF_THEME_URI . "/assets/css/{$file}.css",
-			$file === 'variables' ? [ 'sf-fonts' ] : [ 'sf-variables' ],
+			$file === 'variables' ? [] : [ 'sf-variables' ],
 			SF_THEME_VERSION
 		);
 	}
@@ -58,7 +52,7 @@ function sf_theme_enqueue_assets(): void {
 	wp_enqueue_script( 'sf-navigation', SF_THEME_URI . '/assets/js/navigation.js', [], SF_THEME_VERSION, [ 'strategy' => 'defer', 'in_footer' => true ] );
 	wp_enqueue_script( 'sf-animations', SF_THEME_URI . '/assets/js/animations.js', [], SF_THEME_VERSION, [ 'strategy' => 'defer', 'in_footer' => true ] );
 
-	if ( is_front_page() ) {
+	if ( is_front_page() || is_page_template( [ 'page-templates/page-pricing.php', 'page-templates/page-bundle.php', 'page-templates/page-enterprise.php' ] ) ) {
 		wp_enqueue_script( 'sf-faq', SF_THEME_URI . '/assets/js/faq.js', [], SF_THEME_VERSION, [ 'strategy' => 'defer', 'in_footer' => true ] );
 	}
 
@@ -179,13 +173,65 @@ function sf_doc_sidebar( array $sections ): void {
 if ( ! function_exists( 'sf_default_nav' ) ) {
 	function sf_default_nav(): void {
 		echo '<ul class="sf-nav-list">';
-		echo '<li><a href="' . esc_url( home_url( '/#features' ) ) . '" title="SearchForge Features — SEO Score, AI Briefs, Keyword Clustering &amp; More">Features</a></li>';
-		echo '<li><a href="' . esc_url( home_url( '/pricing/' ) ) . '" title="SearchForge Pricing — Free, Pro &amp; Agency Plans">Pricing</a></li>';
-		echo '<li><a href="' . esc_url( home_url( '/docs/' ) ) . '" title="SearchForge Documentation — Setup, Configuration &amp; API Reference">Docs</a></li>';
-		echo '<li><a href="' . esc_url( home_url( '/changelog/' ) ) . '" title="SearchForge Changelog — Version History &amp; Release Notes">Changelog</a></li>';
-		echo '<li><a href="' . esc_url( home_url( '/enterprise/' ) ) . '" title="SearchForge Enterprise — Multi-Site, White-Label &amp; Priority Support">Enterprise</a></li>';
+		echo '<li><a href="' . esc_url( home_url( '/#features' ) ) . '">Features</a></li>';
+		echo '<li><a href="' . esc_url( home_url( '/pricing/' ) ) . '">Pricing</a></li>';
+		echo '<li><a href="' . esc_url( home_url( '/docs/' ) ) . '">Docs</a></li>';
+		echo '<li><a href="' . esc_url( home_url( '/changelog/' ) ) . '">Changelog</a></li>';
+		echo '<li><a href="' . esc_url( home_url( '/enterprise/' ) ) . '">Enterprise</a></li>';
 		echo '</ul>';
 	}
+}
+
+/**
+ * Render an FAQ accordion section with FAQPage JSON-LD schema.
+ *
+ * @param array<int, array{q: string, a: string}> $faqs     FAQ items.
+ * @param string                                    $id_prefix Unique prefix for ARIA IDs.
+ */
+function sf_render_faq( array $faqs, string $id_prefix = 'faq' ): void {
+	?>
+	<div class="sf-faq" role="list">
+		<?php foreach ( $faqs as $i => $faq ) :
+			$slug = sanitize_title( $faq['q'] );
+		?>
+			<div class="sf-faq__item" id="<?php echo esc_attr( $slug ); ?>" role="listitem">
+				<button class="sf-faq__question" aria-expanded="false" aria-controls="<?php echo esc_attr( $id_prefix ); ?>-<?php echo esc_attr( $i ); ?>">
+					<span><?php echo esc_html( $faq['q'] ); ?></span>
+					<span class="sf-faq__chevron" aria-hidden="true"></span>
+				</button>
+				<div class="sf-faq__answer" id="<?php echo esc_attr( $id_prefix ); ?>-<?php echo esc_attr( $i ); ?>" hidden>
+					<p><?php echo esc_html( $faq['a'] ); ?></p>
+				</div>
+			</div>
+		<?php endforeach; ?>
+	</div>
+	<noscript><style>.sf-faq__answer[hidden] { display: block !important; }</style></noscript>
+
+	<script type="application/ld+json">
+	<?php
+	echo wp_json_encode(
+		[
+			'@context'   => 'https://schema.org',
+			'@type'      => 'FAQPage',
+			'mainEntity' => array_map(
+				function ( $faq ) {
+					return [
+						'@type'          => 'Question',
+						'name'           => $faq['q'],
+						'acceptedAnswer' => [
+							'@type' => 'Answer',
+							'text'  => $faq['a'],
+						],
+					];
+				},
+				$faqs
+			),
+		],
+		JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE
+	);
+	?>
+	</script>
+	<?php
 }
 
 // Load includes.

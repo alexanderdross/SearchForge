@@ -183,19 +183,17 @@ function sf_theme_output_navigation_schema(): void {
 	];
 
 	$elements = [];
-	foreach ( $nav_items as $i => $item ) {
+	foreach ( $nav_items as $item ) {
 		$elements[] = [
-			'@type'    => 'SiteNavigationElement',
-			'position' => $i + 1,
-			'name'     => $item['name'],
-			'url'      => $item['url'],
+			'@type' => 'SiteNavigationElement',
+			'name'  => $item['name'],
+			'url'   => $item['url'],
 		];
 	}
 
 	$schema = [
-		'@context'        => 'https://schema.org',
-		'@type'           => 'ItemList',
-		'itemListElement' => $elements,
+		'@context' => 'https://schema.org',
+		'@graph'   => $elements,
 	];
 
 	echo '<script type="application/ld+json">' . wp_json_encode( $schema, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE ) . '</script>' . "\n";

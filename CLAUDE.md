@@ -18,8 +18,8 @@ SearchForge is a product ecosystem by **Dross:Media GmbH** that transforms raw S
 
 ```
 SearchForge/
+├── .gitignore                             # Git ignore rules
 ├── CLAUDE.md                              # This file
-├── THEME-PLAN.md                          # Design system & theme development plan
 ├── searchforge-theme/                     # WordPress marketing theme (v1.1.0)
 ├── searchforge-theme.zip                  # Pre-built theme package
 ├── searchforge-wordpress-plugin/          # Core SEO plugin (v2.0.0)
@@ -96,7 +96,7 @@ searchforge-theme/
     └── og-default.png           # Social sharing image (1200x630)
 ```
 
-### Design System (from THEME-PLAN.md)
+### Design System
 
 **Brand Colors:**
 | Token | Hex | Usage |
@@ -627,7 +627,6 @@ Pre-built ZIP packages are at the repository root:
 
 ### Related Documentation
 
-- `THEME-PLAN.md` — Comprehensive design system, color palette, typography, page structure, development plan (~640 lines)
 - `searchforge-wordpress-plugin/CHANGELOG.md` — Plugin version history
 - `searchforge-wordpress-plugin/tests/TEST-REPORT.md` — Plugin QA audit
 - `searchforge-license-manager/tests/TEST-REPORT.md` — License Manager QA audit

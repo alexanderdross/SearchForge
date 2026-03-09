@@ -1,0 +1,13 @@
+# macOS
+.DS_Store
+
+# Composer
+vendor/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+
+# Environment
+.env

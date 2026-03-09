@@ -35,13 +35,7 @@ add_action( 'after_setup_theme', 'sf_theme_setup' );
  * Enqueue styles and scripts.
  */
 function sf_theme_enqueue_assets(): void {
-	// Fonts — self-hosted for GDPR compliance (no Google CDN requests).
-	wp_enqueue_style(
-		'sf-fonts',
-		SF_THEME_URI . '/assets/fonts/fonts.css',
-		[],
-		SF_THEME_VERSION
-	);
+	// Fonts are inlined in <head> via sf_theme_inline_fonts() — no external CSS file needed.
 
 	// Stylesheets — all depend on variables only (allows parallel loading).
 	$css_files = [ 'variables', 'base', 'components', 'sections', 'responsive' ];
@@ -49,7 +43,7 @@ function sf_theme_enqueue_assets(): void {
 		wp_enqueue_style(
 			"sf-{$file}",
 			SF_THEME_URI . "/assets/css/{$file}.css",
-			$file === 'variables' ? [ 'sf-fonts' ] : [ 'sf-variables' ],
+			$file === 'variables' ? [] : [ 'sf-variables' ],
 			SF_THEME_VERSION
 		);
 	}

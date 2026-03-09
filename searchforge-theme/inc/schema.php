@@ -174,7 +174,7 @@ function sf_theme_output_schema(): void {
 			'@type'            => 'Article',
 			'@id'              => $site_url . '/#article',
 			'headline'         => 'SEO Data, LLM-Ready.',
-			'description'      => 'Connects Google Search Console, Bing Webmaster Tools, Google Business Profile, Bing Places, Google Keyword Planner, GA4 and Google Trends — continuously collecting your SEO data and turning it into structured markdown briefs for LLMs to design, optimize, and evolve your website. Perfect for vibe coding: instead of letting an LLM guess your content and information architecture, this plugin feeds it real, historically collected web data — boosting your new website\'s SEO, GEO, and AEO.',
+			'description'      => 'Connects GSC, Bing Webmaster Tools, Google Business Profile, Bing Places, Keyword Planner, GA4 and Google Trends. Continuously collects your SEO data and converts it into structured markdown briefs for LLMs. Built for vibe coding — grounds AI decisions in real, historical web data instead of guesswork. Directly shapes your website\'s content and information architecture to boost SEO, GEO and AEO.',
 			'url'              => $site_url . '/',
 			'mainEntityOfPage' => [ '@id' => $site_url . '/#collection-page' ],
 			'author'           => [ '@id' => $org_id ],

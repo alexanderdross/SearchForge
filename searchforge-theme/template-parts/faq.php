@@ -12,7 +12,7 @@ $faqs = [
 	],
 	[
 		'q' => 'Do I need API keys for all sources?',
-		'a' => 'Google sources (GSC, GA4, Keyword Planner, Business Profile) use one-click OAuth — no API keys needed. Bing uses OAuth or an API key from Bing Webmaster Tools. Google Trends and competitor monitoring use SerpApi, which requires a separate API key (you provide your own).',
+		'a' => 'Google sources (GSC, GA4, Keyword Planner, Business Profile) use one-click OAuth - no API keys needed. Bing uses OAuth or an API key from Bing Webmaster Tools. Google Trends and competitor monitoring use SerpApi, which requires a separate API key (you provide your own).',
 	],
 	[
 		'q' => 'How does the free tier work?',
@@ -20,7 +20,7 @@ $faqs = [
 	],
 	[
 		'q' => 'What makes SearchForge different from Yoast or Rank Math?',
-		'a' => 'Yoast and Rank Math focus on on-page SEO optimization (meta tags, readability, schema). SearchForge focuses on data synthesis — pulling real performance data from multiple sources and turning it into actionable, AI-ready markdown briefs. They complement each other perfectly.',
+		'a' => 'Yoast and Rank Math focus on on-page SEO optimization (meta tags, readability, schema). SearchForge focuses on data synthesis - pulling real performance data from multiple sources and turning it into actionable, AI-ready markdown briefs. They complement each other perfectly.',
 	],
 	[
 		'q' => 'How does AI Visibility Monitoring work?',
@@ -28,7 +28,7 @@ $faqs = [
 	],
 	[
 		'q' => 'Can I use SearchForge with Claude Code or ChatGPT?',
-		'a' => 'Yes — this is a core use case. Export per-page markdown briefs, then paste them into Claude Code or ChatGPT for AI-assisted content optimization. The briefs include all the context an LLM needs: rankings, traffic, competitor data, and specific recommendations.',
+		'a' => 'Yes - this is a core use case. Export per-page markdown briefs, then paste them into Claude Code or ChatGPT for AI-assisted content optimization. The briefs include all the context an LLM needs: rankings, traffic, competitor data, and specific recommendations.',
 	],
 	[
 		'q' => 'What is llms.txt and why do I need it?',
@@ -40,7 +40,7 @@ $faqs = [
 	],
 	[
 		'q' => 'Can I cancel my Pro subscription anytime?',
-		'a' => 'Yes. Cancel anytime from your account dashboard. Your Pro features remain active until the end of your billing period. After that, your site reverts to the free tier — no data is deleted.',
+		'a' => 'Yes. Cancel anytime from your account dashboard. Your Pro features remain active until the end of your billing period. After that, your site reverts to the free tier - no data is deleted.',
 	],
 ];
 ?>

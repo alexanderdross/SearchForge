@@ -1,6 +1,6 @@
 <?php
 /**
- * SearchForge Theme — functions and definitions.
+ * SearchForge Theme - functions and definitions.
  *
  * @package SearchForge_Theme
  */
@@ -35,9 +35,9 @@ add_action( 'after_setup_theme', 'sf_theme_setup' );
  * Enqueue styles and scripts.
  */
 function sf_theme_enqueue_assets(): void {
-	// Fonts are inlined in <head> via sf_theme_inline_fonts() — no external CSS file needed.
+	// Fonts are inlined in <head> via sf_theme_inline_fonts() - no external CSS file needed.
 
-	// Stylesheets — all depend on variables only (allows parallel loading).
+	// Stylesheets - all depend on variables only (allows parallel loading).
 	$css_files = [ 'variables', 'base', 'components', 'sections', 'responsive' ];
 	foreach ( $css_files as $file ) {
 		wp_enqueue_style(
@@ -48,7 +48,7 @@ function sf_theme_enqueue_assets(): void {
 		);
 	}
 
-	// Scripts — conditionally load only what the current page needs.
+	// Scripts - conditionally load only what the current page needs.
 	wp_enqueue_script( 'sf-navigation', SF_THEME_URI . '/assets/js/navigation.js', [], SF_THEME_VERSION, [ 'strategy' => 'defer', 'in_footer' => true ] );
 	wp_enqueue_script( 'sf-animations', SF_THEME_URI . '/assets/js/animations.js', [], SF_THEME_VERSION, [ 'strategy' => 'defer', 'in_footer' => true ] );
 
@@ -173,11 +173,11 @@ function sf_doc_sidebar( array $sections ): void {
 if ( ! function_exists( 'sf_default_nav' ) ) {
 	function sf_default_nav(): void {
 		echo '<ul class="sf-nav-list">';
-		echo '<li><a href="' . esc_url( home_url( '/#features' ) ) . '" title="SearchForge Features — SEO Score, AI Briefs, Competitor Analysis &amp; More">Features</a></li>';
-		echo '<li><a href="' . esc_url( home_url( '/pricing/' ) ) . '" title="SearchForge Pricing — Compare Free, Pro &amp; Agency Plans">Pricing</a></li>';
-		echo '<li><a href="' . esc_url( home_url( '/docs/' ) ) . '" title="SearchForge Documentation — Setup, Configuration &amp; API Reference">Docs</a></li>';
-		echo '<li><a href="' . esc_url( home_url( '/changelog/' ) ) . '" title="SearchForge Changelog — Version History &amp; Release Notes">Changelog</a></li>';
-		echo '<li><a href="' . esc_url( home_url( '/enterprise/' ) ) . '" title="SearchForge Enterprise — Multi-Site, White-Label &amp; Priority Support">Enterprise</a></li>';
+		echo '<li><a href="' . esc_url( home_url( '/#features' ) ) . '" title="SearchForge Features - SEO Score, AI Briefs, Competitor Analysis &amp; More">Features</a></li>';
+		echo '<li><a href="' . esc_url( home_url( '/pricing/' ) ) . '" title="SearchForge Pricing - Compare Free, Pro &amp; Agency Plans">Pricing</a></li>';
+		echo '<li><a href="' . esc_url( home_url( '/docs/' ) ) . '" title="SearchForge Documentation - Setup, Configuration &amp; API Reference">Docs</a></li>';
+		echo '<li><a href="' . esc_url( home_url( '/changelog/' ) ) . '" title="SearchForge Changelog - Version History &amp; Release Notes">Changelog</a></li>';
+		echo '<li><a href="' . esc_url( home_url( '/enterprise/' ) ) . '" title="SearchForge Enterprise - Multi-Site, White-Label &amp; Priority Support">Enterprise</a></li>';
 		echo '</ul>';
 	}
 }

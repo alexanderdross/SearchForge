@@ -294,8 +294,8 @@ get_header();
 		<h2>Ready to Try SearchForge?</h2>
 		<p class="sf-text--inverse-muted">Start free with Google Search Console. Upgrade to Pro when you need more.</p>
 		<div class="sf-hero__actions sf-section__actions">
-			<a href="<?php echo esc_url( home_url( '/pricing/' ) ); ?>" class="sf-btn sf-btn--primary sf-btn--lg" title="SearchForge Pricing — Compare Free, Pro &amp; Agency Plans">View Pricing</a>
-			<a href="<?php echo esc_url( home_url( '/docs/' ) ); ?>" class="sf-btn sf-btn--outline-light sf-btn--lg" title="SearchForge Documentation — Setup, Configuration &amp; API Reference">Read the Docs</a>
+			<a href="<?php echo esc_url( home_url( '/pricing/' ) ); ?>" class="sf-btn sf-btn--primary sf-btn--lg" title="SearchForge Pricing - Compare Free, Pro &amp; Agency Plans">View Pricing</a>
+			<a href="<?php echo esc_url( home_url( '/docs/' ) ); ?>" class="sf-btn sf-btn--outline-light sf-btn--lg" title="SearchForge Documentation - Setup, Configuration &amp; API Reference">Read the Docs</a>
 		</div>
 	</div>
 </section>

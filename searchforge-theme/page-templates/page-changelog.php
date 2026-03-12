@@ -261,7 +261,7 @@ get_header();
 <section class="sf-section sf-section--light" style="text-align: center;">
 	<div class="sf-container sf-container--narrow">
 		<p class="sf-text--muted">
-			<a href="<?php echo esc_url( home_url( '/docs/' ) ); ?>" title="SearchForge Documentation — Setup, Configuration &amp; API Reference">&larr; Back to Documentation</a>
+			<a href="<?php echo esc_url( home_url( '/docs/' ) ); ?>" title="SearchForge Documentation - Setup, Configuration &amp; API Reference">&larr; Back to Documentation</a>
 		</p>
 	</div>
 </section>

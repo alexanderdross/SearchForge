@@ -1,5 +1,5 @@
 /**
- * SearchForge Theme — Design Tokens.
+ * SearchForge Theme - Design Tokens.
  */
 
 :root {
@@ -8,7 +8,7 @@
 	--font-body: 'Inter', sans-serif;
 	--font-mono: 'JetBrains Mono', monospace;
 
-	/* Brand colors — steel blue palette from logo */
+	/* Brand colors - steel blue palette from logo */
 	--sf-primary: #395F7A;
 	--sf-primary-dark: #2D4F68;
 	--sf-primary-light: #6B8DA8;
@@ -36,7 +36,7 @@
 	--sf-warning: #E8913A;
 	--sf-error: #ef4444;
 
-	/* Gradient — steel blue to red-orange spark */
+	/* Gradient - steel blue to red-orange spark */
 	--sf-gradient: linear-gradient(135deg, #2C3E50 0%, #4A708E 50%, #D94F3D 100%);
 
 	/* Spacing */

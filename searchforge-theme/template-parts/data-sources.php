@@ -62,7 +62,7 @@ $sources = [
 |------------------|-------|---------------|----------|
 | Google AI Overview| Yes  | 58%           | Stable   |
 | ChatGPT          | Yes   | 25%           | ↑ +15%   |
-| Perplexity       | No    | 0%            | —        |</code></pre>
+| Perplexity       | No    | 0%            | -        |</code></pre>
 		</div>
 	</div>
 </section>

@@ -1,5 +1,5 @@
 /**
- * SearchForge Theme — Scroll-triggered fade-in animations.
+ * SearchForge Theme - Scroll-triggered fade-in animations.
  */
 ( function() {
 	'use strict';

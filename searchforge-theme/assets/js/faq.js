@@ -1,5 +1,5 @@
 /**
- * SearchForge Theme — FAQ accordion with hash navigation.
+ * SearchForge Theme - FAQ accordion with hash navigation.
  */
 ( function() {
 	'use strict';

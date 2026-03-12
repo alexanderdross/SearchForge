@@ -126,7 +126,7 @@ function sf_theme_output_schema(): void {
 		$graph[] = [
 			'@type'       => 'CollectionPage',
 			'@id'         => $site_url . '/#collection-page',
-			'name'        => 'SearchForge — Turn SEO Data into LLM-Ready Intelligence',
+			'name'        => 'SearchForge - Turn SEO Data into LLM-Ready Intelligence',
 			'description' => 'SearchForge is a WordPress plugin that unifies Google Search Console, Bing, GA4, Trends, and Keyword Planner data into AI-ready markdown briefs. Free tier available.',
 			'url'         => $site_url . '/',
 			'isPartOf'    => [ '@id' => $site_id ],
@@ -174,7 +174,7 @@ function sf_theme_output_schema(): void {
 			'@type'            => 'Article',
 			'@id'              => $site_url . '/#article',
 			'headline'         => 'SEO Data, LLM-Ready.',
-			'description'      => 'Connects GSC, Bing Webmaster Tools, Google Business Profile, Bing Places, Keyword Planner, GA4 and Google Trends. Continuously collects your SEO data and converts it into structured markdown briefs for LLMs. Built for vibe coding — grounds AI decisions in real, historical web data instead of guesswork. Directly shapes your website\'s content and information architecture to boost SEO, GEO and AEO.',
+			'description'      => 'Connects GSC, Bing Webmaster Tools, Google Business Profile, Bing Places, Keyword Planner, GA4 and Google Trends. Continuously collects your SEO data and converts it into structured markdown briefs for LLMs. Built for vibe coding - grounds AI decisions in real, historical web data instead of guesswork. Directly shapes your website\'s content and information architecture to boost SEO, GEO and AEO.',
 			'url'              => $site_url . '/',
 			'mainEntityOfPage' => [ '@id' => $site_url . '/#collection-page' ],
 			'author'           => [ '@id' => $org_id ],

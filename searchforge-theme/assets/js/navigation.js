@@ -1,5 +1,5 @@
 /**
- * SearchForge Theme — Mobile navigation toggle.
+ * SearchForge Theme - Mobile navigation toggle.
  */
 ( function() {
 	'use strict';

@@ -40,7 +40,7 @@
 			</ul>
 			<div class="sf-hero__actions">
 				<a href="https://wordpress.org/plugins/searchforge/" class="sf-btn sf-btn--primary sf-btn--lg" title="Download SearchForge Free from WordPress.org">Get Started Free</a>
-				<a href="<?php echo esc_url( home_url( '/pricing/' ) ); ?>" class="sf-btn sf-btn--outline sf-btn--lg" title="SearchForge Pricing — Free, Pro &amp; Agency Plans">View Pricing</a>
+				<a href="<?php echo esc_url( home_url( '/pricing/' ) ); ?>" class="sf-btn sf-btn--outline sf-btn--lg" title="SearchForge Pricing - Free, Pro &amp; Agency Plans">View Pricing</a>
 			</div>
 		</div>
 

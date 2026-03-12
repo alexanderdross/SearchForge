@@ -98,13 +98,13 @@ get_header();
 				<h3>Lifetime Pro</h3>
 				<p class="sf-lifetime-card__price">&euro;249</p>
 				<p class="sf-text--muted">One-time payment. All Pro features forever for 1 site.</p>
-				<a href="<?php echo esc_url( home_url( '/checkout/?tier=lifetime-pro' ) ); ?>" class="sf-btn sf-btn--primary sf-lifetime-card__btn" rel="noopener" title="SearchForge Lifetime Pro — One-Time Payment, All Pro Features Forever">Get Lifetime Pro</a>
+				<a href="<?php echo esc_url( home_url( '/checkout/?tier=lifetime-pro' ) ); ?>" class="sf-btn sf-btn--primary sf-lifetime-card__btn" rel="noopener" title="SearchForge Lifetime Pro - One-Time Payment, All Pro Features Forever">Get Lifetime Pro</a>
 			</div>
 			<div class="sf-card sf-card--bordered sf-lifetime-card">
 				<h3>Lifetime Agency</h3>
 				<p class="sf-lifetime-card__price">&euro;599</p>
 				<p class="sf-text--muted">One-time payment. All Agency features forever for 10 sites.</p>
-				<a href="<?php echo esc_url( home_url( '/checkout/?tier=lifetime-agency' ) ); ?>" class="sf-btn sf-btn--primary sf-lifetime-card__btn" rel="noopener" title="SearchForge Lifetime Agency — One-Time Payment, All Agency Features for 10 Sites">Get Lifetime Agency</a>
+				<a href="<?php echo esc_url( home_url( '/checkout/?tier=lifetime-agency' ) ); ?>" class="sf-btn sf-btn--primary sf-lifetime-card__btn" rel="noopener" title="SearchForge Lifetime Agency - One-Time Payment, All Agency Features for 10 Sites">Get Lifetime Agency</a>
 			</div>
 		</div>
 	</div>

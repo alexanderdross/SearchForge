@@ -15,7 +15,7 @@ get_header();
 			SEO intelligence meets cache warming. Two plugins, one price, 15% off.
 		</p>
 		<div class="sf-hero__actions sf-page-hero__actions">
-			<a href="<?php echo esc_url( home_url( '/checkout/?tier=bundle' ) ); ?>" class="sf-btn sf-btn--primary sf-btn--lg" rel="noopener" title="SearchForge + CacheWarmer Bundle — &euro;169/yr, Save 15%">Get the Bundle &euro;169/yr</a>
+			<a href="<?php echo esc_url( home_url( '/checkout/?tier=bundle' ) ); ?>" class="sf-btn sf-btn--primary sf-btn--lg" rel="noopener" title="SearchForge + CacheWarmer Bundle - &euro;169/yr, Save 15%">Get the Bundle &euro;169/yr</a>
 			<a href="#how-it-works" class="sf-btn sf-btn--outline sf-btn--lg" title="How the SearchForge + CacheWarmer Bundle Works Together">How It Works</a>
 		</div>
 	</div>
@@ -109,7 +109,7 @@ get_header();
 				</table>
 			</div>
 
-			<a href="<?php echo esc_url( home_url( '/checkout/?tier=bundle' ) ); ?>" class="sf-btn sf-btn--primary sf-btn--lg sf-btn--block" rel="noopener" title="SearchForge + CacheWarmer Bundle — &euro;169/yr, Save 15%">Get the Bundle &euro;169/yr</a>
+			<a href="<?php echo esc_url( home_url( '/checkout/?tier=bundle' ) ); ?>" class="sf-btn sf-btn--primary sf-btn--lg sf-btn--block" rel="noopener" title="SearchForge + CacheWarmer Bundle - &euro;169/yr, Save 15%">Get the Bundle &euro;169/yr</a>
 			<p class="sf-text--muted sf-section__fine-print">
 				30-day money-back guarantee. Cancel anytime.
 			</p>
@@ -167,8 +167,8 @@ get_header();
 		<h2>Ready to Optimize Your Entire Workflow?</h2>
 		<p class="sf-text--inverse-muted">SEO intelligence + cache warming. Start with a 14-day free trial of both plugins.</p>
 		<div class="sf-hero__actions sf-section__actions">
-			<a href="<?php echo esc_url( home_url( '/checkout/?tier=bundle' ) ); ?>" class="sf-btn sf-btn--primary sf-btn--lg" rel="noopener" title="SearchForge + CacheWarmer Bundle — Start Your 14-Day Free Trial">Get the Bundle</a>
-			<a href="https://dross.net/contact/?topic=searchforge-bundle" class="sf-btn sf-btn--outline sf-btn--lg" target="_blank" rel="noopener" title="Contact Dross:Media — Questions About the SearchForge + CacheWarmer Bundle">Questions? Contact Us</a>
+			<a href="<?php echo esc_url( home_url( '/checkout/?tier=bundle' ) ); ?>" class="sf-btn sf-btn--primary sf-btn--lg" rel="noopener" title="SearchForge + CacheWarmer Bundle - Start Your 14-Day Free Trial">Get the Bundle</a>
+			<a href="https://dross.net/contact/?topic=searchforge-bundle" class="sf-btn sf-btn--outline sf-btn--lg" target="_blank" rel="noopener" title="Contact Dross:Media - Questions About the SearchForge + CacheWarmer Bundle">Questions? Contact Us</a>
 		</div>
 	</div>
 </section>

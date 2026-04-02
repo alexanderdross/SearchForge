@@ -12,7 +12,7 @@ get_header();
 	<div class="sf-container" style="text-align: center;">
 		<h1><span class="sf-gradient-text">Changelog</span></h1>
 		<p class="sf-text--inverse-muted" style="font-size: 1.25rem;">
-			What&rsquo;s new in SearchForge. Every release, documented.
+			What's new in SearchForge. Every release, documented.
 		</p>
 	</div>
 </section>
@@ -68,7 +68,7 @@ get_header();
 			</ul>
 			<h4>Fixed</h4>
 			<ul>
-				<li>Organization schema name corrected to &ldquo;Dross:Media&rdquo;</li>
+				<li>Organization schema name corrected to "Dross:Media"</li>
 				<li>Schema URL references now point to correct production domain</li>
 			</ul>
 		</article>

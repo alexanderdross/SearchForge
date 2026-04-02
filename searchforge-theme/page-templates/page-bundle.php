@@ -53,7 +53,7 @@ get_header();
 <section class="sf-section sf-section--light">
 	<div class="sf-container">
 		<div class="sf-section__header">
-			<h2>What&rsquo;s Included</h2>
+			<h2>What's Included</h2>
 		</div>
 
 		<div class="sf-grid sf-grid--2">

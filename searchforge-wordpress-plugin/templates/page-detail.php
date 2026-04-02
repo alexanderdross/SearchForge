@@ -364,7 +364,7 @@ $cannibal     = $is_pro ? SearchForge\Admin\PageDetail::get_page_cannibalization
 			<?php if ( $trend['decay_detected'] ) : ?>
 				<div class="notice notice-warning sf-decay-notice">
 					<p>
-						<strong><?php esc_html_e( 'Content Decay Detected', 'searchforge' ); ?></strong> &mdash;
+						<strong><?php esc_html_e( 'Content Decay Detected', 'searchforge' ); ?></strong> -
 						<?php echo esc_html( sprintf(
 							__( 'Clicks declined %s%% over the last %d days.', 'searchforge' ),
 							$trend['decay_percentage'],
@@ -395,7 +395,7 @@ $cannibal     = $is_pro ? SearchForge\Admin\PageDetail::get_page_cannibalization
 										<?php echo esc_html( ( $snap['clicks_change'] >= 0 ? '+' : '' ) . $snap['clicks_change'] ); ?>%
 									</span>
 								<?php else : ?>
-									&mdash;
+									-
 								<?php endif; ?>
 							</td>
 							<td><?php echo esc_html( number_format( $snap['impressions'] ) ); ?></td>

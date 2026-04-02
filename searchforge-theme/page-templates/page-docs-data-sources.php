@@ -53,7 +53,7 @@ $sections = [
 
 		<article class="sf-doc-section" id="bing-webmaster-tools">
 			<h2>Bing Webmaster Tools</h2>
-			<p>Bing-specific search data often reveals keywords that Google doesn&rsquo;t surface. Side-by-side comparison with GSC data in your briefs.</p>
+			<p>Bing-specific search data often reveals keywords that Google doesn't surface. Side-by-side comparison with GSC data in your briefs.</p>
 			<h3>Setup</h3>
 			<p>Go to <strong>Data Sources &rarr; Bing Webmaster Tools</strong>. Authenticate via OAuth or paste your Bing API key from <a href="https://www.bing.com/webmasters/" rel="noopener" title="Bing Webmaster Tools - Manage Your Site in Bing Search">Bing Webmaster Tools</a>.</p>
 			<h3>Data pulled</h3>

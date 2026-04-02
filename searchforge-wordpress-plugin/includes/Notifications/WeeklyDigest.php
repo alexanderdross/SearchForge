@@ -117,7 +117,7 @@ class WeeklyDigest {
 			<div class="container">
 				<div class="header">
 					<h1>SearchForge Weekly Digest</h1>
-					<p><?php echo esc_html( $data['site_name'] ); ?> &mdash; <?php echo esc_html( wp_date( 'M j, Y' ) ); ?></p>
+					<p><?php echo esc_html( $data['site_name'] ); ?> - <?php echo esc_html( wp_date( 'M j, Y' ) ); ?></p>
 				</div>
 
 				<div class="content">

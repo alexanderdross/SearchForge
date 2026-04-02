@@ -8,6 +8,19 @@ class Settings {
 
 	private const OPTION_KEY = 'searchforge_settings';
 
+	/**
+	 * Fields that should be encrypted at rest.
+	 */
+	private const ENCRYPTED_FIELDS = [
+		'gsc_access_token',
+		'gsc_refresh_token',
+		'gsc_client_secret',
+		'bing_api_key',
+		'kwp_developer_token',
+		'serpapi_key',
+		'ai_api_key',
+	];
+
 	private const DEFAULTS = [
 		'gsc_client_id'     => '',
 		'gsc_client_secret' => '',
@@ -135,11 +148,23 @@ class Settings {
 		$sanitized['data_retention']  = absint( $input['data_retention'] ?? $current['data_retention'] );
 		$sanitized['license_tier']    = self::resolve_license_tier( $sanitized['license_key'], $current['license_tier'] );
 
-		return $sanitized;
+		return self::encrypt_settings( $sanitized );
 	}
 
 	public static function get_all(): array {
-		return wp_parse_args( get_option( self::OPTION_KEY, [] ), self::DEFAULTS );
+		$settings = wp_parse_args( get_option( self::OPTION_KEY, [] ), self::DEFAULTS );
+
+		// Decrypt sensitive fields.
+		foreach ( self::ENCRYPTED_FIELDS as $field ) {
+			if ( ! empty( $settings[ $field ] ) && is_string( $settings[ $field ] ) ) {
+				$decrypted = self::decrypt( $settings[ $field ] );
+				if ( false !== $decrypted ) {
+					$settings[ $field ] = $decrypted;
+				}
+			}
+		}
+
+		return $settings;
 	}
 
 	public static function get( string $key, $default = null ) {
@@ -150,13 +175,77 @@ class Settings {
 	public static function update( string $key, $value ): bool {
 		$settings          = self::get_all();
 		$settings[ $key ]  = $value;
-		return update_option( self::OPTION_KEY, $settings );
+		return update_option( self::OPTION_KEY, self::encrypt_settings( $settings ) );
 	}
 
 	public static function update_many( array $values ): bool {
 		$settings = self::get_all();
 		$settings = array_merge( $settings, $values );
-		return update_option( self::OPTION_KEY, $settings );
+		return update_option( self::OPTION_KEY, self::encrypt_settings( $settings ) );
+	}
+
+	/**
+	 * Encrypt sensitive fields before storing.
+	 */
+	private static function encrypt_settings( array $settings ): array {
+		foreach ( self::ENCRYPTED_FIELDS as $field ) {
+			if ( ! empty( $settings[ $field ] ) && is_string( $settings[ $field ] ) ) {
+				$encrypted = self::encrypt( $settings[ $field ] );
+				if ( false !== $encrypted ) {
+					$settings[ $field ] = $encrypted;
+				}
+			}
+		}
+		return $settings;
+	}
+
+	/**
+	 * Encrypt a value using AES-256-CBC.
+	 */
+	private static function encrypt( string $value ): string|false {
+		if ( empty( $value ) ) {
+			return $value;
+		}
+
+		$key = self::get_encryption_key();
+		$iv  = openssl_random_pseudo_bytes( 16 );
+
+		$encrypted = openssl_encrypt( $value, 'aes-256-cbc', $key, OPENSSL_RAW_DATA, $iv );
+		if ( false === $encrypted ) {
+			return false;
+		}
+
+		// Prefix with 'enc:' so we can detect already-encrypted values.
+		return 'enc:' . base64_encode( $iv . $encrypted );
+	}
+
+	/**
+	 * Decrypt a value encrypted with encrypt().
+	 */
+	private static function decrypt( string $value ): string|false {
+		// Not encrypted (legacy plaintext value).
+		if ( ! str_starts_with( $value, 'enc:' ) ) {
+			return $value;
+		}
+
+		$key  = self::get_encryption_key();
+		$data = base64_decode( substr( $value, 4 ), true );
+
+		if ( false === $data || strlen( $data ) < 17 ) {
+			return false;
+		}
+
+		$iv        = substr( $data, 0, 16 );
+		$encrypted = substr( $data, 16 );
+
+		return openssl_decrypt( $encrypted, 'aes-256-cbc', $key, OPENSSL_RAW_DATA, $iv );
+	}
+
+	/**
+	 * Derive a 32-byte encryption key from WordPress auth salts.
+	 */
+	private static function get_encryption_key(): string {
+		return hash( 'sha256', wp_salt( 'auth' ) . 'searchforge_encrypt', true );
 	}
 
 	/**

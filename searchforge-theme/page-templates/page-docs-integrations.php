@@ -51,7 +51,7 @@ $sections = [
 
 		<article class="sf-doc-section" id="rank-math">
 			<h2>Rank Math</h2>
-			<p>Full integration with Rank Math&rsquo;s SEO data, including their proprietary SEO score.</p>
+			<p>Full integration with Rank Math's SEO data, including their proprietary SEO score.</p>
 			<h3>What gets pulled</h3>
 			<ul class="sf-content">
 				<li>Focus keywords (up to 5 per page)</li>
@@ -60,7 +60,7 @@ $sections = [
 				<li>Redirect rules</li>
 			</ul>
 			<h3>Setup</h3>
-			<p>Automatic. Detected when Rank Math is active. SearchForge shows both its own score and Rank Math&rsquo;s score side by side.</p>
+			<p>Automatic. Detected when Rank Math is active. SearchForge shows both its own score and Rank Math's score side by side.</p>
 		</article>
 
 		<hr style="border: none; border-top: 1px solid var(--sf-border); margin: var(--space-2xl) 0;">
@@ -85,7 +85,7 @@ $sections = [
 			<p>Trigger cache warming after content changes detected by SearchForge. Ensures updated pages are always served from cache.</p>
 			<h3>How it works</h3>
 			<ul class="sf-content">
-				<li><strong>Manual mode (Pro)</strong>  - Click &ldquo;Warm Cache&rdquo; from any page in SearchForge.</li>
+				<li><strong>Manual mode (Pro)</strong>  - Click "Warm Cache" from any page in SearchForge.</li>
 				<li><strong>Auto-trigger (Agency/Enterprise)</strong>  - Automatically warm cache when SearchForge detects content changes or after scheduled exports.</li>
 			</ul>
 			<h3>Setup</h3>

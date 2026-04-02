@@ -102,7 +102,7 @@ $sections = [
 			<p>Requires a SerpApi key. Enter it at <strong>Data Sources &rarr; Google Trends</strong>.</p>
 			<h3>Data pulled</h3>
 			<ul class="sf-content">
-				<li>Interest over time (relative 0&ndash;100 scale)</li>
+				<li>Interest over time (relative 0-100 scale)</li>
 				<li>Related queries and rising queries</li>
 				<li>Geographic breakdown by region</li>
 			</ul>

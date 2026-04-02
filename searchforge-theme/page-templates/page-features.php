@@ -114,7 +114,7 @@ get_header();
 	<div class="sf-container">
 		<div class="sf-section__header">
 			<h2>SearchForge Score</h2>
-			<p class="sf-text--muted">A proprietary 0&ndash;100 SEO health score with actionable breakdown.</p>
+			<p class="sf-text--muted">A proprietary 0-100 SEO health score with actionable breakdown.</p>
 		</div>
 
 		<div class="sf-grid sf-grid--2">
@@ -157,7 +157,7 @@ get_header();
 			</div>
 			<div class="sf-card sf-card--accent">
 				<h3 class="sf-card__title">AI Visibility Score</h3>
-				<p class="sf-card__desc">Proprietary 0&ndash;100 score measuring how likely your page is to be cited by AI engines, tracked over time.</p>
+				<p class="sf-card__desc">Proprietary 0-100 score measuring how likely your page is to be cited by AI engines, tracked over time.</p>
 			</div>
 			<div class="sf-card sf-card--accent">
 				<h3 class="sf-card__title">Structured Data Audit</h3>
@@ -172,7 +172,7 @@ get_header();
 	<div class="sf-container">
 		<div class="sf-section__header">
 			<h2>Competitor SERP Intelligence</h2>
-			<p class="sf-text--muted">Understand who ranks above and below you &mdash; without paying $1,400/yr for Semrush.</p>
+			<p class="sf-text--muted">Understand who ranks above and below you  - without paying $1,400/yr for Semrush.</p>
 		</div>
 
 		<div class="sf-grid sf-grid--2">
@@ -182,7 +182,7 @@ get_header();
 				</div>
 				<div class="sf-feature-card__content">
 					<h3>SERP Snapshots</h3>
-					<p>For your top keywords, capture who ranks in positions 1&ndash;10. Auto-identify recurring competitor domains across your keyword set.</p>
+					<p>For your top keywords, capture who ranks in positions 1-10. Auto-identify recurring competitor domains across your keyword set.</p>
 				</div>
 			</div>
 			<div class="sf-feature-card">

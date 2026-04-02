@@ -69,7 +69,7 @@ $sections = [
 				<li>Grant the requested permissions (read-only access to Search Console data).</li>
 				<li>Select your GSC property from the dropdown and click <strong>Save</strong>.</li>
 			</ol>
-			<p>SearchForge uses OAuth 2.0 &mdash; your credentials are never stored. The access token is stored securely in your WordPress database.</p>
+			<p>SearchForge uses OAuth 2.0  - your credentials are never stored. The access token is stored securely in your WordPress database.</p>
 		</article>
 
 		<hr style="border: none; border-top: 1px solid var(--sf-border); margin: var(--space-2xl) 0;">
@@ -83,14 +83,14 @@ $sections = [
 				<li>SearchForge pulls clicks, impressions, CTR, and position data for each page and keyword.</li>
 				<li>Free tier: up to 10 pages and 100 keywords. Pro: unlimited.</li>
 			</ol>
-			<p>The first sync usually takes 30&ndash;60 seconds depending on your site size. Subsequent syncs are incremental and faster.</p>
+			<p>The first sync usually takes 30-60 seconds depending on your site size. Subsequent syncs are incremental and faster.</p>
 		</article>
 
 		<hr style="border: none; border-top: 1px solid var(--sf-border); margin: var(--space-2xl) 0;">
 
 		<article class="sf-doc-section" id="exporting-your-first-brief">
 			<h2>Exporting Your First Brief</h2>
-			<p>The core output of SearchForge is the per-page markdown brief &mdash; a structured document ready for LLMs.</p>
+			<p>The core output of SearchForge is the per-page markdown brief  - a structured document ready for LLMs.</p>
 			<ol class="sf-content">
 				<li>Navigate to <strong>SearchForge &rarr; Pages</strong> and click any page.</li>
 				<li>Review the data summary: rankings, top keywords, trends, and SearchForge Score.</li>

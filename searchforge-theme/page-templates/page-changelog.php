@@ -25,7 +25,7 @@ get_header();
 				<h2>v2.0.0 <span class="sf-badge sf-badge--accent">Latest</span></h2>
 				<time class="sf-text--muted" datetime="2026-03-08">March 8, 2026</time>
 			</div>
-			<h3>Version 2.0 &mdash; Feature Complete</h3>
+			<h3>Version 2.0  - Feature Complete</h3>
 			<p class="sf-text--muted">SearchForge reaches feature completeness. Full SEO metadata, structured data, and marketing site polish make this the definitive release for production use.</p>
 			<h4>Added</h4>
 			<ul>
@@ -60,7 +60,7 @@ get_header();
 			<h4>Added</h4>
 			<ul>
 				<li>Competitor domain tracking with auto-detection from shared keywords</li>
-				<li>SERP snapshot capture for top keywords (positions 1&ndash;10)</li>
+				<li>SERP snapshot capture for top keywords (positions 1-10)</li>
 				<li>Content gap analysis vs. competitors</li>
 				<li>SERP feature tracking (featured snippets, PAA, video packs)</li>
 				<li>Competitor keyword overlap and visibility comparison</li>
@@ -130,7 +130,7 @@ get_header();
 			</ul>
 			<h4>Security</h4>
 			<ul>
-				<li>API keys accepted via headers only &mdash; query parameter authentication removed to prevent credential exposure in server logs</li>
+				<li>API keys accepted via headers only  - query parameter authentication removed to prevent credential exposure in server logs</li>
 			</ul>
 		</article>
 
@@ -234,7 +234,7 @@ get_header();
 				<li>Per-page markdown brief export with keyword data, performance metrics, and recommendations</li>
 				<li>Combined site-wide markdown master brief export</li>
 				<li>Admin dashboard with top pages, top keywords, and KPI summary cards</li>
-				<li>SearchForge Score (0&ndash;100) with 4 components: Technical, Content, Authority, Momentum</li>
+				<li>SearchForge Score (0-100) with 4 components: Technical, Content, Authority, Momentum</li>
 				<li>Auto-generated recommendations based on score analysis</li>
 				<li><code>llms.txt</code> and <code>llms-full.txt</code> auto-generation for AI crawler discovery</li>
 				<li>Sitemap discovery via <code>robots.txt</code> parsing</li>
@@ -246,12 +246,12 @@ get_header();
 			</ul>
 			<h4>REST API</h4>
 			<ul>
-				<li><code>GET /searchforge/v1/status</code> &mdash; Plugin health and version</li>
-				<li><code>GET /searchforge/v1/pages</code> &mdash; Top pages with metrics</li>
-				<li><code>GET /searchforge/v1/keywords</code> &mdash; Top keywords</li>
-				<li><code>GET /searchforge/v1/export/page</code> &mdash; Single page markdown brief</li>
-				<li><code>GET /searchforge/v1/export/site</code> &mdash; Full site export</li>
-				<li><code>POST /searchforge/v1/sync</code> &mdash; Manual sync trigger</li>
+				<li><code>GET /searchforge/v1/status</code>  - Plugin health and version</li>
+				<li><code>GET /searchforge/v1/pages</code>  - Top pages with metrics</li>
+				<li><code>GET /searchforge/v1/keywords</code>  - Top keywords</li>
+				<li><code>GET /searchforge/v1/export/page</code>  - Single page markdown brief</li>
+				<li><code>GET /searchforge/v1/export/site</code>  - Full site export</li>
+				<li><code>POST /searchforge/v1/sync</code>  - Manual sync trigger</li>
 			</ul>
 		</article>
 

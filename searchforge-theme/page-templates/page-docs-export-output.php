@@ -36,9 +36,9 @@ $sections = [
 			<p>The core export format. Per-page markdown documents containing all SEO data structured for LLM consumption.</p>
 			<h3>Brief types</h3>
 			<ul class="sf-content">
-				<li><strong>Per-source brief</strong> &mdash; Data from a single source (e.g., GSC only).</li>
-				<li><strong>Combined brief</strong> &mdash; Merged data from all connected sources for one page.</li>
-				<li><strong>LLM Quick Brief</strong> &mdash; Token-optimized format for cost-efficient LLM usage.</li>
+				<li><strong>Per-source brief</strong>  - Data from a single source (e.g., GSC only).</li>
+				<li><strong>Combined brief</strong>  - Merged data from all connected sources for one page.</li>
+				<li><strong>LLM Quick Brief</strong>  - Token-optimized format for cost-efficient LLM usage.</li>
 			</ul>
 			<h3>Export options</h3>
 			<p>Copy to clipboard, download as <code>.md</code>, or push to GitHub/GitLab. Free tier: GSC data only. Pro: all sources.</p>
@@ -99,9 +99,9 @@ $sections = [
 			<p>Automate recurring exports on a daily or weekly schedule. Delivered via email, cloud storage, or Git push.</p>
 			<h3>Delivery options</h3>
 			<ul class="sf-content">
-				<li><strong>Email</strong> &mdash; ZIP attachment or inline summary.</li>
-				<li><strong>Cloud storage</strong> &mdash; Push to Amazon S3, Google Cloud Storage, or Dropbox.</li>
-				<li><strong>Git</strong> &mdash; Auto-commit to GitHub or GitLab repository.</li>
+				<li><strong>Email</strong>  - ZIP attachment or inline summary.</li>
+				<li><strong>Cloud storage</strong>  - Push to Amazon S3, Google Cloud Storage, or Dropbox.</li>
+				<li><strong>Git</strong>  - Auto-commit to GitHub or GitLab repository.</li>
 			</ul>
 			<p>Available on Agency and Enterprise tiers.</p>
 		</article>

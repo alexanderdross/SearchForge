@@ -38,12 +38,12 @@ $sections = [
 			<p><code>https://your-site.com/wp-json/searchforge/v1/</code></p>
 			<h3>Key endpoints</h3>
 			<ul class="sf-content">
-				<li><code>GET /pages</code> &mdash; List all tracked pages with scores.</li>
-				<li><code>GET /pages/{id}/brief</code> &mdash; Get the markdown brief for a specific page.</li>
-				<li><code>GET /pages/{id}/keywords</code> &mdash; Keywords for a page with metrics.</li>
-				<li><code>GET /score/{id}</code> &mdash; SearchForge Score with component breakdown.</li>
-				<li><code>POST /sync</code> &mdash; Trigger a manual data sync (Agency/Enterprise).</li>
-				<li><code>GET /export/zip</code> &mdash; Download bulk ZIP export.</li>
+				<li><code>GET /pages</code>  - List all tracked pages with scores.</li>
+				<li><code>GET /pages/{id}/brief</code>  - Get the markdown brief for a specific page.</li>
+				<li><code>GET /pages/{id}/keywords</code>  - Keywords for a page with metrics.</li>
+				<li><code>GET /score/{id}</code>  - SearchForge Score with component breakdown.</li>
+				<li><code>POST /sync</code>  - Trigger a manual data sync (Agency/Enterprise).</li>
+				<li><code>GET /export/zip</code>  - Download bulk ZIP export.</li>
 			</ul>
 			<h3>Access levels</h3>
 			<p>Pro: read-only endpoints. Agency and Enterprise: full CRUD including sync triggers and export scheduling.</p>
@@ -56,12 +56,12 @@ $sections = [
 			<p>Full terminal access to SearchForge data and operations.</p>
 			<h3>Available commands</h3>
 			<ul class="sf-content">
-				<li><code>wp searchforge sync</code> &mdash; Trigger a data sync for all connected sources.</li>
-				<li><code>wp searchforge export --format=brief --page={id}</code> &mdash; Export a single page brief.</li>
-				<li><code>wp searchforge export --format=master-brief</code> &mdash; Export combined master brief.</li>
-				<li><code>wp searchforge export --format=zip</code> &mdash; Generate and download bulk ZIP.</li>
-				<li><code>wp searchforge score --page={id}</code> &mdash; Show SearchForge Score for a page.</li>
-				<li><code>wp searchforge llms-txt regenerate</code> &mdash; Force regenerate llms.txt files.</li>
+				<li><code>wp searchforge sync</code>  - Trigger a data sync for all connected sources.</li>
+				<li><code>wp searchforge export --format=brief --page={id}</code>  - Export a single page brief.</li>
+				<li><code>wp searchforge export --format=master-brief</code>  - Export combined master brief.</li>
+				<li><code>wp searchforge export --format=zip</code>  - Generate and download bulk ZIP.</li>
+				<li><code>wp searchforge score --page={id}</code>  - Show SearchForge Score for a page.</li>
+				<li><code>wp searchforge llms-txt regenerate</code>  - Force regenerate llms.txt files.</li>
 			</ul>
 			<p>Available on Pro and above. Multi-site support on Agency and Enterprise.</p>
 		</article>
@@ -73,17 +73,17 @@ $sections = [
 			<p>WordPress hooks for extending and customizing SearchForge behavior.</p>
 			<h3>Key actions</h3>
 			<ul class="sf-content">
-				<li><code>searchforge/sync/complete</code> &mdash; Fires after a successful data sync.</li>
-				<li><code>searchforge/brief/exported</code> &mdash; Fires after a brief is exported.</li>
-				<li><code>searchforge/score/calculated</code> &mdash; Fires after score recalculation.</li>
-				<li><code>searchforge/alert/triggered</code> &mdash; Fires when an alert condition is met.</li>
+				<li><code>searchforge/sync/complete</code>  - Fires after a successful data sync.</li>
+				<li><code>searchforge/brief/exported</code>  - Fires after a brief is exported.</li>
+				<li><code>searchforge/score/calculated</code>  - Fires after score recalculation.</li>
+				<li><code>searchforge/alert/triggered</code>  - Fires when an alert condition is met.</li>
 			</ul>
 			<h3>Key filters</h3>
 			<ul class="sf-content">
-				<li><code>searchforge/brief/content</code> &mdash; Modify brief content before export.</li>
-				<li><code>searchforge/score/weights</code> &mdash; Adjust score component weights.</li>
-				<li><code>searchforge/llms_txt/content</code> &mdash; Filter llms.txt output before writing.</li>
-				<li><code>searchforge/export/filename</code> &mdash; Customize export file naming.</li>
+				<li><code>searchforge/brief/content</code>  - Modify brief content before export.</li>
+				<li><code>searchforge/score/weights</code>  - Adjust score component weights.</li>
+				<li><code>searchforge/llms_txt/content</code>  - Filter llms.txt output before writing.</li>
+				<li><code>searchforge/export/filename</code>  - Customize export file naming.</li>
 			</ul>
 		</article>
 
@@ -114,12 +114,12 @@ $sections = [
 			<p>Configure webhook URLs at <strong>SearchForge &rarr; Settings &rarr; Webhooks</strong>. Each URL can subscribe to specific events.</p>
 			<h3>Available events</h3>
 			<ul class="sf-content">
-				<li><code>sync.complete</code> &mdash; Data sync finished successfully.</li>
-				<li><code>sync.failed</code> &mdash; Data sync encountered an error.</li>
-				<li><code>alert.ranking_drop</code> &mdash; Significant ranking decrease detected.</li>
-				<li><code>alert.content_decay</code> &mdash; Content decay threshold exceeded.</li>
-				<li><code>export.complete</code> &mdash; Scheduled export finished.</li>
-				<li><code>score.changed</code> &mdash; SearchForge Score changed significantly.</li>
+				<li><code>sync.complete</code>  - Data sync finished successfully.</li>
+				<li><code>sync.failed</code>  - Data sync encountered an error.</li>
+				<li><code>alert.ranking_drop</code>  - Significant ranking decrease detected.</li>
+				<li><code>alert.content_decay</code>  - Content decay threshold exceeded.</li>
+				<li><code>export.complete</code>  - Scheduled export finished.</li>
+				<li><code>score.changed</code>  - SearchForge Score changed significantly.</li>
 			</ul>
 			<h3>Payload format</h3>
 			<p>JSON payload with event type, timestamp, affected page/keyword, and relevant metrics. HMAC-SHA256 signature in <code>X-SearchForge-Signature</code> header for verification.</p>

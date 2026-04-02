@@ -107,10 +107,10 @@ get_header();
 					<tr><td>Competitor Keywords</td><td>100/month</td><td>Unlimited</td></tr>
 					<tr><td>AI Content Briefs</td><td>50/month</td><td>Unlimited</td></tr>
 					<tr><td>Data Retention</td><td>24 months</td><td>24 months</td></tr>
-					<tr><td>Audit Log</td><td>&mdash;</td><td>&#10003;</td></tr>
-					<tr><td>Priority Support (24h SLA)</td><td>&mdash;</td><td>&#10003;</td></tr>
-					<tr><td>Custom Sync Frequencies</td><td>&mdash;</td><td>&#10003;</td></tr>
-					<tr><td>Discord &amp; Webhook Alerts</td><td>&mdash;</td><td>&#10003;</td></tr>
+					<tr><td>Audit Log</td><td>-</td><td>&#10003;</td></tr>
+					<tr><td>Priority Support (24h SLA)</td><td>-</td><td>&#10003;</td></tr>
+					<tr><td>Custom Sync Frequencies</td><td>-</td><td>&#10003;</td></tr>
+					<tr><td>Discord &amp; Webhook Alerts</td><td>-</td><td>&#10003;</td></tr>
 				</tbody>
 			</table>
 		</div>

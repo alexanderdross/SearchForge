@@ -41,47 +41,47 @@ get_header();
 				<tbody>
 					<tr><th colspan="5" scope="colgroup" class="sf-comparison-table__group">Data Sources</th></tr>
 					<tr><th scope="row">Google Search Console</th><td>10 pages</td><td>Unlimited</td><td>Unlimited</td><td>Unlimited</td></tr>
-					<tr><th scope="row">Bing Webmaster Tools</th><td>&mdash;</td><td>Unlimited</td><td>Unlimited</td><td>Unlimited</td></tr>
-					<tr><th scope="row">Google Analytics 4</th><td>&mdash;</td><td>Unlimited</td><td>Unlimited</td><td>Unlimited</td></tr>
-					<tr><th scope="row">Keyword Planner</th><td>&mdash;</td><td>Unlimited</td><td>Unlimited</td><td>Unlimited</td></tr>
-					<tr><th scope="row">Google Trends</th><td>&mdash;</td><td>Unlimited</td><td>Unlimited</td><td>Unlimited</td></tr>
-					<tr><th scope="row">Google Business Profile</th><td>&mdash;</td><td>1 location</td><td>10 locations</td><td>Unlimited</td></tr>
-					<tr><th scope="row">Bing Places</th><td>&mdash;</td><td>1 location</td><td>10 locations</td><td>Unlimited</td></tr>
-					<tr><th scope="row">AI Visibility Monitor</th><td>&mdash;</td><td>20 queries/mo</td><td>200 queries/mo</td><td>Unlimited</td></tr>
-					<tr><th scope="row">Competitor Intelligence</th><td>&mdash;</td><td>10 keywords/mo</td><td>100 keywords/mo</td><td>Unlimited</td></tr>
+					<tr><th scope="row">Bing Webmaster Tools</th><td>-</td><td>Unlimited</td><td>Unlimited</td><td>Unlimited</td></tr>
+					<tr><th scope="row">Google Analytics 4</th><td>-</td><td>Unlimited</td><td>Unlimited</td><td>Unlimited</td></tr>
+					<tr><th scope="row">Keyword Planner</th><td>-</td><td>Unlimited</td><td>Unlimited</td><td>Unlimited</td></tr>
+					<tr><th scope="row">Google Trends</th><td>-</td><td>Unlimited</td><td>Unlimited</td><td>Unlimited</td></tr>
+					<tr><th scope="row">Google Business Profile</th><td>-</td><td>1 location</td><td>10 locations</td><td>Unlimited</td></tr>
+					<tr><th scope="row">Bing Places</th><td>-</td><td>1 location</td><td>10 locations</td><td>Unlimited</td></tr>
+					<tr><th scope="row">AI Visibility Monitor</th><td>-</td><td>20 queries/mo</td><td>200 queries/mo</td><td>Unlimited</td></tr>
+					<tr><th scope="row">Competitor Intelligence</th><td>-</td><td>10 keywords/mo</td><td>100 keywords/mo</td><td>Unlimited</td></tr>
 
 					<tr><th colspan="5" scope="colgroup" class="sf-comparison-table__group">Analysis &amp; Intelligence</th></tr>
 					<tr><th scope="row">SearchForge Score</th><td>Overall only</td><td>Full breakdown</td><td>Full breakdown</td><td>Full breakdown</td></tr>
 					<tr><th scope="row">Content Gap Analysis</th><td>Top 3</td><td>Unlimited</td><td>Unlimited</td><td>Unlimited</td></tr>
-					<tr><th scope="row">AI Content Briefs</th><td>&mdash;</td><td>10/mo</td><td>50/mo</td><td>Unlimited</td></tr>
-					<tr><th scope="row">Keyword Clustering</th><td>&mdash;</td><td>&#10003;</td><td>&#10003;</td><td>&#10003;</td></tr>
-					<tr><th scope="row">Cannibalization Detection</th><td>&mdash;</td><td>&#10003;</td><td>&#10003;</td><td>&#10003;</td></tr>
-					<tr><th scope="row">Content Decay Alerts</th><td>&mdash;</td><td>Email</td><td>Email + Slack</td><td>All channels</td></tr>
+					<tr><th scope="row">AI Content Briefs</th><td>-</td><td>10/mo</td><td>50/mo</td><td>Unlimited</td></tr>
+					<tr><th scope="row">Keyword Clustering</th><td>-</td><td>&#10003;</td><td>&#10003;</td><td>&#10003;</td></tr>
+					<tr><th scope="row">Cannibalization Detection</th><td>-</td><td>&#10003;</td><td>&#10003;</td><td>&#10003;</td></tr>
+					<tr><th scope="row">Content Decay Alerts</th><td>-</td><td>Email</td><td>Email + Slack</td><td>All channels</td></tr>
 
 					<tr><th colspan="5" scope="colgroup" class="sf-comparison-table__group">Export &amp; Output</th></tr>
 					<tr><th scope="row">Markdown Export</th><td>GSC only</td><td>All sources</td><td>All sources</td><td>All sources</td></tr>
-					<tr><th scope="row">Combined Master Brief</th><td>&mdash;</td><td>Per page</td><td>Per page</td><td>Per page</td></tr>
+					<tr><th scope="row">Combined Master Brief</th><td>-</td><td>Per page</td><td>Per page</td><td>Per page</td></tr>
 					<tr><th scope="row">llms.txt</th><td>Basic</td><td>Advanced</td><td>Advanced</td><td>Advanced</td></tr>
-					<tr><th scope="row">WP-CLI</th><td>&mdash;</td><td>&#10003;</td><td>Multi-site</td><td>Multi-site</td></tr>
-					<tr><th scope="row">REST API</th><td>&mdash;</td><td>Read-only</td><td>Full CRUD</td><td>Full CRUD</td></tr>
-					<tr><th scope="row">GitHub / GitLab Push</th><td>&mdash;</td><td>&mdash;</td><td>Auto-push</td><td>Auto-push</td></tr>
-					<tr><th scope="row">Scheduled Exports</th><td>&mdash;</td><td>&mdash;</td><td>Email, cloud</td><td>Email, cloud</td></tr>
-					<tr><th scope="row">White-label Reports</th><td>&mdash;</td><td>&mdash;</td><td>PDF/HTML</td><td>PDF/HTML</td></tr>
+					<tr><th scope="row">WP-CLI</th><td>-</td><td>&#10003;</td><td>Multi-site</td><td>Multi-site</td></tr>
+					<tr><th scope="row">REST API</th><td>-</td><td>Read-only</td><td>Full CRUD</td><td>Full CRUD</td></tr>
+					<tr><th scope="row">GitHub / GitLab Push</th><td>-</td><td>-</td><td>Auto-push</td><td>Auto-push</td></tr>
+					<tr><th scope="row">Scheduled Exports</th><td>-</td><td>-</td><td>Email, cloud</td><td>Email, cloud</td></tr>
+					<tr><th scope="row">White-label Reports</th><td>-</td><td>-</td><td>PDF/HTML</td><td>PDF/HTML</td></tr>
 
 					<tr><th colspan="5" scope="colgroup" class="sf-comparison-table__group">History &amp; Monitoring</th></tr>
 					<tr><th scope="row">Data Retention</th><td>30 days</td><td>12 months</td><td>24 months</td><td>24 months</td></tr>
-					<tr><th scope="row">Historical Snapshots</th><td>&mdash;</td><td>Weekly</td><td>Daily</td><td>Daily</td></tr>
-					<tr><th scope="row">YoY Comparison</th><td>&mdash;</td><td>&#10003;</td><td>&#10003;</td><td>&#10003;</td></tr>
-					<tr><th scope="row">Weekly Digest Email</th><td>&mdash;</td><td>Single site</td><td>All sites</td><td>All sites</td></tr>
-					<tr><th scope="row">Slack / Discord Alerts</th><td>&mdash;</td><td>&mdash;</td><td>&#10003;</td><td>&#10003;</td></tr>
+					<tr><th scope="row">Historical Snapshots</th><td>-</td><td>Weekly</td><td>Daily</td><td>Daily</td></tr>
+					<tr><th scope="row">YoY Comparison</th><td>-</td><td>&#10003;</td><td>&#10003;</td><td>&#10003;</td></tr>
+					<tr><th scope="row">Weekly Digest Email</th><td>-</td><td>Single site</td><td>All sites</td><td>All sites</td></tr>
+					<tr><th scope="row">Slack / Discord Alerts</th><td>-</td><td>-</td><td>&#10003;</td><td>&#10003;</td></tr>
 
 					<tr><th colspan="5" scope="colgroup" class="sf-comparison-table__group">Scale &amp; Collaboration</th></tr>
 					<tr><th scope="row">Sites</th><td>1</td><td>1</td><td>10</td><td>Unlimited</td></tr>
 					<tr><th scope="row">Team Members</th><td>1</td><td>3</td><td>Unlimited</td><td>Unlimited</td></tr>
-					<tr><td>Client Portal</td><td>&mdash;</td><td>&mdash;</td><td>&#10003;</td><td>&#10003;</td></tr>
-					<tr><td>CacheWarmer Integration</td><td>&mdash;</td><td>Manual</td><td>Auto-trigger</td><td>Auto-trigger</td></tr>
-					<tr><td>Audit Log</td><td>&mdash;</td><td>&mdash;</td><td>&mdash;</td><td>&#10003;</td></tr>
-					<tr><td>Priority Support</td><td>&mdash;</td><td>&mdash;</td><td>&mdash;</td><td>&#10003;</td></tr>
+					<tr><td>Client Portal</td><td>-</td><td>-</td><td>&#10003;</td><td>&#10003;</td></tr>
+					<tr><td>CacheWarmer Integration</td><td>-</td><td>Manual</td><td>Auto-trigger</td><td>Auto-trigger</td></tr>
+					<tr><td>Audit Log</td><td>-</td><td>-</td><td>-</td><td>&#10003;</td></tr>
+					<tr><td>Priority Support</td><td>-</td><td>-</td><td>-</td><td>&#10003;</td></tr>
 				</tbody>
 			</table>
 		</div>

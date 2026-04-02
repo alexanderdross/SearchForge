@@ -16,7 +16,7 @@
 						<small>for WordPress</small>
 					</span>
 				</div>
-				<p class="sf-footer__desc">Transform raw SEO data from 8 sources into LLM-ready intelligence. Unify Search Console, Analytics, and more into actionable briefs.</p>
+				<p class="sf-footer__desc">Transform raw SEO data from 9 sources into LLM-ready intelligence. Unify Search Console, Analytics, and more into actionable briefs.</p>
 				<a href="<?php echo esc_url( home_url( '/docs/' ) ); ?>" class="sf-footer__doc-btn" title="SearchForge Documentation - Setup, Configuration &amp; API Reference">
 					<svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="1.5" width="10" height="13" rx="1"/><line x1="5.5" y1="5" x2="10.5" y2="5"/><line x1="5.5" y1="7.5" x2="10.5" y2="7.5"/><line x1="5.5" y1="10" x2="8.5" y2="10"/></svg>
 					Documentation

@@ -85,8 +85,8 @@ $sections = [
 			<p>Trigger cache warming after content changes detected by SearchForge. Ensures updated pages are always served from cache.</p>
 			<h3>How it works</h3>
 			<ul class="sf-content">
-				<li><strong>Manual mode (Pro)</strong> &mdash; Click &ldquo;Warm Cache&rdquo; from any page in SearchForge.</li>
-				<li><strong>Auto-trigger (Agency/Enterprise)</strong> &mdash; Automatically warm cache when SearchForge detects content changes or after scheduled exports.</li>
+				<li><strong>Manual mode (Pro)</strong>  - Click &ldquo;Warm Cache&rdquo; from any page in SearchForge.</li>
+				<li><strong>Auto-trigger (Agency/Enterprise)</strong>  - Automatically warm cache when SearchForge detects content changes or after scheduled exports.</li>
 			</ul>
 			<h3>Setup</h3>
 			<p>Requires the <a href="https://cachewarmer.drossmedia.de/" rel="noopener" title="CacheWarmer - Automated Cache Warming Plugin for WordPress">CacheWarmer plugin</a> installed and activated. Configure at <strong>SearchForge &rarr; Settings &rarr; Integrations &rarr; CacheWarmer</strong>.</p>

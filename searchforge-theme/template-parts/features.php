@@ -54,7 +54,7 @@ $features = [
 	[
 		'icon'  => 'export',
 		'title' => 'Multi-Source Export',
-		'desc'  => 'Combined markdown briefs from all 8 data sources. WP-CLI, REST API, or ZIP download.',
+		'desc'  => 'Combined markdown briefs from all 9 data sources. WP-CLI, REST API, or ZIP download.',
 	],
 ];
 ?>

@@ -22,10 +22,33 @@ get_header();
 
 		<article class="sf-changelog-entry">
 			<div class="sf-changelog-entry__header">
-				<h2>v2.0.0 <span class="sf-badge sf-badge--accent">Latest</span></h2>
+				<h2>v2.1.0 <span class="sf-badge sf-badge--accent">Latest</span></h2>
+				<time class="sf-text--muted" datetime="2026-04-02">April 2, 2026</time>
+			</div>
+			<h3>Adobe Analytics Integration</h3>
+			<p class="sf-text--muted">SearchForge now connects to 9 data sources. Adobe Analytics joins the stack, bringing enterprise-grade behavior metrics for sites beyond the Google ecosystem.</p>
+			<h4>Added</h4>
+			<ul>
+				<li>Adobe Analytics integration via Adobe Analytics 2.0 API (visits, page views, bounce rate, time on page, conversions, revenue)</li>
+				<li>OAuth Server-to-Server authentication with Adobe IMS (Identity Management System)</li>
+				<li>Adobe Analytics settings section with Report Suite ID, Organization ID, and Client ID/Secret fields</li>
+				<li>Adobe behavior data included in per-page markdown briefs and combined master briefs</li>
+				<li>Side-by-side GA4 vs. Adobe Analytics comparison in page detail view</li>
+				<li>WP-CLI: <code>wp searchforge sync --source=adobe</code></li>
+			</ul>
+			<h4>Changed</h4>
+			<ul>
+				<li>Data source count updated from 8 to 9 across all marketing pages</li>
+				<li>Combined master brief now includes Adobe Analytics section when connected</li>
+			</ul>
+		</article>
+
+		<article class="sf-changelog-entry">
+			<div class="sf-changelog-entry__header">
+				<h2>v2.0.0</h2>
 				<time class="sf-text--muted" datetime="2026-03-08">March 8, 2026</time>
 			</div>
-			<h3>Version 2.0 &mdash; Feature Complete</h3>
+			<h3>Version 2.0  - Feature Complete</h3>
 			<p class="sf-text--muted">SearchForge reaches feature completeness. Full SEO metadata, structured data, and marketing site polish make this the definitive release for production use.</p>
 			<h4>Added</h4>
 			<ul>
@@ -60,7 +83,7 @@ get_header();
 			<h4>Added</h4>
 			<ul>
 				<li>Competitor domain tracking with auto-detection from shared keywords</li>
-				<li>SERP snapshot capture for top keywords (positions 1&ndash;10)</li>
+				<li>SERP snapshot capture for top keywords (positions 1-10)</li>
 				<li>Content gap analysis vs. competitors</li>
 				<li>SERP feature tracking (featured snippets, PAA, video packs)</li>
 				<li>Competitor keyword overlap and visibility comparison</li>
@@ -130,7 +153,7 @@ get_header();
 			</ul>
 			<h4>Security</h4>
 			<ul>
-				<li>API keys accepted via headers only &mdash; query parameter authentication removed to prevent credential exposure in server logs</li>
+				<li>API keys accepted via headers only  - query parameter authentication removed to prevent credential exposure in server logs</li>
 			</ul>
 		</article>
 
@@ -234,7 +257,7 @@ get_header();
 				<li>Per-page markdown brief export with keyword data, performance metrics, and recommendations</li>
 				<li>Combined site-wide markdown master brief export</li>
 				<li>Admin dashboard with top pages, top keywords, and KPI summary cards</li>
-				<li>SearchForge Score (0&ndash;100) with 4 components: Technical, Content, Authority, Momentum</li>
+				<li>SearchForge Score (0-100) with 4 components: Technical, Content, Authority, Momentum</li>
 				<li>Auto-generated recommendations based on score analysis</li>
 				<li><code>llms.txt</code> and <code>llms-full.txt</code> auto-generation for AI crawler discovery</li>
 				<li>Sitemap discovery via <code>robots.txt</code> parsing</li>
@@ -246,12 +269,12 @@ get_header();
 			</ul>
 			<h4>REST API</h4>
 			<ul>
-				<li><code>GET /searchforge/v1/status</code> &mdash; Plugin health and version</li>
-				<li><code>GET /searchforge/v1/pages</code> &mdash; Top pages with metrics</li>
-				<li><code>GET /searchforge/v1/keywords</code> &mdash; Top keywords</li>
-				<li><code>GET /searchforge/v1/export/page</code> &mdash; Single page markdown brief</li>
-				<li><code>GET /searchforge/v1/export/site</code> &mdash; Full site export</li>
-				<li><code>POST /searchforge/v1/sync</code> &mdash; Manual sync trigger</li>
+				<li><code>GET /searchforge/v1/status</code>  - Plugin health and version</li>
+				<li><code>GET /searchforge/v1/pages</code>  - Top pages with metrics</li>
+				<li><code>GET /searchforge/v1/keywords</code>  - Top keywords</li>
+				<li><code>GET /searchforge/v1/export/page</code>  - Single page markdown brief</li>
+				<li><code>GET /searchforge/v1/export/site</code>  - Full site export</li>
+				<li><code>POST /searchforge/v1/sync</code>  - Manual sync trigger</li>
 			</ul>
 		</article>
 

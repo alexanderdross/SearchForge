@@ -32,7 +32,7 @@ $tiers = [
 		'cta_class'  => 'sf-btn--primary',
 		'cta_url'    => home_url( '/checkout/?tier=pro' ),
 		'features'   => [
-			'All 8 data sources (unlimited)',
+			'All 9 data sources (unlimited)',
 			'Full SearchForge Score breakdown',
 			'AI Visibility Monitor (20 queries/mo)',
 			'Competitor Intelligence (10 keywords/mo)',

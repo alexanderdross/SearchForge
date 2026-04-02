@@ -12,7 +12,7 @@ get_header();
 	<div class="sf-container">
 		<h1><span class="sf-gradient-text">Every Feature You Need</span></h1>
 		<p class="sf-text--inverse-muted sf-page-hero__subtitle sf-page-hero__subtitle--narrow">
-			SearchForge unifies 8 SEO data sources into LLM-ready intelligence. Here&rsquo;s everything included.
+			SearchForge unifies 9 SEO data sources into LLM-ready intelligence. Here&rsquo;s everything included.
 		</p>
 	</div>
 </section>
@@ -21,7 +21,7 @@ get_header();
 <section class="sf-section" id="data-sources">
 	<div class="sf-container">
 		<div class="sf-section__header">
-			<h2>8 Data Sources, One Dashboard</h2>
+			<h2>9 Data Sources, One Dashboard</h2>
 			<p class="sf-text--muted">Connect once. Sync automatically. All data flows into unified per-page briefs.</p>
 		</div>
 
@@ -98,6 +98,16 @@ get_header();
 
 			<div class="sf-feature-card">
 				<div class="sf-feature-card__icon" aria-hidden="true">
+					<img src="<?php echo esc_url( SF_THEME_URI ); ?>/assets/images/icons/adobe.svg" alt="" width="24" height="24">
+				</div>
+				<div class="sf-feature-card__content">
+					<h3>Adobe Analytics</h3>
+					<p>Enterprise behavior metrics via the Adobe Analytics 2.0 API. Visits, page views, bounce rate, time on page, conversions, and revenue. Ideal for organizations using the Adobe Experience Cloud.</p>
+				</div>
+			</div>
+
+			<div class="sf-feature-card">
+				<div class="sf-feature-card__icon" aria-hidden="true">
 					<img src="<?php echo esc_url( SF_THEME_URI ); ?>/assets/images/icons/serp.svg" alt="" width="24" height="24">
 				</div>
 				<div class="sf-feature-card__content">
@@ -114,7 +124,7 @@ get_header();
 	<div class="sf-container">
 		<div class="sf-section__header">
 			<h2>SearchForge Score</h2>
-			<p class="sf-text--muted">A proprietary 0&ndash;100 SEO health score with actionable breakdown.</p>
+			<p class="sf-text--muted">A proprietary 0-100 SEO health score with actionable breakdown.</p>
 		</div>
 
 		<div class="sf-grid sf-grid--2">
@@ -157,7 +167,7 @@ get_header();
 			</div>
 			<div class="sf-card sf-card--accent">
 				<h3 class="sf-card__title">AI Visibility Score</h3>
-				<p class="sf-card__desc">Proprietary 0&ndash;100 score measuring how likely your page is to be cited by AI engines, tracked over time.</p>
+				<p class="sf-card__desc">Proprietary 0-100 score measuring how likely your page is to be cited by AI engines, tracked over time.</p>
 			</div>
 			<div class="sf-card sf-card--accent">
 				<h3 class="sf-card__title">Structured Data Audit</h3>
@@ -172,7 +182,7 @@ get_header();
 	<div class="sf-container">
 		<div class="sf-section__header">
 			<h2>Competitor SERP Intelligence</h2>
-			<p class="sf-text--muted">Understand who ranks above and below you &mdash; without paying $1,400/yr for Semrush.</p>
+			<p class="sf-text--muted">Understand who ranks above and below you  - without paying $1,400/yr for Semrush.</p>
 		</div>
 
 		<div class="sf-grid sf-grid--2">
@@ -182,7 +192,7 @@ get_header();
 				</div>
 				<div class="sf-feature-card__content">
 					<h3>SERP Snapshots</h3>
-					<p>For your top keywords, capture who ranks in positions 1&ndash;10. Auto-identify recurring competitor domains across your keyword set.</p>
+					<p>For your top keywords, capture who ranks in positions 1-10. Auto-identify recurring competitor domains across your keyword set.</p>
 				</div>
 			</div>
 			<div class="sf-feature-card">

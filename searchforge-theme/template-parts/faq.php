@@ -8,7 +8,7 @@
 $faqs = [
 	[
 		'q' => 'What data sources does SearchForge support?',
-		'a' => 'SearchForge connects to 8 data sources: Google Search Console, Bing Webmaster Tools, Google Analytics 4, Google Keyword Planner, Google Trends, Google Business Profile, Bing Places for Business, and SerpApi (for AI visibility and competitor monitoring). The free tier includes GSC with a 10-page limit; Pro unlocks all sources.',
+		'a' => 'SearchForge connects to 9 data sources: Google Search Console, Bing Webmaster Tools, Google Analytics 4, Google Keyword Planner, Google Trends, Google Business Profile, Bing Places for Business, Adobe Analytics, and SerpApi (for AI visibility and competitor monitoring). The free tier includes GSC with a 10-page limit; Pro unlocks all sources.',
 	],
 	[
 		'q' => 'Do I need API keys for all sources?',

@@ -15,6 +15,7 @@ $sections = [
 	[ 'id' => 'google-trends',            'label' => 'Google Trends',          'title' => 'Configure Google Trends integration in SearchForge' ],
 	[ 'id' => 'google-business-profile',  'label' => 'Google Business Profile','title' => 'Configure Google Business Profile integration in SearchForge' ],
 	[ 'id' => 'bing-places-for-business', 'label' => 'Bing Places for Business','title' => 'Configure Bing Places for Business integration in SearchForge' ],
+	[ 'id' => 'adobe-analytics',          'label' => 'Adobe Analytics',         'title' => 'Configure Adobe Analytics integration in SearchForge' ],
 ];
 ?>
 
@@ -22,7 +23,7 @@ $sections = [
 	<div class="sf-container" style="text-align: center;">
 		<h1><span class="sf-gradient-text">Data Sources</span></h1>
 		<p class="sf-text--inverse-muted" style="font-size: 1.25rem; max-width: 640px; margin: var(--space-md) auto 0;">
-			SearchForge connects to 8 SEO data sources. Learn how to configure each integration.
+			SearchForge connects to 9 SEO data sources. Learn how to configure each integration.
 		</p>
 	</div>
 </section>
@@ -102,7 +103,7 @@ $sections = [
 			<p>Requires a SerpApi key. Enter it at <strong>Data Sources &rarr; Google Trends</strong>.</p>
 			<h3>Data pulled</h3>
 			<ul class="sf-content">
-				<li>Interest over time (relative 0&ndash;100 scale)</li>
+				<li>Interest over time (relative 0-100 scale)</li>
 				<li>Related queries and rising queries</li>
 				<li>Geographic breakdown by region</li>
 			</ul>
@@ -139,6 +140,34 @@ $sections = [
 				<li>Customer actions on Bing</li>
 				<li>Cross-platform comparison metrics</li>
 			</ul>
+		</article>
+
+		<hr style="border: none; border-top: 1px solid var(--sf-border); margin: var(--space-2xl) 0;">
+
+		<article class="sf-doc-section" id="adobe-analytics">
+			<h2>Adobe Analytics</h2>
+			<p>Enterprise-grade behavior analytics for organizations using the Adobe Experience Cloud. Provides similar metrics to GA4 but with deeper segmentation and revenue attribution.</p>
+			<h3>Setup</h3>
+			<ol class="sf-content">
+				<li>Create an OAuth Server-to-Server credential in the <a href="https://developer.adobe.com/console/" rel="noopener" title="Adobe Developer Console - Create API Credentials">Adobe Developer Console</a>.</li>
+				<li>Add the <strong>Adobe Analytics</strong> API to your project and assign the correct product profile.</li>
+				<li>In SearchForge, go to <strong>Data Sources - Adobe Analytics</strong>.</li>
+				<li>Enter your Organization ID, Client ID, and Client Secret from the Adobe Developer Console.</li>
+				<li>Enter your Report Suite ID (e.g. <code>mycompanyprod</code>).</li>
+				<li>Click <strong>Test Connection</strong> to verify access, then <strong>Save</strong>.</li>
+			</ol>
+			<h3>Data pulled</h3>
+			<ul class="sf-content">
+				<li>Visits (sessions) and unique visitors per page</li>
+				<li>Page views and average time on page</li>
+				<li>Bounce rate and exit rate</li>
+				<li>Conversion events and revenue attribution</li>
+				<li>Traffic source breakdown (organic search, direct, referral)</li>
+			</ul>
+			<h3>Authentication</h3>
+			<p>SearchForge uses Adobe IMS OAuth Server-to-Server credentials. This is the recommended method by Adobe and does not require user interaction after initial setup. Tokens are refreshed automatically.</p>
+			<h3>Limits</h3>
+			<p>Available on Pro tier and above. API rate limits depend on your Adobe Analytics contract. SearchForge batches requests to stay within typical limits.</p>
 		</article>
 
 			</div>

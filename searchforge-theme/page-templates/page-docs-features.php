@@ -35,13 +35,13 @@ $sections = [
 
 		<article class="sf-doc-section" id="searchforge-score">
 			<h2>SearchForge Score</h2>
-			<p>A proprietary 0&ndash;100 SEO health score calculated per page. The score combines four equally weighted components.</p>
+			<p>A proprietary 0-100 SEO health score calculated per page. The score combines four equally weighted components.</p>
 			<h3>Components</h3>
 			<ul class="sf-content">
-				<li><strong>Technical SEO (25%)</strong> &mdash; Schema markup, mobile-friendliness, Core Web Vitals hints, heading structure.</li>
-				<li><strong>Content Quality (25%)</strong> &mdash; Keyword coverage, heading hierarchy, content length vs. competitors, internal linking.</li>
-				<li><strong>Authority (25%)</strong> &mdash; GSC link data, internal links, referring domains, brand query volume.</li>
-				<li><strong>Momentum (25%)</strong> &mdash; Ranking trends (7d/30d/90d), impression growth, new keywords, CTR vs. expected.</li>
+				<li><strong>Technical SEO (25%)</strong>  - Schema markup, mobile-friendliness, Core Web Vitals hints, heading structure.</li>
+				<li><strong>Content Quality (25%)</strong>  - Keyword coverage, heading hierarchy, content length vs. competitors, internal linking.</li>
+				<li><strong>Authority (25%)</strong>  - GSC link data, internal links, referring domains, brand query volume.</li>
+				<li><strong>Momentum (25%)</strong>  - Ranking trends (7d/30d/90d), impression growth, new keywords, CTR vs. expected.</li>
 			</ul>
 			<p>Free tier shows the overall score. Pro unlocks the full breakdown with per-component recommendations.</p>
 		</article>
@@ -69,10 +69,10 @@ $sections = [
 			<p>Understand who ranks above and below you for your target keywords without expensive third-party tools.</p>
 			<h3>Capabilities</h3>
 			<ul class="sf-content">
-				<li><strong>SERP Snapshots</strong> &mdash; Capture positions 1&ndash;10 for your keywords. Auto-identify recurring competitors.</li>
-				<li><strong>Content Gaps</strong> &mdash; Discover keywords where competitors rank but you don&rsquo;t.</li>
-				<li><strong>SERP Feature Tracking</strong> &mdash; Featured snippets, People Also Ask, video/image packs.</li>
-				<li><strong>Competitor Markdown Export</strong> &mdash; Export competitor analysis for LLM context.</li>
+				<li><strong>SERP Snapshots</strong>  - Capture positions 1-10 for your keywords. Auto-identify recurring competitors.</li>
+				<li><strong>Content Gaps</strong>  - Discover keywords where competitors rank but you don&rsquo;t.</li>
+				<li><strong>SERP Feature Tracking</strong>  - Featured snippets, People Also Ask, video/image packs.</li>
+				<li><strong>Competitor Markdown Export</strong>  - Export competitor analysis for LLM context.</li>
 			</ul>
 			<h3>Limits</h3>
 			<p>Pro: 10 keywords/month. Agency: 100 keywords/month. Enterprise: unlimited.</p>
@@ -84,7 +84,7 @@ $sections = [
 			<h2>AI Content Briefs</h2>
 			<p>AI-generated per-page briefs with specific content change recommendations and estimated impact.</p>
 			<h3>How it works</h3>
-			<p>SearchForge sends your page&rsquo;s SEO data (rankings, keywords, competitor context) to an LLM and returns structured recommendations. Uses your own OpenAI or Claude API key &mdash; we never see the content.</p>
+			<p>SearchForge sends your page&rsquo;s SEO data (rankings, keywords, competitor context) to an LLM and returns structured recommendations. Uses your own OpenAI or Claude API key  - we never see the content.</p>
 			<h3>Output includes</h3>
 			<ul class="sf-content">
 				<li>Recommended title and meta description changes</li>
@@ -133,10 +133,10 @@ $sections = [
 			<p>Automated notifications when your rankings change significantly or content starts decaying.</p>
 			<h3>Alert types</h3>
 			<ul class="sf-content">
-				<li><strong>Ranking drops</strong> &mdash; Page falls 5+ positions for a tracked keyword.</li>
-				<li><strong>Content decay</strong> &mdash; Traffic declining over 7d, 30d, or 90d windows.</li>
-				<li><strong>New keyword acquisitions</strong> &mdash; Pages ranking for new keywords not seen before.</li>
-				<li><strong>AI visibility changes</strong> &mdash; Gained or lost AI citations.</li>
+				<li><strong>Ranking drops</strong>  - Page falls 5+ positions for a tracked keyword.</li>
+				<li><strong>Content decay</strong>  - Traffic declining over 7d, 30d, or 90d windows.</li>
+				<li><strong>New keyword acquisitions</strong>  - Pages ranking for new keywords not seen before.</li>
+				<li><strong>AI visibility changes</strong>  - Gained or lost AI citations.</li>
 			</ul>
 			<h3>Channels</h3>
 			<p>Pro: email alerts. Agency: email + Slack. Enterprise: email + Slack + Discord + webhooks.</p>

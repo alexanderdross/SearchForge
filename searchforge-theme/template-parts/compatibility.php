@@ -17,7 +17,7 @@
 		</div>
 
 		<p class="sf-text--muted" style="max-width: 640px; margin: 1.5rem auto 0;">
-			SearchForge doesn't replace your SEO plugin&nbsp;&mdash; it supercharges it.
+			SearchForge doesn't replace your SEO plugin&nbsp;- it supercharges it.
 			Import focus keywords, cross-reference with real GSC data, and see both scores side by side.
 		</p>
 	</div>

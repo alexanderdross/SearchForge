@@ -70,7 +70,7 @@ $sections = [
 			<h3>Capabilities</h3>
 			<ul class="sf-content">
 				<li><strong>SERP Snapshots</strong>  - Capture positions 1-10 for your keywords. Auto-identify recurring competitors.</li>
-				<li><strong>Content Gaps</strong>  - Discover keywords where competitors rank but you don&rsquo;t.</li>
+				<li><strong>Content Gaps</strong>  - Discover keywords where competitors rank but you don't.</li>
 				<li><strong>SERP Feature Tracking</strong>  - Featured snippets, People Also Ask, video/image packs.</li>
 				<li><strong>Competitor Markdown Export</strong>  - Export competitor analysis for LLM context.</li>
 			</ul>
@@ -84,7 +84,7 @@ $sections = [
 			<h2>AI Content Briefs</h2>
 			<p>AI-generated per-page briefs with specific content change recommendations and estimated impact.</p>
 			<h3>How it works</h3>
-			<p>SearchForge sends your page&rsquo;s SEO data (rankings, keywords, competitor context) to an LLM and returns structured recommendations. Uses your own OpenAI or Claude API key  - we never see the content.</p>
+			<p>SearchForge sends your page's SEO data (rankings, keywords, competitor context) to an LLM and returns structured recommendations. Uses your own OpenAI or Claude API key  - we never see the content.</p>
 			<h3>Output includes</h3>
 			<ul class="sf-content">
 				<li>Recommended title and meta description changes</li>

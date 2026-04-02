@@ -12,7 +12,7 @@ get_header();
 	<div class="sf-container">
 		<h1><span class="sf-gradient-text">Every Feature You Need</span></h1>
 		<p class="sf-text--inverse-muted sf-page-hero__subtitle sf-page-hero__subtitle--narrow">
-			SearchForge unifies 9 SEO data sources into LLM-ready intelligence. Here&rsquo;s everything included.
+			SearchForge unifies 9 SEO data sources into LLM-ready intelligence. Here's everything included.
 		</p>
 	</div>
 </section>
@@ -42,7 +42,7 @@ get_header();
 				</div>
 				<div class="sf-feature-card__content">
 					<h3>Bing Webmaster Tools</h3>
-					<p>Bing-specific click and impression data, often revealing keywords Google doesn&rsquo;t show. Side-by-side comparison with GSC data. OAuth or API key authentication.</p>
+					<p>Bing-specific click and impression data, often revealing keywords Google doesn't show. Side-by-side comparison with GSC data. OAuth or API key authentication.</p>
 				</div>
 			</div>
 
@@ -201,7 +201,7 @@ get_header();
 				</div>
 				<div class="sf-feature-card__content">
 					<h3>Content Gaps</h3>
-					<p>Discover keywords where competitors rank but you don&rsquo;t. Prioritize by estimated traffic potential and difficulty.</p>
+					<p>Discover keywords where competitors rank but you don't. Prioritize by estimated traffic potential and difficulty.</p>
 				</div>
 			</div>
 			<div class="sf-feature-card">
@@ -244,7 +244,7 @@ get_header();
 			</div>
 			<div class="sf-card sf-card--bordered">
 				<h3 class="sf-card__title">Content Decay Detection</h3>
-				<p class="sf-card__desc">Alert when a page&rsquo;s rankings decline. 7-day, 30-day, and 90-day trend analysis with velocity metrics.</p>
+				<p class="sf-card__desc">Alert when a page's rankings decline. 7-day, 30-day, and 90-day trend analysis with velocity metrics.</p>
 			</div>
 			<div class="sf-card sf-card--bordered">
 				<h3 class="sf-card__title">AI Content Briefs</h3>

@@ -35,7 +35,7 @@
 					<span class="sf-hero__feature-icon">
 						<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
 					</span>
-					<span>Directly shapes your new website&rsquo;s content &amp; information architecture with historical data, to boost your <strong>SEO</strong>, <strong>GEO</strong> &amp; <strong>AEO</strong>.</span>
+					<span>Directly shapes your new website's content &amp; information architecture with historical data, to boost your <strong>SEO</strong>, <strong>GEO</strong> &amp; <strong>AEO</strong>.</span>
 				</li>
 			</ul>
 			<div class="sf-hero__actions">

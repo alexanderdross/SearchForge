@@ -7,7 +7,7 @@
 
 $rows = [
 	[ 'capability' => 'Data collection',        'old' => 'Hours per week',                  'sf' => 'Automatic daily sync' ],
-	[ 'capability' => 'Sources combined',        'old' => 'Copy-paste between tabs',         'sf' => '8 sources in one dashboard' ],
+	[ 'capability' => 'Sources combined',        'old' => 'Copy-paste between tabs',         'sf' => '9 sources in one dashboard' ],
 	[ 'capability' => 'LLM-ready export',        'old' => 'Reformat manually',               'sf' => 'One-click markdown brief' ],
 	[ 'capability' => 'AI visibility',           'old' => 'Not tracked',                     'sf' => 'Monitored weekly' ],
 	[ 'capability' => 'Competitor data',         'old' => '$1,400/yr (Semrush)',              'sf' => 'Included in Pro (&euro;99/yr)' ],

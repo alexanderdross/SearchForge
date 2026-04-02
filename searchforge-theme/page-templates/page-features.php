@@ -12,7 +12,7 @@ get_header();
 	<div class="sf-container">
 		<h1><span class="sf-gradient-text">Every Feature You Need</span></h1>
 		<p class="sf-text--inverse-muted sf-page-hero__subtitle sf-page-hero__subtitle--narrow">
-			SearchForge unifies 8 SEO data sources into LLM-ready intelligence. Here&rsquo;s everything included.
+			SearchForge unifies 9 SEO data sources into LLM-ready intelligence. Here&rsquo;s everything included.
 		</p>
 	</div>
 </section>
@@ -21,7 +21,7 @@ get_header();
 <section class="sf-section" id="data-sources">
 	<div class="sf-container">
 		<div class="sf-section__header">
-			<h2>8 Data Sources, One Dashboard</h2>
+			<h2>9 Data Sources, One Dashboard</h2>
 			<p class="sf-text--muted">Connect once. Sync automatically. All data flows into unified per-page briefs.</p>
 		</div>
 
@@ -93,6 +93,16 @@ get_header();
 				<div class="sf-feature-card__content">
 					<h3>Bing Places for Business</h3>
 					<p>Bing local search impressions and actions. Cross-platform comparison with Google Business Profile to identify Bing-only discovery keywords.</p>
+				</div>
+			</div>
+
+			<div class="sf-feature-card">
+				<div class="sf-feature-card__icon" aria-hidden="true">
+					<img src="<?php echo esc_url( SF_THEME_URI ); ?>/assets/images/icons/adobe.svg" alt="" width="24" height="24">
+				</div>
+				<div class="sf-feature-card__content">
+					<h3>Adobe Analytics</h3>
+					<p>Enterprise behavior metrics via the Adobe Analytics 2.0 API. Visits, page views, bounce rate, time on page, conversions, and revenue. Ideal for organizations using the Adobe Experience Cloud.</p>
 				</div>
 			</div>
 

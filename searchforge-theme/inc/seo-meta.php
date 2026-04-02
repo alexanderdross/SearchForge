@@ -97,7 +97,7 @@ function sf_theme_get_page_meta(): array {
 		case str_contains( $template, 'page-features' ) || $slug === 'features':
 			return [
 				'title'       => 'Features - SearchForge for WordPress',
-				'description' => 'Explore SearchForge features: 8 data sources, SearchForge Score, AI Visibility Monitor, competitor intelligence, keyword clustering, content briefs, and more.',
+				'description' => 'Explore SearchForge features: 9 data sources, SearchForge Score, AI Visibility Monitor, competitor intelligence, keyword clustering, content briefs, and more.',
 			];
 
 		case str_contains( $template, 'page-pricing' ) || $slug === 'pricing':

@@ -47,6 +47,7 @@ get_header();
 					<tr><th scope="row">Google Trends</th><td>-</td><td>Unlimited</td><td>Unlimited</td><td>Unlimited</td></tr>
 					<tr><th scope="row">Google Business Profile</th><td>-</td><td>1 location</td><td>10 locations</td><td>Unlimited</td></tr>
 					<tr><th scope="row">Bing Places</th><td>-</td><td>1 location</td><td>10 locations</td><td>Unlimited</td></tr>
+					<tr><th scope="row">Adobe Analytics</th><td>-</td><td>Unlimited</td><td>Unlimited</td><td>Unlimited</td></tr>
 					<tr><th scope="row">AI Visibility Monitor</th><td>-</td><td>20 queries/mo</td><td>200 queries/mo</td><td>Unlimited</td></tr>
 					<tr><th scope="row">Competitor Intelligence</th><td>-</td><td>10 keywords/mo</td><td>100 keywords/mo</td><td>Unlimited</td></tr>
 

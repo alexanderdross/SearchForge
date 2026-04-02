@@ -43,7 +43,7 @@ get_header();
 					<img src="<?php echo esc_url( SF_THEME_URI ); ?>/assets/images/icons/layers.svg" alt="" width="24" height="24">
 				</div>
 				<h2 class="sf-card__title"><a href="<?php echo esc_url( home_url( '/docs/data-sources/' ) ); ?>" title="SearchForge Data Sources - GSC, Bing, GA4, Trends, GBP & More">Data Sources</a></h2>
-				<p class="sf-card__desc">Configure all 8 SEO data integrations: Google Search Console, Bing Webmaster, GA4, Keyword Planner, Trends, GBP, and Bing Places.</p>
+				<p class="sf-card__desc">Configure all 9 SEO data integrations: Google Search Console, Bing Webmaster, GA4, Keyword Planner, Trends, GBP, Bing Places, and Adobe Analytics.</p>
 				<ul style="list-style: none; margin-top: var(--space-md);">
 					<li style="padding: var(--space-xs) 0;"><a href="<?php echo esc_url( home_url( '/docs/data-sources/#google-search-console' ) ); ?>" title="Configure Google Search Console integration">Google Search Console</a></li>
 					<li style="padding: var(--space-xs) 0;"><a href="<?php echo esc_url( home_url( '/docs/data-sources/#bing-webmaster-tools' ) ); ?>" title="Configure Bing Webmaster Tools integration">Bing Webmaster Tools</a></li>

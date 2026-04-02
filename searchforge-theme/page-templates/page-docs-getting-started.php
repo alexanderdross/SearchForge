@@ -11,6 +11,7 @@ $sections = [
 	[ 'id' => 'installation',                    'label' => 'Installation',                    'title' => 'How to install SearchForge on WordPress' ],
 	[ 'id' => 'license-activation',              'label' => 'License Activation',              'title' => 'Activate your SearchForge license key' ],
 	[ 'id' => 'connecting-google-search-console', 'label' => 'Connecting Google Search Console', 'title' => 'Connect Google Search Console to SearchForge' ],
+	[ 'id' => 'connecting-additional-sources',    'label' => 'Additional Data Sources',         'title' => 'Connect additional SEO data sources to SearchForge' ],
 	[ 'id' => 'your-first-data-sync',            'label' => 'Your First Data Sync',            'title' => 'Run your first SEO data sync with SearchForge' ],
 	[ 'id' => 'exporting-your-first-brief',      'label' => 'Exporting Your First Brief',      'title' => 'Export your first AI-ready SEO brief' ],
 ];
@@ -70,6 +71,23 @@ $sections = [
 				<li>Select your GSC property from the dropdown and click <strong>Save</strong>.</li>
 			</ol>
 			<p>SearchForge uses OAuth 2.0  - your credentials are never stored. The access token is stored securely in your WordPress database.</p>
+		</article>
+
+		<hr style="border: none; border-top: 1px solid var(--sf-border); margin: var(--space-2xl) 0;">
+
+		<article class="sf-doc-section" id="connecting-additional-sources">
+			<h2>Connecting Additional Data Sources</h2>
+			<p>Pro and above tiers can connect up to 9 data sources. After GSC, consider connecting these for richer briefs:</p>
+			<ul class="sf-content">
+				<li><strong>Bing Webmaster Tools</strong> - Bing-specific search data via API key or OAuth.</li>
+				<li><strong>Google Analytics 4</strong> - On-page behavior metrics (bounce rate, engagement, conversions). Uses the same Google OAuth as GSC.</li>
+				<li><strong>Google Keyword Planner</strong> - Search volume and competition data. Requires a Google Ads account.</li>
+				<li><strong>Google Trends</strong> - Relative interest and rising queries. Requires a SerpApi key.</li>
+				<li><strong>Google Business Profile</strong> - Local SEO data for physical locations.</li>
+				<li><strong>Bing Places</strong> - Bing local search data.</li>
+				<li><strong>Adobe Analytics</strong> - Enterprise behavior metrics via the Adobe Analytics 2.0 API. Requires Adobe Developer Console credentials (Organization ID, Client ID, Client Secret) and a Report Suite ID.</li>
+			</ul>
+			<p>Configure all sources at <strong>SearchForge - Data Sources</strong>. Each source enriches your briefs with additional context.</p>
 		</article>
 
 		<hr style="border: none; border-top: 1px solid var(--sf-border); margin: var(--space-2xl) 0;">

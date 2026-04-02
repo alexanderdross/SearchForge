@@ -22,7 +22,30 @@ get_header();
 
 		<article class="sf-changelog-entry">
 			<div class="sf-changelog-entry__header">
-				<h2>v2.0.0 <span class="sf-badge sf-badge--accent">Latest</span></h2>
+				<h2>v2.1.0 <span class="sf-badge sf-badge--accent">Latest</span></h2>
+				<time class="sf-text--muted" datetime="2026-04-02">April 2, 2026</time>
+			</div>
+			<h3>Adobe Analytics Integration</h3>
+			<p class="sf-text--muted">SearchForge now connects to 9 data sources. Adobe Analytics joins the stack, bringing enterprise-grade behavior metrics for sites beyond the Google ecosystem.</p>
+			<h4>Added</h4>
+			<ul>
+				<li>Adobe Analytics integration via Adobe Analytics 2.0 API (visits, page views, bounce rate, time on page, conversions, revenue)</li>
+				<li>OAuth Server-to-Server authentication with Adobe IMS (Identity Management System)</li>
+				<li>Adobe Analytics settings section with Report Suite ID, Organization ID, and Client ID/Secret fields</li>
+				<li>Adobe behavior data included in per-page markdown briefs and combined master briefs</li>
+				<li>Side-by-side GA4 vs. Adobe Analytics comparison in page detail view</li>
+				<li>WP-CLI: <code>wp searchforge sync --source=adobe</code></li>
+			</ul>
+			<h4>Changed</h4>
+			<ul>
+				<li>Data source count updated from 8 to 9 across all marketing pages</li>
+				<li>Combined master brief now includes Adobe Analytics section when connected</li>
+			</ul>
+		</article>
+
+		<article class="sf-changelog-entry">
+			<div class="sf-changelog-entry__header">
+				<h2>v2.0.0</h2>
 				<time class="sf-text--muted" datetime="2026-03-08">March 8, 2026</time>
 			</div>
 			<h3>Version 2.0  - Feature Complete</h3>

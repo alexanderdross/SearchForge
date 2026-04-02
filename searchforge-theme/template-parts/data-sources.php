@@ -13,6 +13,7 @@ $sources = [
 	[ 'id' => 'trends', 'name' => 'Google Trends',          'tier' => 'Pro' ],
 	[ 'id' => 'gbp',    'name' => 'Business Profile',       'tier' => 'Pro' ],
 	[ 'id' => 'bing-places', 'name' => 'Bing Places',       'tier' => 'Pro' ],
+	[ 'id' => 'adobe',  'name' => 'Adobe Analytics',         'tier' => 'Pro' ],
 	[ 'id' => 'serp',   'name' => 'SERP Intelligence',      'tier' => 'Pro' ],
 ];
 ?>
@@ -20,7 +21,7 @@ $sources = [
 <section class="sf-section sf-section--light" id="data-sources">
 	<div class="sf-container">
 		<div class="sf-section__header">
-			<h2>8 Data Sources. One Unified Brief.</h2>
+			<h2>9 Data Sources. One Unified Brief.</h2>
 			<p class="sf-text--muted">Connect once, sync automatically. All data flows into a single per-page brief.</p>
 		</div>
 
@@ -42,7 +43,7 @@ $sources = [
 				<span class="sf-code-block__filename">master-brief-organic-coffee.md</span>
 			</div>
 			<pre class="sf-code-block__content"><code># Combined Master Brief: /organic-coffee/
-**Generated:** 2026-03-06 · **Sources:** GSC, Bing, GA4, Trends, KWP
+**Generated:** 2026-04-02 · **Sources:** GSC, Bing, GA4, Adobe, Trends, KWP
 
 ## Search Performance (GSC + Bing)
 | Query               | Google Pos | Bing Pos | Volume | Trend   |

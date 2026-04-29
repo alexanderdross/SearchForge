@@ -536,4 +536,97 @@
 			$btn.prop('disabled', false).text('Sync Keywords');
 		});
 	});
+	// --- Merger Analysis ---
+
+	// Enable/disable generate button based on property selection.
+	$(document).on('change', '.sf-merger-property', function () {
+		var checked = $('.sf-merger-property:checked').length;
+		$('#sf-generate-merger-brief').prop('disabled', checked < 2);
+	});
+
+	// Add another nav CSV upload row.
+	$(document).on('click', '#sf-add-nav-upload', function () {
+		var $row = $('.sf-nav-upload-row').first().clone();
+		$row.find('input').val('');
+		$('#sf-nav-uploads').append($row);
+	});
+
+	// Remove a nav CSV upload row (keep at least one).
+	$(document).on('click', '.sf-nav-upload-remove', function () {
+		if ($('.sf-nav-upload-row').length > 1) {
+			$(this).closest('.sf-nav-upload-row').remove();
+		} else {
+			$(this).closest('.sf-nav-upload-row').find('input').val('');
+		}
+	});
+
+	// Generate merger brief (with optional CSV uploads).
+	$(document).on('click', '#sf-generate-merger-brief', function () {
+		var $btn = $(this);
+		var $status = $('#sf-merger-status');
+		var ids = [];
+		$('.sf-merger-property:checked').each(function () {
+			ids.push($(this).val());
+		});
+
+		if (ids.length < 2) {
+			$status.text('Select at least 2 properties.');
+			return;
+		}
+
+		$btn.prop('disabled', true);
+		$status.text('Generating...');
+		$('#sf-merger-output').hide();
+
+		var formData = new FormData();
+		formData.append('action', 'searchforge_generate_merger_brief');
+		formData.append('nonce', searchforge.nonce);
+		ids.forEach(function (id) {
+			formData.append('property_ids[]', id);
+		});
+
+		// Attach CSV files.
+		$('.sf-nav-upload-row').each(function (i) {
+			var fileInput = $(this).find('.sf-nav-csv-file')[0];
+			var label = $(this).find('.sf-nav-csv-label').val();
+			if (fileInput && fileInput.files.length > 0) {
+				formData.append('nav_csv_files[' + i + ']', fileInput.files[0]);
+				formData.append('nav_csv_labels[' + i + ']', label || fileInput.files[0].name);
+			}
+		});
+
+		$.ajax({
+			url: searchforge.ajax_url,
+			type: 'POST',
+			data: formData,
+			processData: false,
+			contentType: false,
+			success: function (response) {
+				if (response.success) {
+					$('#sf-merger-content').text(response.data.markdown);
+					$('#sf-merger-output').show();
+					$status.text('Done.');
+
+					// Wire up download.
+					$('#sf-merger-download').off('click').on('click', function () {
+						var blob = new Blob([response.data.markdown], { type: 'text/markdown' });
+						var url = URL.createObjectURL(blob);
+						var a = document.createElement('a');
+						a.href = url;
+						a.download = response.data.filename || 'merger-analysis.md';
+						a.click();
+						URL.revokeObjectURL(url);
+					});
+				} else {
+					$status.text(response.data && response.data.message || 'Generation failed.');
+				}
+				$btn.prop('disabled', false);
+			},
+			error: function () {
+				$status.text('Network error.');
+				$btn.prop('disabled', false);
+			}
+		});
+	});
+
 })(jQuery);

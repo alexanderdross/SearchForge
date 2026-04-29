@@ -2,6 +2,24 @@
 
 All notable changes to the SearchForge WordPress plugin will be documented in this file.
 
+## [3.1.0] - 2026-04-29
+
+### Added
+- Adobe Analytics integration via Analytics 2.0 API (visits, page views, bounce rate, time on page, conversions, revenue).
+- OAuth Server-to-Server authentication with Adobe IMS (Identity Management System) per property.
+- Adobe Analytics settings section in property configuration: Organization ID, Client ID, Client Secret, Report Suite ID.
+- Adobe data synced into behavior metrics table alongside GA4 for unified analysis.
+- CSV navigation upload in Merger Analysis — upload one CSV per domain or subfolder with current header/footer items.
+- Flexible CSV column mapping accepts multiple header formats (label/text/name, url/link/href, location/position/type).
+- "Current Navigation Inventory" section in merger brief shows existing navigation alongside traffic-weighted recommendations.
+- Dynamic CSV upload UI with add/remove rows for multiple domains and subfolders.
+- WP-CLI: `wp searchforge sync --source=adobe` for Adobe Analytics sync.
+- REST API: merger-analysis endpoint accepts optional `nav_data` parameter.
+
+### Changed
+- Data source count increased from 8 to 9 with Adobe Analytics addition.
+- Merger analysis description updated to clarify CMS-agnostic support (WordPress, Drupal, custom backends).
+
 ## [3.0.0] - 2026-04-29
 
 ### Added

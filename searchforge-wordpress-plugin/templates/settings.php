@@ -68,6 +68,7 @@ if ( isset( $_GET['gsc_connected'] ) ) : ?>
 					<th><?php esc_html_e( 'GSC', 'searchforge' ); ?></th>
 					<th><?php esc_html_e( 'Bing', 'searchforge' ); ?></th>
 					<th><?php esc_html_e( 'GA4', 'searchforge' ); ?></th>
+					<th><?php esc_html_e( 'Adobe', 'searchforge' ); ?></th>
 					<th><?php esc_html_e( 'Actions', 'searchforge' ); ?></th>
 				</tr>
 			</thead>
@@ -79,6 +80,7 @@ if ( isset( $_GET['gsc_connected'] ) ) : ?>
 						<td><?php echo ! empty( $prop['gsc_access_token'] ) ? '<span class="sf-status sf-status-connected">Connected</span>' : '<span class="sf-status sf-status-disconnected">&mdash;</span>'; ?></td>
 						<td><?php echo ! empty( $prop['bing_enabled'] ) && ! empty( $prop['bing_api_key'] ) ? '<span class="sf-status sf-status-connected">Connected</span>' : '<span class="sf-status sf-status-disconnected">&mdash;</span>'; ?></td>
 						<td><?php echo ! empty( $prop['ga4_enabled'] ) && ! empty( $prop['ga4_property_id'] ) ? '<span class="sf-status sf-status-connected">Connected</span>' : '<span class="sf-status sf-status-disconnected">&mdash;</span>'; ?></td>
+						<td><?php echo ! empty( $prop['adobe_enabled'] ) && ! empty( $prop['adobe_client_id'] ) ? '<span class="sf-status sf-status-connected">Connected</span>' : '<span class="sf-status sf-status-disconnected">&mdash;</span>'; ?></td>
 						<td>
 							<?php if ( empty( $prop['is_default'] ) ) : ?>
 								<button type="button" class="button button-small sf-remove-property" data-id="<?php echo esc_attr( $prop['id'] ); ?>">
@@ -331,6 +333,72 @@ if ( isset( $_GET['gsc_connected'] ) ) : ?>
 						<?php disabled( ! SearchForge\Admin\Settings::is_pro() ); ?> />
 					<p class="description">
 						<?php esc_html_e( 'GA4 Property ID (numeric). Uses the same Google OAuth connection as GSC.', 'searchforge' ); ?>
+					</p>
+				</td>
+			</tr>
+		</table>
+
+		<!-- Adobe Analytics (Pro) -->
+		<h2><?php esc_html_e( 'Adobe Analytics', 'searchforge' ); ?>
+			<?php if ( ! SearchForge\Admin\Settings::is_pro() ) : ?>
+				<span class="sf-pro-badge">Pro</span>
+			<?php endif; ?>
+		</h2>
+		<p class="description"><?php esc_html_e( 'Connect Adobe Analytics for sites using non-WordPress backends (Drupal, custom CMS). Uses OAuth Server-to-Server authentication.', 'searchforge' ); ?></p>
+		<table class="form-table">
+			<tr>
+				<th scope="row"><?php esc_html_e( 'Enable', 'searchforge' ); ?></th>
+				<td>
+					<label>
+						<input type="checkbox" name="searchforge_settings[adobe_enabled]" value="1"
+							<?php checked( ! empty( $property['adobe_enabled'] ) ); ?>
+							<?php disabled( ! SearchForge\Admin\Settings::is_pro() ); ?> />
+						<?php esc_html_e( 'Enable Adobe Analytics integration (visits, pageviews, bounce rate, conversions, revenue)', 'searchforge' ); ?>
+					</label>
+				</td>
+			</tr>
+			<tr>
+				<th scope="row">
+					<label for="adobe_org_id"><?php esc_html_e( 'Organization ID', 'searchforge' ); ?></label>
+				</th>
+				<td>
+					<input type="text" name="searchforge_settings[adobe_org_id]" id="adobe_org_id"
+						value="<?php echo esc_attr( $property['adobe_org_id'] ?? '' ); ?>" class="regular-text"
+						placeholder="XXXXXXXXXXXXX@AdobeOrg"
+						<?php disabled( ! SearchForge\Admin\Settings::is_pro() ); ?> />
+				</td>
+			</tr>
+			<tr>
+				<th scope="row">
+					<label for="adobe_client_id"><?php esc_html_e( 'Client ID', 'searchforge' ); ?></label>
+				</th>
+				<td>
+					<input type="text" name="searchforge_settings[adobe_client_id]" id="adobe_client_id"
+						value="<?php echo esc_attr( $property['adobe_client_id'] ?? '' ); ?>" class="regular-text"
+						<?php disabled( ! SearchForge\Admin\Settings::is_pro() ); ?> />
+				</td>
+			</tr>
+			<tr>
+				<th scope="row">
+					<label for="adobe_client_secret"><?php esc_html_e( 'Client Secret', 'searchforge' ); ?></label>
+				</th>
+				<td>
+					<input type="password" name="searchforge_settings[adobe_client_secret]" id="adobe_client_secret"
+						value="<?php echo esc_attr( $property['adobe_client_secret'] ?? '' ); ?>" class="regular-text"
+						<?php disabled( ! SearchForge\Admin\Settings::is_pro() ); ?> />
+				</td>
+			</tr>
+			<tr>
+				<th scope="row">
+					<label for="adobe_report_suite_id"><?php esc_html_e( 'Report Suite ID', 'searchforge' ); ?></label>
+				</th>
+				<td>
+					<input type="text" name="searchforge_settings[adobe_report_suite_id]" id="adobe_report_suite_id"
+						value="<?php echo esc_attr( $property['adobe_report_suite_id'] ?? '' ); ?>" class="regular-text"
+						placeholder="myreportsuiteid"
+						<?php disabled( ! SearchForge\Admin\Settings::is_pro() ); ?> />
+					<p class="description">
+						<?php esc_html_e( 'Find this in Adobe Analytics under Admin > Report Suites.', 'searchforge' ); ?>
 					</p>
 				</td>
 			</tr>

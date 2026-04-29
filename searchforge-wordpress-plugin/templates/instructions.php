@@ -34,13 +34,13 @@ $is_pro = SearchForge\Admin\Settings::is_pro();
 					<span class="sf-pro-badge">Pro</span>
 				<?php endif; ?>
 			</h2>
-			<p><?php esc_html_e( 'Manage multiple domains or GSC properties from a single WordPress installation. Each property has its own GSC, Bing, and GA4 credentials, and all data is isolated per property.', 'searchforge' ); ?></p>
+			<p><?php esc_html_e( 'Manage multiple domains or GSC properties from a single WordPress installation. Each property has its own GSC, Bing, GA4, and Adobe Analytics credentials, and all data is isolated per property.', 'searchforge' ); ?></p>
 			<h3><?php esc_html_e( 'Adding a Property', 'searchforge' ); ?></h3>
 			<ol>
 				<li><?php esc_html_e( 'Go to SearchForge → Settings → Properties.', 'searchforge' ); ?></li>
 				<li><?php esc_html_e( 'Enter a label (e.g., "Main Site") and the domain (e.g., "example.com").', 'searchforge' ); ?></li>
 				<li><?php esc_html_e( 'Click "Add Property". The property appears in the table above.', 'searchforge' ); ?></li>
-				<li><?php esc_html_e( 'Connect GSC, Bing, and GA4 credentials for the new property in the respective settings sections.', 'searchforge' ); ?></li>
+				<li><?php esc_html_e( 'Connect GSC, Bing, GA4, and/or Adobe Analytics credentials for the new property in the respective settings sections.', 'searchforge' ); ?></li>
 			</ol>
 			<h3><?php esc_html_e( 'Switching Properties', 'searchforge' ); ?></h3>
 			<p><?php esc_html_e( 'When you have 2 or more properties, a "Property" dropdown appears at the top of every admin page. Select a property to view its data. Your selection is remembered per user.', 'searchforge' ); ?></p>
@@ -67,9 +67,37 @@ $is_pro = SearchForge\Admin\Settings::is_pro();
 					<tr><td>Google Analytics 4</td><td><?php esc_html_e( 'Pro+', 'searchforge' ); ?></td><td>OAuth 2.0</td></tr>
 					<tr><td>Google Keyword Planner</td><td><?php esc_html_e( 'Pro+', 'searchforge' ); ?></td><td><?php esc_html_e( 'Developer Token', 'searchforge' ); ?></td></tr>
 					<tr><td>Google Trends (via SerpAPI)</td><td><?php esc_html_e( 'Pro+', 'searchforge' ); ?></td><td><?php esc_html_e( 'API Key', 'searchforge' ); ?></td></tr>
+					<tr><td>Adobe Analytics</td><td><?php esc_html_e( 'Pro+', 'searchforge' ); ?></td><td><?php esc_html_e( 'OAuth Server-to-Server', 'searchforge' ); ?></td></tr>
 				</tbody>
 			</table>
 			<p style="margin-top: 12px;"><?php esc_html_e( 'Configure all sources in SearchForge → Settings. Each data source enriches your briefs with additional context.', 'searchforge' ); ?></p>
+		</div>
+
+		<hr style="border: none; border-top: 1px solid #dcdcde; margin: 24px 0;">
+
+		<!-- Adobe Analytics Setup -->
+		<div class="sf-instructions-section">
+			<h2><?php esc_html_e( 'Adobe Analytics Setup', 'searchforge' ); ?>
+				<?php if ( ! $is_pro ) : ?>
+					<span class="sf-pro-badge">Pro</span>
+				<?php endif; ?>
+			</h2>
+			<p><?php esc_html_e( 'Adobe Analytics provides enterprise-grade behavior metrics (visits, page views, bounce rate, time on page, conversions, revenue) as an alternative or complement to GA4. Useful when your sites run on non-Google analytics stacks (e.g., Drupal, custom CMS backends).', 'searchforge' ); ?></p>
+			<h3><?php esc_html_e( 'Prerequisites', 'searchforge' ); ?></h3>
+			<ol>
+				<li><?php esc_html_e( 'An Adobe Developer Console project with an OAuth Server-to-Server credential.', 'searchforge' ); ?></li>
+				<li><?php esc_html_e( 'The credential must have the Adobe Analytics API added as a product profile.', 'searchforge' ); ?></li>
+				<li><?php esc_html_e( 'Note the Organization ID, Client ID, Client Secret, and Report Suite ID.', 'searchforge' ); ?></li>
+			</ol>
+			<h3><?php esc_html_e( 'Configuration', 'searchforge' ); ?></h3>
+			<ol>
+				<li><?php esc_html_e( 'Go to SearchForge → Settings → scroll to the Adobe Analytics section for your property.', 'searchforge' ); ?></li>
+				<li><?php esc_html_e( 'Check "Enable Adobe Analytics".', 'searchforge' ); ?></li>
+				<li><?php esc_html_e( 'Enter your Organization ID, Client ID, Client Secret, and Report Suite ID.', 'searchforge' ); ?></li>
+				<li><?php esc_html_e( 'Save settings. The client secret is stored with AES-256-CBC encryption.', 'searchforge' ); ?></li>
+				<li><?php esc_html_e( 'Trigger a sync — Adobe data will appear alongside GA4 metrics in page detail views and briefs.', 'searchforge' ); ?></li>
+			</ol>
+			<p><?php esc_html_e( 'Adobe Analytics data is synced into the same behavior metrics table as GA4. When both are connected, the merger brief and page detail views include data from both sources.', 'searchforge' ); ?></p>
 		</div>
 
 		<hr style="border: none; border-top: 1px solid #dcdcde; margin: 24px 0;">
@@ -84,7 +112,7 @@ $is_pro = SearchForge\Admin\Settings::is_pro();
 				<li><?php esc_html_e( 'Daily click/impression chart (30 days)', 'searchforge' ); ?></li>
 				<li><?php esc_html_e( 'Top keywords with position, CTR, and search volume', 'searchforge' ); ?></li>
 				<li><?php esc_html_e( 'Device breakdown and Bing cross-reference data', 'searchforge' ); ?></li>
-				<li><?php esc_html_e( 'GA4 engagement metrics (sessions, bounce rate, conversions)', 'searchforge' ); ?></li>
+				<li><?php esc_html_e( 'GA4 and Adobe Analytics engagement metrics (sessions, bounce rate, conversions)', 'searchforge' ); ?></li>
 			</ul>
 		</div>
 
@@ -151,22 +179,25 @@ $is_pro = SearchForge\Admin\Settings::is_pro();
 					<span class="sf-pro-badge">Pro</span>
 				<?php endif; ?>
 			</h2>
-			<p><?php esc_html_e( 'Generate a comprehensive markdown brief for domain mergers, migrations, and portfolio consolidation. Available under SearchForge → Merger Analysis.', 'searchforge' ); ?></p>
+			<p><?php esc_html_e( 'Generate a comprehensive markdown brief for domain mergers, migrations, and portfolio consolidation. Available under SearchForge → Merger Analysis. Works with analytics data from any CMS backend (WordPress, Drupal, custom).', 'searchforge' ); ?></p>
 			<h3><?php esc_html_e( 'How to Use', 'searchforge' ); ?></h3>
 			<ol>
 				<li><?php esc_html_e( 'Ensure at least 2 properties are configured with synced data.', 'searchforge' ); ?></li>
 				<li><?php esc_html_e( 'Go to SearchForge → Merger Analysis.', 'searchforge' ); ?></li>
 				<li><?php esc_html_e( 'Select 2 or more properties via the checkboxes.', 'searchforge' ); ?></li>
+				<li><?php esc_html_e( 'Optionally, upload CSV files with your current header/footer navigation items for each domain or subfolder (e.g., www.domain.com, www.domain.com/country/, www.domain.com/country/product-1/).', 'searchforge' ); ?></li>
 				<li><?php esc_html_e( 'Click "Generate Merger Brief" and wait for the analysis to complete.', 'searchforge' ); ?></li>
 				<li><?php esc_html_e( 'Review the rendered brief or click "Download .md" to save it.', 'searchforge' ); ?></li>
 			</ol>
+			<h3><?php esc_html_e( 'Navigation CSV Upload', 'searchforge' ); ?></h3>
+			<p><?php esc_html_e( 'Upload one CSV per domain or subfolder containing your current navigation items. The CSV must have a header row with columns: label, url, location (header or footer). The brief will include a "Current Navigation Inventory" section showing your existing items alongside the traffic-weighted recommendations.', 'searchforge' ); ?></p>
 			<h3><?php esc_html_e( 'What the Brief Includes', 'searchforge' ); ?></h3>
 			<ul>
 				<li><strong><?php esc_html_e( 'Executive Summary', 'searchforge' ); ?></strong> — <?php esc_html_e( 'Aggregate traffic, keyword counts, and top-level consolidation recommendations.', 'searchforge' ); ?></li>
 				<li><strong><?php esc_html_e( 'URL Pattern Analysis', 'searchforge' ); ?></strong> — <?php esc_html_e( 'Subfolder structure detection across properties.', 'searchforge' ); ?></li>
 				<li><strong><?php esc_html_e( 'Navigation Recommendations', 'searchforge' ); ?></strong> — <?php esc_html_e( 'Traffic-weighted header (max 8-10 items) and footer navigation suggestions, plus items to consolidate or retire.', 'searchforge' ); ?></li>
 				<li><strong><?php esc_html_e( 'Information Architecture', 'searchforge' ); ?></strong> — <?php esc_html_e( 'Proposed content silos from keyword clusters and URL patterns, redirect map for 301s, orphaned content flagging.', 'searchforge' ); ?></li>
-				<li><strong><?php esc_html_e( 'User Funnel Optimization', 'searchforge' ); ?></strong> — <?php esc_html_e( 'Entry points, drop-off pages, conversion corridors to protect, and internal linking recommendations (requires GA4 data).', 'searchforge' ); ?></li>
+				<li><strong><?php esc_html_e( 'User Funnel Optimization', 'searchforge' ); ?></strong> — <?php esc_html_e( 'Entry points, drop-off pages, conversion corridors to protect, and internal linking recommendations (requires GA4 or Adobe Analytics data).', 'searchforge' ); ?></li>
 				<li><strong><?php esc_html_e( 'Cross-Property Cannibalization', 'searchforge' ); ?></strong> — <?php esc_html_e( 'Keywords where multiple properties compete against each other in search results.', 'searchforge' ); ?></li>
 			</ul>
 		</div>
@@ -273,6 +304,7 @@ $is_pro = SearchForge\Admin\Settings::is_pro();
 					<tr><td><code>wp searchforge status</code></td><td><?php esc_html_e( 'Show config, data summary, and properties', 'searchforge' ); ?></td></tr>
 					<tr><td><code>wp searchforge properties</code></td><td><?php esc_html_e( 'List all properties with connection status', 'searchforge' ); ?></td></tr>
 					<tr><td><code>wp searchforge export pages</code></td><td><?php esc_html_e( 'Export pages (--format=csv|json|md --property=ID)', 'searchforge' ); ?></td></tr>
+					<tr><td><code>wp searchforge sync --source=adobe</code></td><td><?php esc_html_e( 'Sync Adobe Analytics data for active property', 'searchforge' ); ?></td></tr>
 					<tr><td><code>wp searchforge merger</code></td><td><?php esc_html_e( 'Generate merger brief (--properties=1,2,3 --file=out.md)', 'searchforge' ); ?></td></tr>
 				</tbody>
 			</table>

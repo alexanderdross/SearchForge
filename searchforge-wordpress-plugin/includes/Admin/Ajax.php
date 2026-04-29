@@ -464,12 +464,77 @@ class Ajax {
 			wp_send_json_error( [ 'message' => __( 'Select at least 2 properties.', 'searchforge' ) ] );
 		}
 
-		$analyzer = new \SearchForge\Analysis\MergerAnalysis( $ids );
+		$nav_uploads = $this->parse_nav_csv_uploads();
+
+		$analyzer = new \SearchForge\Analysis\MergerAnalysis( $ids, $nav_uploads );
 		$markdown = $analyzer->generate_markdown();
 
 		wp_send_json_success( [
 			'markdown' => $markdown,
 			'filename' => 'searchforge-merger-analysis-' . implode( '-', $ids ) . '.md',
 		] );
+	}
+
+	private function parse_nav_csv_uploads(): array {
+		$nav_data = [];
+
+		if ( empty( $_FILES['nav_csv_files'] ) ) {
+			return $nav_data;
+		}
+
+		$files = $_FILES['nav_csv_files'];
+		$labels = $_POST['nav_csv_labels'] ?? [];
+
+		$file_count = is_array( $files['name'] ) ? count( $files['name'] ) : 0;
+
+		for ( $i = 0; $i < $file_count; $i++ ) {
+			if ( $files['error'][ $i ] !== UPLOAD_ERR_OK ) {
+				continue;
+			}
+
+			$tmp  = $files['tmp_name'][ $i ];
+			$label = sanitize_text_field( $labels[ $i ] ?? $files['name'][ $i ] );
+
+			$ext = strtolower( pathinfo( $files['name'][ $i ], PATHINFO_EXTENSION ) );
+			if ( $ext !== 'csv' ) {
+				continue;
+			}
+
+			$handle = fopen( $tmp, 'r' );
+			if ( ! $handle ) {
+				continue;
+			}
+
+			$header = fgetcsv( $handle );
+			if ( ! $header ) {
+				fclose( $handle );
+				continue;
+			}
+			$header = array_map( 'strtolower', array_map( 'trim', $header ) );
+
+			$items = [];
+			while ( ( $row = fgetcsv( $handle ) ) !== false ) {
+				if ( count( $row ) < 2 ) {
+					continue;
+				}
+				$mapped = array_combine( $header, array_pad( $row, count( $header ), '' ) );
+				$items[] = [
+					'label'    => sanitize_text_field( $mapped['label'] ?? $mapped['text'] ?? $mapped['name'] ?? $row[0] ),
+					'url'      => esc_url_raw( $mapped['url'] ?? $mapped['link'] ?? $mapped['href'] ?? $row[1] ),
+					'location' => sanitize_text_field( $mapped['location'] ?? $mapped['position'] ?? $mapped['type'] ?? 'header' ),
+				];
+			}
+
+			fclose( $handle );
+
+			if ( ! empty( $items ) ) {
+				$nav_data[] = [
+					'domain' => $label,
+					'items'  => $items,
+				];
+			}
+		}
+
+		return $nav_data;
 	}
 }

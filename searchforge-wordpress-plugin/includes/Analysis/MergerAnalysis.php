@@ -14,9 +14,11 @@ class MergerAnalysis {
 
 	private array $property_ids;
 	private array $properties = [];
+	private array $nav_uploads = [];
 
-	public function __construct( array $property_ids ) {
+	public function __construct( array $property_ids, array $nav_uploads = [] ) {
 		$this->property_ids = array_map( 'intval', $property_ids );
+		$this->nav_uploads  = $nav_uploads;
 		foreach ( $this->property_ids as $pid ) {
 			$prop = Property::get( $pid );
 			if ( $prop ) {
@@ -47,6 +49,9 @@ class MergerAnalysis {
 
 		$md .= "\n---\n\n";
 		$md .= $this->render_executive_summary( $summaries, $nav_analysis, $cannibal );
+		if ( ! empty( $this->nav_uploads ) ) {
+			$md .= $this->render_current_navigation();
+		}
 		$md .= $this->render_url_patterns( $url_patterns );
 		$md .= $this->render_navigation_recommendations( $nav_analysis );
 		$md .= $this->render_ia_restructuring( $ia_analysis );
@@ -740,6 +745,66 @@ class MergerAnalysis {
 
 		if ( empty( $funnel['entry_points'] ) && empty( $funnel['dropoff_points'] ) && empty( $funnel['conversion_corridors'] ) ) {
 			$md .= "*No GA4 data available. Connect GA4 for user funnel analysis.*\n\n";
+		}
+
+		return $md;
+	}
+
+	private function render_current_navigation(): string {
+		$md = "## Current Navigation Inventory\n\n";
+		$md .= "Navigation items uploaded from existing sites. Compare these against the traffic-weighted recommendations below.\n\n";
+
+		$total_header = 0;
+		$total_footer = 0;
+
+		foreach ( $this->nav_uploads as $upload ) {
+			$domain = $upload['domain'] ?? 'Unknown';
+			$items  = $upload['items'] ?? [];
+
+			$header_items = array_filter( $items, fn( $i ) => strtolower( $i['location'] ) === 'header' );
+			$footer_items = array_filter( $items, fn( $i ) => strtolower( $i['location'] ) !== 'header' );
+			$total_header += count( $header_items );
+			$total_footer += count( $footer_items );
+
+			$md .= "### {$domain}\n\n";
+
+			if ( ! empty( $header_items ) ) {
+				$md .= "**Header Navigation** (" . count( $header_items ) . " items)\n\n";
+				$md .= "| Label | URL |\n|-------|-----|\n";
+				foreach ( $header_items as $item ) {
+					$md .= "| {$item['label']} | `{$item['url']}` |\n";
+				}
+				$md .= "\n";
+			}
+
+			if ( ! empty( $footer_items ) ) {
+				$md .= "**Footer Navigation** (" . count( $footer_items ) . " items)\n\n";
+				$md .= "| Label | URL |\n|-------|-----|\n";
+				foreach ( $footer_items as $item ) {
+					$md .= "| {$item['label']} | `{$item['url']}` |\n";
+				}
+				$md .= "\n";
+			}
+		}
+
+		$md .= "**Totals:** {$total_header} header items, {$total_footer} footer items across " . count( $this->nav_uploads ) . " domains/subfolders.\n\n";
+
+		$all_urls = [];
+		foreach ( $this->nav_uploads as $upload ) {
+			foreach ( $upload['items'] ?? [] as $item ) {
+				$url = $item['url'] ?? '';
+				$path = wp_parse_url( $url, PHP_URL_PATH ) ?: $url;
+				$all_urls[ $path ] = ( $all_urls[ $path ] ?? 0 ) + 1;
+			}
+		}
+		$duplicates = array_filter( $all_urls, fn( $count ) => $count > 1 );
+		if ( ! empty( $duplicates ) ) {
+			arsort( $duplicates );
+			$md .= "**Shared across multiple domains:**\n\n";
+			foreach ( $duplicates as $path => $count ) {
+				$md .= "- `{$path}` (appears in {$count} domains)\n";
+			}
+			$md .= "\n";
 		}
 
 		return $md;

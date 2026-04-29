@@ -23,7 +23,7 @@ class Commands {
 	 * ## OPTIONS
 	 *
 	 * [--source=<source>]
-	 * : Sync a specific source only. Accepts: gsc, bing, ga4, kwp.
+	 * : Sync a specific source only. Accepts: gsc, bing, ga4, adobe, kwp.
 	 *
 	 * [--property=<id>]
 	 * : Sync a specific property only. If omitted, syncs all properties.
@@ -114,6 +114,23 @@ class Commands {
 				}
 			}
 
+			if ( in_array( $source, [ 'all', 'adobe' ], true ) ) {
+				$adobe_enabled = $prop ? ! empty( $prop['adobe_enabled'] ) : false;
+				$adobe_client  = $prop ? ( $prop['adobe_client_id'] ?? '' ) : '';
+				if ( ! Settings::is_pro() || ! $adobe_enabled || empty( $adobe_client ) ) {
+					\WP_CLI::warning( 'Adobe Analytics not configured or requires Pro. Skipping.' );
+				} else {
+					\WP_CLI::log( 'Syncing Adobe Analytics...' );
+					$syncer = new \SearchForge\Integrations\Adobe\Syncer( $pid );
+					$result = $syncer->sync();
+					if ( is_wp_error( $result ) ) {
+						\WP_CLI::warning( 'Adobe sync failed: ' . $result->get_error_message() );
+					} else {
+						\WP_CLI::success( 'Adobe Analytics sync completed.' );
+					}
+				}
+			}
+
 			if ( in_array( $source, [ 'all', 'kwp' ], true ) ) {
 				$settings = Settings::get_all();
 				if ( ! Settings::is_pro() || empty( $settings['kwp_enabled'] ) || empty( $settings['kwp_customer_id'] ) ) {
@@ -156,7 +173,8 @@ class Commands {
 			$gsc = ! empty( $prop['gsc_access_token'] ) ? 'Connected' : 'No';
 			$bing = ! empty( $prop['bing_enabled'] ) ? 'Yes' : 'No';
 			$ga4 = ! empty( $prop['ga4_enabled'] ) ? 'Yes' : 'No';
-			\WP_CLI::log( "  [{$pid}] {$prop['label']} ({$prop['domain']}) — GSC: {$gsc}, Bing: {$bing}, GA4: {$ga4}" );
+			$adobe = ! empty( $prop['adobe_enabled'] ) ? 'Yes' : 'No';
+			\WP_CLI::log( "  [{$pid}] {$prop['label']} ({$prop['domain']}) — GSC: {$gsc}, Bing: {$bing}, GA4: {$ga4}, Adobe: {$adobe}" );
 		}
 
 		\WP_CLI::log( '' );
@@ -355,9 +373,10 @@ class Commands {
 				'GSC'     => ! empty( $p['gsc_access_token'] ) ? 'Connected' : '—',
 				'Bing'    => ! empty( $p['bing_enabled'] ) ? 'Enabled' : '—',
 				'GA4'     => ! empty( $p['ga4_enabled'] ) ? 'Enabled' : '—',
+				'Adobe'   => ! empty( $p['adobe_enabled'] ) ? 'Enabled' : '—',
 			];
 		}, $properties );
-		\WP_CLI\Utils\format_items( 'table', $table_data, [ 'ID', 'Label', 'Domain', 'Default', 'GSC', 'Bing', 'GA4' ] );
+		\WP_CLI\Utils\format_items( 'table', $table_data, [ 'ID', 'Label', 'Domain', 'Default', 'GSC', 'Bing', 'GA4', 'Adobe' ] );
 	}
 
 	/**

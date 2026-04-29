@@ -551,7 +551,8 @@ class RestController {
 		if ( count( $ids ) < 2 ) {
 			return new \WP_REST_Response( [ 'error' => 'At least 2 property IDs required.' ], 400 );
 		}
-		$analyzer = new \SearchForge\Analysis\MergerAnalysis( $ids );
+		$nav_data = (array) $request->get_param( 'nav_data' ) ?: [];
+		$analyzer = new \SearchForge\Analysis\MergerAnalysis( $ids, $nav_data );
 		return new \WP_REST_Response( [ 'markdown' => $analyzer->generate_markdown() ] );
 	}
 }

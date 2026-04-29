@@ -177,6 +177,20 @@ final class SearchForge {
 					do_action( 'searchforge_sync_completed', 'ga4', $result, $pid );
 				}
 			}
+
+			// Adobe Analytics sync (Pro only).
+			if ( SearchForge\Admin\Settings::is_pro()
+				&& ! empty( $property['adobe_enabled'] )
+				&& ! empty( $property['adobe_client_id'] )
+			) {
+				$adobe_syncer = new SearchForge\Integrations\Adobe\Syncer( $pid );
+				$result = $adobe_syncer->sync();
+				if ( is_wp_error( $result ) ) {
+					do_action( 'searchforge_sync_failed', 'adobe', $result->get_error_message(), $pid );
+				} else {
+					do_action( 'searchforge_sync_completed', 'adobe', $result, $pid );
+				}
+			}
 		}
 
 		// Keyword Planner enrichment — global, not per-property.

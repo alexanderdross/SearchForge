@@ -2,12 +2,12 @@
 /**
  * Plugin Name: SearchForge
  * Plugin URI:  https://forge.drossmedia.de
- * Description: Unifies search data sources (GSC, Bing, Keyword Planner, Trends, GA4) into LLM-ready markdown briefs with AI content analysis.
- * Version:     3.0.0
+ * Description: Unifies search data sources (GSC, Bing, GA4, Adobe Analytics, Keyword Planner, Trends) into LLM-ready markdown briefs with AI content analysis.
+ * Version:     3.1.0
  * Author:      Dross Media
  * Author URI:  https://drossmedia.de
  * License:     GPL-2.0-or-later
- * Text Domain: searchforge
+ * Text Domain: searchforge-wordpress-plugin
  * Domain Path: /languages
  * Requires at least: 6.0
  * Requires PHP: 8.0
@@ -15,7 +15,7 @@
 
 defined( 'ABSPATH' ) || exit;
 
-define( 'SEARCHFORGE_VERSION', '3.0.0' );
+define( 'SEARCHFORGE_VERSION', '3.1.0' );
 define( 'SEARCHFORGE_FILE', __FILE__ );
 define( 'SEARCHFORGE_PATH', plugin_dir_path( __FILE__ ) );
 define( 'SEARCHFORGE_URL', plugin_dir_url( __FILE__ ) );
@@ -75,7 +75,7 @@ final class SearchForge {
 	}
 
 	public function init(): void {
-		load_plugin_textdomain( 'searchforge', false, dirname( plugin_basename( SEARCHFORGE_FILE ) ) . '/languages' );
+		load_plugin_textdomain( 'searchforge-wordpress-plugin', false, dirname( plugin_basename( SEARCHFORGE_FILE ) ) . '/languages' );
 
 		// Admin.
 		if ( is_admin() ) {

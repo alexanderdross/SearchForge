@@ -1,4 +1,5 @@
 <?php
+// phpcs:disable WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound
 defined( 'ABSPATH' ) || exit;
 
 $property_id = SearchForge\Models\Property::get_active_property_id();
@@ -22,6 +23,7 @@ if ( $is_pro ) {
 
 // Recent alerts.
 global $wpdb;
+// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 $recent_alerts = $wpdb->get_results( $wpdb->prepare(
 	"SELECT * FROM {$wpdb->prefix}sf_alerts WHERE property_id = %d ORDER BY created_at DESC LIMIT 5",
 	$property_id
@@ -29,16 +31,16 @@ $recent_alerts = $wpdb->get_results( $wpdb->prepare(
 ?>
 
 <div class="wrap searchforge-wrap">
-	<h1><?php esc_html_e( 'SearchForge Dashboard', 'searchforge' ); ?></h1>
+	<h1><?php esc_html_e( 'SearchForge Dashboard', 'searchforge-wordpress-plugin' ); ?></h1>
 
 	<?php include SEARCHFORGE_PATH . 'templates/partials/property-selector.php'; ?>
 
 	<?php if ( ! $connected ) : ?>
 		<div class="notice notice-warning">
 			<p>
-				<?php esc_html_e( 'Google Search Console is not connected.', 'searchforge' ); ?>
+				<?php esc_html_e( 'Google Search Console is not connected.', 'searchforge-wordpress-plugin' ); ?>
 				<a href="<?php echo esc_url( admin_url( 'admin.php?page=searchforge-settings' ) ); ?>">
-					<?php esc_html_e( 'Connect now', 'searchforge' ); ?>
+					<?php esc_html_e( 'Connect now', 'searchforge-wordpress-plugin' ); ?>
 				</a>
 			</p>
 		</div>
@@ -47,9 +49,9 @@ $recent_alerts = $wpdb->get_results( $wpdb->prepare(
 	<?php if ( $connected && $summary['total_pages'] === 0 ) : ?>
 		<div class="notice notice-info">
 			<p>
-				<?php esc_html_e( 'No data yet. Run your first sync to see results.', 'searchforge' ); ?>
+				<?php esc_html_e( 'No data yet. Run your first sync to see results.', 'searchforge-wordpress-plugin' ); ?>
 				<button type="button" class="button button-primary" id="sf-sync-btn">
-					<?php esc_html_e( 'Sync Now', 'searchforge' ); ?>
+					<?php esc_html_e( 'Sync Now', 'searchforge-wordpress-plugin' ); ?>
 				</button>
 			</p>
 		</div>
@@ -58,32 +60,32 @@ $recent_alerts = $wpdb->get_results( $wpdb->prepare(
 	<!-- Summary Cards -->
 	<div class="sf-cards">
 		<div class="sf-card">
-			<h3><?php esc_html_e( 'Total Clicks', 'searchforge' ); ?></h3>
+			<h3><?php esc_html_e( 'Total Clicks', 'searchforge-wordpress-plugin' ); ?></h3>
 			<span class="sf-card-value"><?php echo esc_html( number_format( $summary['total_clicks'] ) ); ?></span>
 		</div>
 		<div class="sf-card">
-			<h3><?php esc_html_e( 'Total Impressions', 'searchforge' ); ?></h3>
+			<h3><?php esc_html_e( 'Total Impressions', 'searchforge-wordpress-plugin' ); ?></h3>
 			<span class="sf-card-value"><?php echo esc_html( number_format( $summary['total_impressions'] ) ); ?></span>
 		</div>
 		<div class="sf-card">
-			<h3><?php esc_html_e( 'Avg CTR', 'searchforge' ); ?></h3>
+			<h3><?php esc_html_e( 'Avg CTR', 'searchforge-wordpress-plugin' ); ?></h3>
 			<span class="sf-card-value"><?php echo esc_html( $summary['avg_ctr'] ); ?>%</span>
 		</div>
 		<div class="sf-card">
-			<h3><?php esc_html_e( 'Avg Position', 'searchforge' ); ?></h3>
+			<h3><?php esc_html_e( 'Avg Position', 'searchforge-wordpress-plugin' ); ?></h3>
 			<span class="sf-card-value"><?php echo esc_html( $summary['avg_position'] ); ?></span>
 		</div>
 		<div class="sf-card">
-			<h3><?php esc_html_e( 'Pages', 'searchforge' ); ?></h3>
+			<h3><?php esc_html_e( 'Pages', 'searchforge-wordpress-plugin' ); ?></h3>
 			<span class="sf-card-value"><?php echo esc_html( number_format( $summary['total_pages'] ) ); ?></span>
 		</div>
 		<div class="sf-card">
-			<h3><?php esc_html_e( 'Keywords', 'searchforge' ); ?></h3>
+			<h3><?php esc_html_e( 'Keywords', 'searchforge-wordpress-plugin' ); ?></h3>
 			<span class="sf-card-value"><?php echo esc_html( number_format( $summary['total_keywords'] ) ); ?></span>
 		</div>
 		<?php if ( $site_score ) : ?>
 			<div class="sf-card sf-card-score">
-				<h3><?php esc_html_e( 'SearchForge Score', 'searchforge' ); ?></h3>
+				<h3><?php esc_html_e( 'SearchForge Score', 'searchforge-wordpress-plugin' ); ?></h3>
 				<span class="sf-card-value sf-score-<?php echo $site_score['total'] >= 70 ? 'good' : ( $site_score['total'] >= 40 ? 'ok' : 'low' ); ?>">
 					<?php echo esc_html( $site_score['total'] ); ?>/100
 				</span>
@@ -93,12 +95,14 @@ $recent_alerts = $wpdb->get_results( $wpdb->prepare(
 
 	<!-- 14-Day Trend Chart -->
 	<?php if ( ! empty( $daily_trend ) ) : ?>
-		<div class="sf-chart-container" aria-label="<?php esc_attr_e( '14-day performance trend chart showing clicks and impressions over time', 'searchforge' ); ?>">
-			<h2><?php esc_html_e( '14-Day Performance', 'searchforge' ); ?></h2>
+		<div class="sf-chart-container" aria-label="<?php esc_attr_e( '14-day performance trend chart showing clicks and impressions over time', 'searchforge-wordpress-plugin' ); ?>">
+			<h2><?php esc_html_e( '14-Day Performance', 'searchforge-wordpress-plugin' ); ?></h2>
 			<canvas id="sf-dashboard-chart" height="200"></canvas>
 			<span class="screen-reader-text">
-				<?php echo esc_html( sprintf(
-					__( 'Line chart displaying daily clicks and impressions for the last 14 days. Total clicks: %s, Total impressions: %s.', 'searchforge' ),
+				<?php
+				/* translators: %1$s: total clicks, %2$s: total impressions */
+				echo esc_html( sprintf(
+					__( 'Line chart displaying daily clicks and impressions for the last 14 days. Total clicks: %1$s, Total impressions: %2$s.', 'searchforge-wordpress-plugin' ),
 					number_format( $summary['total_clicks'] ),
 					number_format( $summary['total_impressions'] )
 				) ); ?>
@@ -112,7 +116,7 @@ $recent_alerts = $wpdb->get_results( $wpdb->prepare(
 	<!-- Recent Alerts -->
 	<?php if ( ! empty( $recent_alerts ) ) : ?>
 		<div class="sf-alerts-section">
-			<h2><?php esc_html_e( 'Recent Alerts', 'searchforge' ); ?></h2>
+			<h2><?php esc_html_e( 'Recent Alerts', 'searchforge-wordpress-plugin' ); ?></h2>
 			<?php foreach ( $recent_alerts as $alert ) : ?>
 				<div class="sf-alert sf-alert-<?php echo esc_attr( $alert['severity'] ); ?>">
 					<strong>[<?php echo esc_html( strtoupper( $alert['severity'] ) ); ?>]</strong>
@@ -126,14 +130,14 @@ $recent_alerts = $wpdb->get_results( $wpdb->prepare(
 	<!-- Content Decay Warning -->
 	<?php if ( ! empty( $decaying ) ) : ?>
 		<div class="sf-decay-section">
-			<h2><?php esc_html_e( 'Content Decay Warning', 'searchforge' ); ?></h2>
+			<h2><?php esc_html_e( 'Content Decay Warning', 'searchforge-wordpress-plugin' ); ?></h2>
 			<table class="widefat sf-table">
 				<thead>
 					<tr>
-						<th scope="col"><?php esc_html_e( 'Page', 'searchforge' ); ?></th>
-						<th scope="col"><?php esc_html_e( 'Recent Clicks', 'searchforge' ); ?></th>
-						<th scope="col"><?php esc_html_e( 'Previous Clicks', 'searchforge' ); ?></th>
-						<th scope="col"><?php esc_html_e( 'Change', 'searchforge' ); ?></th>
+						<th scope="col"><?php esc_html_e( 'Page', 'searchforge-wordpress-plugin' ); ?></th>
+						<th scope="col"><?php esc_html_e( 'Recent Clicks', 'searchforge-wordpress-plugin' ); ?></th>
+						<th scope="col"><?php esc_html_e( 'Previous Clicks', 'searchforge-wordpress-plugin' ); ?></th>
+						<th scope="col"><?php esc_html_e( 'Change', 'searchforge-wordpress-plugin' ); ?></th>
 					</tr>
 				</thead>
 				<tbody>
@@ -154,15 +158,17 @@ $recent_alerts = $wpdb->get_results( $wpdb->prepare(
 	<?php if ( $is_pro && $cannibal_count > 0 ) : ?>
 		<div class="sf-cannibal-summary">
 			<h2>
-				<?php echo esc_html( sprintf(
-					__( 'Keyword Cannibalization (%d issues)', 'searchforge' ),
+				<?php
+				/* translators: %d: number of cannibalization issues */
+				echo esc_html( sprintf(
+					__( 'Keyword Cannibalization (%d issues)', 'searchforge-wordpress-plugin' ),
 					$cannibal_count
 				) ); ?>
 			</h2>
 			<p class="description">
-				<?php esc_html_e( 'Multiple pages compete for the same keywords, splitting ranking signals.', 'searchforge' ); ?>
+				<?php esc_html_e( 'Multiple pages compete for the same keywords, splitting ranking signals.', 'searchforge-wordpress-plugin' ); ?>
 				<a href="<?php echo esc_url( admin_url( 'admin.php?page=searchforge-analysis&tab=cannibalization' ) ); ?>">
-					<?php esc_html_e( 'View all', 'searchforge' ); ?> &rarr;
+					<?php esc_html_e( 'View all', 'searchforge-wordpress-plugin' ); ?> &rarr;
 				</a>
 			</p>
 			<?php
@@ -176,8 +182,10 @@ $recent_alerts = $wpdb->get_results( $wpdb->prepare(
 			<?php foreach ( $top_cannibal as $item ) : ?>
 				<div class="sf-alert sf-alert-<?php echo $item['severity'] === 'high' ? 'high' : 'medium'; ?>">
 					<strong>&ldquo;<?php echo esc_html( $item['query'] ); ?>&rdquo;</strong>
-					<?php echo esc_html( sprintf(
-						__( '%d pages competing | %s impressions', 'searchforge' ),
+					<?php
+					/* translators: %1$d: number of competing pages, %2$s: total impressions */
+					echo esc_html( sprintf(
+						__( '%1$d pages competing | %2$s impressions', 'searchforge-wordpress-plugin' ),
 						$item['page_count'],
 						number_format( $item['total_impressions'] )
 					) ); ?>
@@ -188,29 +196,31 @@ $recent_alerts = $wpdb->get_results( $wpdb->prepare(
 
 	<?php if ( $summary['last_sync'] ) : ?>
 		<p class="sf-last-sync">
-			<?php echo esc_html( sprintf(
-				__( 'Last sync: %s (%s)', 'searchforge' ),
+			<?php
+			/* translators: %1$s: last sync date and time, %2$s: sync status */
+			echo esc_html( sprintf(
+				__( 'Last sync: %1$s (%2$s)', 'searchforge-wordpress-plugin' ),
 				wp_date( get_option( 'date_format' ) . ' ' . get_option( 'time_format' ), strtotime( $summary['last_sync'] ) ),
 				$summary['sync_status'] ?? 'unknown'
 			) ); ?>
 			<button type="button" class="button" id="sf-sync-btn">
-				<?php esc_html_e( 'Sync Now', 'searchforge' ); ?>
+				<?php esc_html_e( 'Sync Now', 'searchforge-wordpress-plugin' ); ?>
 			</button>
 		</p>
 	<?php endif; ?>
 
 	<!-- Top Pages -->
 	<?php if ( ! empty( $pages ) ) : ?>
-		<h2><?php esc_html_e( 'Top Pages', 'searchforge' ); ?></h2>
+		<h2><?php esc_html_e( 'Top Pages', 'searchforge-wordpress-plugin' ); ?></h2>
 		<table class="widefat sf-table">
 			<thead>
 				<tr>
-					<th scope="col"><?php esc_html_e( 'Page', 'searchforge' ); ?></th>
-					<th scope="col"><?php esc_html_e( 'Clicks', 'searchforge' ); ?></th>
-					<th scope="col"><?php esc_html_e( 'Impressions', 'searchforge' ); ?></th>
-					<th scope="col"><?php esc_html_e( 'CTR', 'searchforge' ); ?></th>
-					<th scope="col"><?php esc_html_e( 'Position', 'searchforge' ); ?></th>
-					<th scope="col"><?php esc_html_e( 'Actions', 'searchforge' ); ?></th>
+					<th scope="col"><?php esc_html_e( 'Page', 'searchforge-wordpress-plugin' ); ?></th>
+					<th scope="col"><?php esc_html_e( 'Clicks', 'searchforge-wordpress-plugin' ); ?></th>
+					<th scope="col"><?php esc_html_e( 'Impressions', 'searchforge-wordpress-plugin' ); ?></th>
+					<th scope="col"><?php esc_html_e( 'CTR', 'searchforge-wordpress-plugin' ); ?></th>
+					<th scope="col"><?php esc_html_e( 'Position', 'searchforge-wordpress-plugin' ); ?></th>
+					<th scope="col"><?php esc_html_e( 'Actions', 'searchforge-wordpress-plugin' ); ?></th>
 				</tr>
 			</thead>
 			<tbody>
@@ -228,7 +238,7 @@ $recent_alerts = $wpdb->get_results( $wpdb->prepare(
 						<td>
 							<button class="button button-small sf-export-btn"
 								data-page="<?php echo esc_attr( $page['page_path'] ); ?>">
-								<?php esc_html_e( 'Export Brief', 'searchforge' ); ?>
+								<?php esc_html_e( 'Export Brief', 'searchforge-wordpress-plugin' ); ?>
 							</button>
 						</td>
 					</tr>
@@ -239,16 +249,16 @@ $recent_alerts = $wpdb->get_results( $wpdb->prepare(
 
 	<!-- Top Keywords -->
 	<?php if ( ! empty( $keywords ) ) : ?>
-		<h2><?php esc_html_e( 'Top Keywords', 'searchforge' ); ?></h2>
+		<h2><?php esc_html_e( 'Top Keywords', 'searchforge-wordpress-plugin' ); ?></h2>
 		<table class="widefat sf-table">
 			<thead>
 				<tr>
-					<th scope="col"><?php esc_html_e( 'Keyword', 'searchforge' ); ?></th>
-					<th scope="col"><?php esc_html_e( 'Page', 'searchforge' ); ?></th>
-					<th scope="col"><?php esc_html_e( 'Clicks', 'searchforge' ); ?></th>
-					<th scope="col"><?php esc_html_e( 'Impressions', 'searchforge' ); ?></th>
-					<th scope="col"><?php esc_html_e( 'CTR', 'searchforge' ); ?></th>
-					<th scope="col"><?php esc_html_e( 'Position', 'searchforge' ); ?></th>
+					<th scope="col"><?php esc_html_e( 'Keyword', 'searchforge-wordpress-plugin' ); ?></th>
+					<th scope="col"><?php esc_html_e( 'Page', 'searchforge-wordpress-plugin' ); ?></th>
+					<th scope="col"><?php esc_html_e( 'Clicks', 'searchforge-wordpress-plugin' ); ?></th>
+					<th scope="col"><?php esc_html_e( 'Impressions', 'searchforge-wordpress-plugin' ); ?></th>
+					<th scope="col"><?php esc_html_e( 'CTR', 'searchforge-wordpress-plugin' ); ?></th>
+					<th scope="col"><?php esc_html_e( 'Position', 'searchforge-wordpress-plugin' ); ?></th>
 				</tr>
 			</thead>
 			<tbody>
@@ -266,3 +276,4 @@ $recent_alerts = $wpdb->get_results( $wpdb->prepare(
 		</table>
 	<?php endif; ?>
 </div>
+<?php // phpcs:enable WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound ?>

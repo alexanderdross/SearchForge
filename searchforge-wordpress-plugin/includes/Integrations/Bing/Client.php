@@ -129,7 +129,7 @@ class Client {
 	private static function api_get( string $endpoint, array $params = [], ?array $property = null ): array|\WP_Error {
 		$api_key = self::get_api_key( $property );
 		if ( empty( $api_key ) ) {
-			return new \WP_Error( 'no_api_key', __( 'Bing API key not configured.', 'searchforge' ) );
+			return new \WP_Error( 'no_api_key', __( 'Bing API key not configured.', 'searchforge-wordpress-plugin' ) );
 		}
 
 		$params['apikey'] = $api_key;

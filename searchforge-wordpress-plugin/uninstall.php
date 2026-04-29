@@ -10,6 +10,7 @@ global $wpdb;
 
 // Drop custom tables.
 $tables = [
+	'sf_properties',
 	'sf_snapshots',
 	'sf_keywords',
 	'sf_sync_log',
@@ -23,7 +24,8 @@ $tables = [
 ];
 
 foreach ( $tables as $table ) {
-	$wpdb->query( "DROP TABLE IF EXISTS {$wpdb->prefix}{$table}" ); // phpcs:ignore WordPress.DB.PreparedSQL
+	// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL
+	$wpdb->query( "DROP TABLE IF EXISTS {$wpdb->prefix}{$table}" );
 }
 
 // Remove options.

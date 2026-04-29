@@ -17,6 +17,7 @@ class BrokenLinks {
 	public static function scan( int $max_pages = 20 ): array {
 		global $wpdb;
 
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 		$pages = $wpdb->get_col(
 			$wpdb->prepare(
 				"SELECT DISTINCT page_path FROM {$wpdb->prefix}sf_snapshots
@@ -154,10 +155,12 @@ class BrokenLinks {
 	private static function store_results( array $broken ): void {
 		global $wpdb;
 
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
 		$wpdb->insert( "{$wpdb->prefix}sf_alerts", [
 			'alert_type' => 'broken_links',
+			/* translators: %d: number of broken links detected */
 			'title'      => sprintf(
-				__( '%d broken link(s) detected', 'searchforge' ),
+				__( '%d broken link(s) detected', 'searchforge-wordpress-plugin' ),
 				count( $broken )
 			),
 			'severity'   => count( $broken ) > 5 ? 'high' : 'medium',
@@ -257,6 +260,7 @@ class BrokenLinks {
 	public static function get_latest(): array {
 		global $wpdb;
 
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 		$result = $wpdb->get_row(
 			"SELECT data, created_at FROM {$wpdb->prefix}sf_alerts
 			WHERE alert_type = 'broken_links'

@@ -20,10 +20,11 @@ class Enricher {
 		global $wpdb;
 
 		if ( ! Settings::is_pro() ) {
-			return new \WP_Error( 'not_pro', __( 'Keyword Planner requires a Pro license.', 'searchforge' ) );
+			return new \WP_Error( 'not_pro', __( 'Keyword Planner requires a Pro license.', 'searchforge-wordpress-plugin' ) );
 		}
 
 		// Get unique keywords without volume data.
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 		$keywords = $wpdb->get_col(
 			"SELECT DISTINCT query FROM {$wpdb->prefix}sf_keywords
 			WHERE search_volume IS NULL
@@ -53,6 +54,7 @@ class Enricher {
 					continue;
 				}
 
+				// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
 				$updated = $wpdb->query( $wpdb->prepare(
 					"UPDATE {$wpdb->prefix}sf_keywords
 					SET search_volume = %d, competition = %s
@@ -86,6 +88,7 @@ class Enricher {
 		global $wpdb;
 
 		// Get your top existing keywords as seeds.
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 		$seeds = $wpdb->get_col(
 			"SELECT DISTINCT query FROM {$wpdb->prefix}sf_keywords
 			WHERE source = 'gsc'
@@ -103,6 +106,7 @@ class Enricher {
 		}
 
 		// Filter out keywords you already rank for.
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 		$existing = $wpdb->get_col(
 			"SELECT DISTINCT query FROM {$wpdb->prefix}sf_keywords WHERE source = 'gsc'"
 		);

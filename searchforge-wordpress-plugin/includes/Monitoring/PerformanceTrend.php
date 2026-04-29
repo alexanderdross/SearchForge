@@ -21,6 +21,7 @@ class PerformanceTrend {
 
 		global $wpdb;
 
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 		return $wpdb->get_results( $wpdb->prepare(
 			"SELECT
 				snapshot_date,
@@ -52,6 +53,7 @@ class PerformanceTrend {
 
 		global $wpdb;
 
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 		return $wpdb->get_results( $wpdb->prepare(
 			"SELECT
 				YEARWEEK(snapshot_date, 1) AS year_week,
@@ -85,6 +87,7 @@ class PerformanceTrend {
 
 		global $wpdb;
 
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 		return $wpdb->get_results( $wpdb->prepare(
 			"SELECT
 				snapshot_date,
@@ -115,6 +118,7 @@ class PerformanceTrend {
 
 		global $wpdb;
 
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 		$current = $wpdb->get_row( $wpdb->prepare(
 			"SELECT
 				SUM(clicks) AS clicks,
@@ -129,6 +133,7 @@ class PerformanceTrend {
 			$property_id
 		), ARRAY_A );
 
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 		$previous = $wpdb->get_row( $wpdb->prepare(
 			"SELECT
 				SUM(clicks) AS clicks,

@@ -43,7 +43,7 @@ class Assets {
 		if ( $needs_charts ) {
 			wp_enqueue_script(
 				'chartjs',
-				'https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js',
+				SEARCHFORGE_URL . 'assets/js/chart.umd.min.js',
 				[],
 				'4.4.7',
 				true

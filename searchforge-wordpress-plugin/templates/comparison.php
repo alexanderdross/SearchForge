@@ -1,4 +1,5 @@
 <?php
+// phpcs:disable WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound
 defined( 'ABSPATH' ) || exit;
 
 $is_pro      = SearchForge\Admin\Settings::is_pro();
@@ -7,7 +8,7 @@ $property_id = SearchForge\Models\Property::get_active_property_id();
 ?>
 
 <div class="wrap searchforge-wrap">
-	<h1><?php esc_html_e( 'SearchForge — Property Comparison', 'searchforge' ); ?>
+	<h1><?php esc_html_e( 'SearchForge — Property Comparison', 'searchforge-wordpress-plugin' ); ?>
 		<?php if ( ! $is_pro ) : ?>
 			<span class="sf-pro-badge">Pro</span>
 		<?php endif; ?>
@@ -17,25 +18,25 @@ $property_id = SearchForge\Models\Property::get_active_property_id();
 
 	<?php if ( ! $is_pro ) : ?>
 		<div class="notice notice-info">
-			<p><?php esc_html_e( 'Property comparison requires a Pro license. Upgrade to compare metrics across multiple properties.', 'searchforge' ); ?></p>
+			<p><?php esc_html_e( 'Property comparison requires a Pro license. Upgrade to compare metrics across multiple properties.', 'searchforge-wordpress-plugin' ); ?></p>
 		</div>
 	<?php elseif ( count( $properties ) < 2 ) : ?>
 		<div class="notice notice-info">
 			<p>
-				<?php esc_html_e( 'Add at least 2 properties in Settings to use the comparison view.', 'searchforge' ); ?>
+				<?php esc_html_e( 'Add at least 2 properties in Settings to use the comparison view.', 'searchforge-wordpress-plugin' ); ?>
 				<a href="<?php echo esc_url( admin_url( 'admin.php?page=searchforge-settings' ) ); ?>">
-					<?php esc_html_e( 'Go to Settings', 'searchforge' ); ?>
+					<?php esc_html_e( 'Go to Settings', 'searchforge-wordpress-plugin' ); ?>
 				</a>
 			</p>
 		</div>
 	<?php else : ?>
 
-		<p class="description"><?php esc_html_e( 'Compare key SEO metrics side-by-side across your properties.', 'searchforge' ); ?></p>
+		<p class="description"><?php esc_html_e( 'Compare key SEO metrics side-by-side across your properties.', 'searchforge-wordpress-plugin' ); ?></p>
 
 		<table class="widefat sf-table" style="margin-top: 16px;">
 			<thead>
 				<tr>
-					<th scope="col"><?php esc_html_e( 'Metric', 'searchforge' ); ?></th>
+					<th scope="col"><?php esc_html_e( 'Metric', 'searchforge-wordpress-plugin' ); ?></th>
 					<?php foreach ( $properties as $prop ) : ?>
 						<th scope="col"><?php echo esc_html( $prop['label'] ); ?></th>
 					<?php endforeach; ?>
@@ -51,43 +52,43 @@ $property_id = SearchForge\Models\Property::get_active_property_id();
 				}
 				?>
 				<tr>
-					<td><strong><?php esc_html_e( 'Total Clicks', 'searchforge' ); ?></strong></td>
+					<td><strong><?php esc_html_e( 'Total Clicks', 'searchforge-wordpress-plugin' ); ?></strong></td>
 					<?php foreach ( $properties as $prop ) : ?>
 						<td><?php echo esc_html( number_format( $summaries[ $prop['id'] ]['total_clicks'] ) ); ?></td>
 					<?php endforeach; ?>
 				</tr>
 				<tr>
-					<td><strong><?php esc_html_e( 'Total Impressions', 'searchforge' ); ?></strong></td>
+					<td><strong><?php esc_html_e( 'Total Impressions', 'searchforge-wordpress-plugin' ); ?></strong></td>
 					<?php foreach ( $properties as $prop ) : ?>
 						<td><?php echo esc_html( number_format( $summaries[ $prop['id'] ]['total_impressions'] ) ); ?></td>
 					<?php endforeach; ?>
 				</tr>
 				<tr>
-					<td><strong><?php esc_html_e( 'Avg CTR', 'searchforge' ); ?></strong></td>
+					<td><strong><?php esc_html_e( 'Avg CTR', 'searchforge-wordpress-plugin' ); ?></strong></td>
 					<?php foreach ( $properties as $prop ) : ?>
 						<td><?php echo esc_html( $summaries[ $prop['id'] ]['avg_ctr'] ); ?>%</td>
 					<?php endforeach; ?>
 				</tr>
 				<tr>
-					<td><strong><?php esc_html_e( 'Avg Position', 'searchforge' ); ?></strong></td>
+					<td><strong><?php esc_html_e( 'Avg Position', 'searchforge-wordpress-plugin' ); ?></strong></td>
 					<?php foreach ( $properties as $prop ) : ?>
 						<td><?php echo esc_html( $summaries[ $prop['id'] ]['avg_position'] ); ?></td>
 					<?php endforeach; ?>
 				</tr>
 				<tr>
-					<td><strong><?php esc_html_e( 'Pages', 'searchforge' ); ?></strong></td>
+					<td><strong><?php esc_html_e( 'Pages', 'searchforge-wordpress-plugin' ); ?></strong></td>
 					<?php foreach ( $properties as $prop ) : ?>
 						<td><?php echo esc_html( number_format( $summaries[ $prop['id'] ]['total_pages'] ) ); ?></td>
 					<?php endforeach; ?>
 				</tr>
 				<tr>
-					<td><strong><?php esc_html_e( 'Keywords', 'searchforge' ); ?></strong></td>
+					<td><strong><?php esc_html_e( 'Keywords', 'searchforge-wordpress-plugin' ); ?></strong></td>
 					<?php foreach ( $properties as $prop ) : ?>
 						<td><?php echo esc_html( number_format( $summaries[ $prop['id'] ]['total_keywords'] ) ); ?></td>
 					<?php endforeach; ?>
 				</tr>
 				<tr>
-					<td><strong><?php esc_html_e( 'SearchForge Score', 'searchforge' ); ?></strong></td>
+					<td><strong><?php esc_html_e( 'SearchForge Score', 'searchforge-wordpress-plugin' ); ?></strong></td>
 					<?php foreach ( $properties as $prop ) : ?>
 						<td>
 							<?php if ( $scores[ $prop['id'] ] ) : ?>
@@ -101,7 +102,7 @@ $property_id = SearchForge\Models\Property::get_active_property_id();
 					<?php endforeach; ?>
 				</tr>
 				<tr>
-					<td><strong><?php esc_html_e( 'GSC Connected', 'searchforge' ); ?></strong></td>
+					<td><strong><?php esc_html_e( 'GSC Connected', 'searchforge-wordpress-plugin' ); ?></strong></td>
 					<?php foreach ( $properties as $prop ) : ?>
 						<td><?php echo ! empty( $prop['gsc_access_token'] ) ? '<span class="sf-status sf-status-connected">Yes</span>' : '<span class="sf-status sf-status-disconnected">No</span>'; ?></td>
 					<?php endforeach; ?>
@@ -111,3 +112,4 @@ $property_id = SearchForge\Models\Property::get_active_property_id();
 
 	<?php endif; ?>
 </div>
+<?php // phpcs:enable WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound ?>

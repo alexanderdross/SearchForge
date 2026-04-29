@@ -25,7 +25,7 @@ class ContentBrief {
 		$property_id = $property_id ?: Property::get_active_property_id();
 
 		if ( ! Settings::is_pro() ) {
-			return new \WP_Error( 'not_pro', __( 'Content briefs require a Pro license.', 'searchforge' ) );
+			return new \WP_Error( 'not_pro', __( 'Content briefs require a Pro license.', 'searchforge-wordpress-plugin' ) );
 		}
 
 		$context = self::gather_context( $page_path, $property_id );
@@ -59,6 +59,7 @@ class ContentBrief {
 
 		global $wpdb;
 
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 		$latest_date = $wpdb->get_var( $wpdb->prepare(
 			"SELECT MAX(snapshot_date) FROM {$wpdb->prefix}sf_snapshots
 			WHERE page_path = %s AND source = 'gsc' AND property_id = %d",
@@ -67,9 +68,10 @@ class ContentBrief {
 		) );
 
 		if ( ! $latest_date ) {
-			return new \WP_Error( 'no_data', __( 'No data found for this page.', 'searchforge' ) );
+			return new \WP_Error( 'no_data', __( 'No data found for this page.', 'searchforge-wordpress-plugin' ) );
 		}
 
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 		$page_data = $wpdb->get_row( $wpdb->prepare(
 			"SELECT clicks, impressions, ctr, position
 			FROM {$wpdb->prefix}sf_snapshots
@@ -79,6 +81,7 @@ class ContentBrief {
 			$property_id
 		), ARRAY_A );
 
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 		$keywords = $wpdb->get_results( $wpdb->prepare(
 			"SELECT query, clicks, impressions, ctr, position, search_volume, competition
 			FROM {$wpdb->prefix}sf_keywords
@@ -106,6 +109,7 @@ class ContentBrief {
 			$placeholders  = implode( ',', array_fill( 0, count( $query_list ), '%s' ) );
 			$prepare_args  = array_merge( $query_list, [ $latest_date, $property_id ] );
 
+			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 			$cannibalizing = $wpdb->get_col( $wpdb->prepare(
 				"SELECT query
 				FROM {$wpdb->prefix}sf_keywords

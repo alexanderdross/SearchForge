@@ -33,7 +33,7 @@ class Client {
 
 		$customer_id = Settings::get( 'kwp_customer_id', '' );
 		if ( empty( $customer_id ) ) {
-			return new \WP_Error( 'no_customer', __( 'Google Ads customer ID not configured.', 'searchforge' ) );
+			return new \WP_Error( 'no_customer', __( 'Google Ads customer ID not configured.', 'searchforge-wordpress-plugin' ) );
 		}
 
 		$body = [
@@ -88,7 +88,7 @@ class Client {
 
 		$customer_id = Settings::get( 'kwp_customer_id', '' );
 		if ( empty( $customer_id ) ) {
-			return new \WP_Error( 'no_customer', __( 'Google Ads customer ID not configured.', 'searchforge' ) );
+			return new \WP_Error( 'no_customer', __( 'Google Ads customer ID not configured.', 'searchforge-wordpress-plugin' ) );
 		}
 
 		$body = [

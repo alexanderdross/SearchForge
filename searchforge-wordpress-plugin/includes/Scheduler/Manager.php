@@ -26,12 +26,12 @@ class Manager {
 	public function add_custom_schedules( array $schedules ): array {
 		$schedules['every_six_hours'] = [
 			'interval' => 6 * HOUR_IN_SECONDS,
-			'display'  => __( 'Every 6 Hours', 'searchforge' ),
+			'display'  => __( 'Every 6 Hours', 'searchforge-wordpress-plugin' ),
 		];
 
 		$schedules['every_four_hours'] = [
 			'interval' => 4 * HOUR_IN_SECONDS,
-			'display'  => __( 'Every 4 Hours', 'searchforge' ),
+			'display'  => __( 'Every 4 Hours', 'searchforge-wordpress-plugin' ),
 		];
 
 		return $schedules;
@@ -61,15 +61,15 @@ class Manager {
 	 */
 	public static function get_schedule_options(): array {
 		$options = [
-			'daily'      => __( 'Daily', 'searchforge' ),
-			'twicedaily' => __( 'Twice Daily', 'searchforge' ),
-			'weekly'     => __( 'Weekly', 'searchforge' ),
+			'daily'      => __( 'Daily', 'searchforge-wordpress-plugin' ),
+			'twicedaily' => __( 'Twice Daily', 'searchforge-wordpress-plugin' ),
+			'weekly'     => __( 'Weekly', 'searchforge-wordpress-plugin' ),
 		];
 
 		if ( Settings::is_pro() ) {
 			$options = [
-				'every_four_hours' => __( 'Every 4 Hours', 'searchforge' ),
-				'every_six_hours'  => __( 'Every 6 Hours', 'searchforge' ),
+				'every_four_hours' => __( 'Every 4 Hours', 'searchforge-wordpress-plugin' ),
+				'every_six_hours'  => __( 'Every 6 Hours', 'searchforge-wordpress-plugin' ),
 			] + $options;
 		}
 

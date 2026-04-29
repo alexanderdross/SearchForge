@@ -35,6 +35,7 @@ class Onboarding {
 		if ( $connected ) {
 			// Check if first sync has happened.
 			global $wpdb;
+			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 			$has_data = (int) $wpdb->get_var( "SELECT COUNT(*) FROM {$wpdb->prefix}sf_snapshots LIMIT 1" );
 			if ( $has_data > 0 ) {
 				// User has data — dismiss onboarding.
@@ -49,10 +50,10 @@ class Onboarding {
 		?>
 		<div class="notice notice-info sf-onboarding-notice" id="sf-onboarding">
 			<p>
-				<strong><?php esc_html_e( 'SearchForge Setup', 'searchforge' ); ?></strong>
+				<strong><?php esc_html_e( 'SearchForge Setup', 'searchforge-wordpress-plugin' ); ?></strong>
 				(<?php echo esc_html( "{$completed}/{$total}" ); ?>)
 				<button type="button" class="notice-dismiss sf-dismiss-onboarding"
-					title="<?php esc_attr_e( 'Dismiss', 'searchforge' ); ?>"></button>
+					title="<?php esc_attr_e( 'Dismiss', 'searchforge-wordpress-plugin' ); ?>"></button>
 			</p>
 			<ol class="sf-setup-steps">
 				<?php foreach ( $steps as $step ) : ?>
@@ -83,9 +84,10 @@ class Onboarding {
 
 		$steps[] = [
 			'text' => $connected
-				? __( 'Google Search Console connected', 'searchforge' )
+				? __( 'Google Search Console connected', 'searchforge-wordpress-plugin' )
+				/* translators: %s: settings page URL */
 				: sprintf(
-					__( 'Connect Google Search Console in <a href="%s">Settings</a>', 'searchforge' ),
+					__( 'Connect Google Search Console in <a href="%s">Settings</a>', 'searchforge-wordpress-plugin' ),
 					admin_url( 'admin.php?page=searchforge-settings' )
 				),
 			'done' => $connected,
@@ -93,20 +95,23 @@ class Onboarding {
 
 		$steps[] = [
 			'text' => ! empty( $settings['gsc_property'] )
-				? sprintf( __( 'Property selected: %s', 'searchforge' ), $settings['gsc_property'] )
+				/* translators: %s: GSC property URL */
+				? sprintf( __( 'Property selected: %s', 'searchforge-wordpress-plugin' ), $settings['gsc_property'] )
 				: sprintf(
-					__( 'Select a GSC property in <a href="%s">Settings</a>', 'searchforge' ),
+					/* translators: %s: settings page URL */
+					__( 'Select a GSC property in <a href="%s">Settings</a>', 'searchforge-wordpress-plugin' ),
 					admin_url( 'admin.php?page=searchforge-settings' )
 				),
 			'done' => ! empty( $settings['gsc_property'] ),
 		];
 
 		global $wpdb;
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 		$has_data = (int) $wpdb->get_var( "SELECT COUNT(*) FROM {$wpdb->prefix}sf_snapshots LIMIT 1" );
 		$steps[] = [
 			'text' => $has_data > 0
-				? __( 'First sync completed', 'searchforge' )
-				: __( 'Run your first sync from the Dashboard', 'searchforge' ),
+				? __( 'First sync completed', 'searchforge-wordpress-plugin' )
+				: __( 'Run your first sync from the Dashboard', 'searchforge-wordpress-plugin' ),
 			'done' => $has_data > 0,
 		];
 

@@ -30,25 +30,26 @@ class Syncer {
 		global $wpdb;
 
 		if ( ! Settings::is_pro() ) {
-			return new \WP_Error( 'not_pro', __( 'Bing integration requires a Pro license.', 'searchforge' ) );
+			return new \WP_Error( 'not_pro', __( 'Bing integration requires a Pro license.', 'searchforge-wordpress-plugin' ) );
 		}
 
 		$prop = Property::get( $this->property_id );
 		if ( ! $prop ) {
-			return new \WP_Error( 'no_property', __( 'Property not found.', 'searchforge' ) );
+			return new \WP_Error( 'no_property', __( 'Property not found.', 'searchforge-wordpress-plugin' ) );
 		}
 
 		$site_url = $prop['bing_site_url'] ?? '';
 		if ( empty( $site_url ) ) {
-			return new \WP_Error( 'no_site', __( 'No Bing site URL configured.', 'searchforge' ) );
+			return new \WP_Error( 'no_site', __( 'No Bing site URL configured.', 'searchforge-wordpress-plugin' ) );
 		}
 
 		$api_key = $prop['bing_api_key'] ?? '';
 		if ( empty( $api_key ) ) {
-			return new \WP_Error( 'no_api_key', __( 'Bing API key not configured.', 'searchforge' ) );
+			return new \WP_Error( 'no_api_key', __( 'Bing API key not configured.', 'searchforge-wordpress-plugin' ) );
 		}
 
 		// Log sync start.
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
 		$wpdb->insert( "{$wpdb->prefix}sf_sync_log", [
 			'source'      => 'bing',
 			'status'      => 'running',
@@ -77,6 +78,7 @@ class Syncer {
 			$keywords_synced = $this->store_keyword_data( $query_stats, $today );
 
 			// Log success.
+			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
 			$wpdb->update( "{$wpdb->prefix}sf_sync_log", [
 				'status'          => 'completed',
 				'pages_synced'    => $pages_synced,
@@ -104,6 +106,7 @@ class Syncer {
 		// Bing returns an array of page stat objects.
 		$pages = is_array( $stats ) ? $stats : [];
 
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
 		$wpdb->query( 'START TRANSACTION' );
 
 		try {
@@ -121,6 +124,7 @@ class Syncer {
 				$position    = (float) ( $entry['AvgImpressionPosition'] ?? $entry['Position'] ?? 0 );
 
 				// Upsert.
+				// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
 				$wpdb->query( $wpdb->prepare(
 					"DELETE FROM {$table} WHERE page_path = %s AND snapshot_date = %s AND source = 'bing' AND device = 'all' AND property_id = %d",
 					$page_path,
@@ -128,6 +132,7 @@ class Syncer {
 					$this->property_id
 				) );
 
+				// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
 				$result = $wpdb->insert( $table, [
 					'page_url'      => $page_url,
 					'page_path'     => $page_path,
@@ -148,8 +153,10 @@ class Syncer {
 				$count++;
 			}
 
+			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
 			$wpdb->query( 'COMMIT' );
 		} catch ( \Exception $e ) {
+			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
 			$wpdb->query( 'ROLLBACK' );
 			throw $e;
 		}
@@ -164,10 +171,12 @@ class Syncer {
 
 		$queries = is_array( $stats ) ? $stats : [];
 
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
 		$wpdb->query( 'START TRANSACTION' );
 
 		try {
 			// Delete existing Bing keywords for this date and property.
+			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
 			$wpdb->query( $wpdb->prepare(
 				"DELETE FROM {$table} WHERE snapshot_date = %s AND source = 'bing' AND property_id = %d",
 				$snapshot_date,
@@ -191,6 +200,7 @@ class Syncer {
 					$page_path = wp_parse_url( $entry['Url'], PHP_URL_PATH ) ?: '/';
 				}
 
+				// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
 				$result = $wpdb->insert( $table, [
 					'page_path'     => $page_path,
 					'query'         => $query,
@@ -211,8 +221,10 @@ class Syncer {
 				$count++;
 			}
 
+			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
 			$wpdb->query( 'COMMIT' );
 		} catch ( \Exception $e ) {
+			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
 			$wpdb->query( 'ROLLBACK' );
 			throw $e;
 		}
@@ -223,6 +235,7 @@ class Syncer {
 	private function log_failure( int $log_id, string $message ): void {
 		global $wpdb;
 
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
 		$wpdb->update( "{$wpdb->prefix}sf_sync_log", [
 			'status'        => 'failed',
 			'error_message' => $message,

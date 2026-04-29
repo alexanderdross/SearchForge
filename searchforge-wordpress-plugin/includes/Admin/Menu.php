@@ -12,8 +12,8 @@ class Menu {
 
 	public function register_menus(): void {
 		add_menu_page(
-			__( 'SearchForge', 'searchforge' ),
-			__( 'SearchForge', 'searchforge' ),
+			__( 'SearchForge', 'searchforge-wordpress-plugin' ),
+			__( 'SearchForge', 'searchforge-wordpress-plugin' ),
 			'manage_options',
 			'searchforge',
 			[ $this, 'render_dashboard' ],
@@ -23,8 +23,8 @@ class Menu {
 
 		add_submenu_page(
 			'searchforge',
-			__( 'Dashboard', 'searchforge' ),
-			__( 'Dashboard', 'searchforge' ),
+			__( 'Dashboard', 'searchforge-wordpress-plugin' ),
+			__( 'Dashboard', 'searchforge-wordpress-plugin' ),
 			'manage_options',
 			'searchforge',
 			[ $this, 'render_dashboard' ]
@@ -32,8 +32,8 @@ class Menu {
 
 		add_submenu_page(
 			'searchforge',
-			__( 'Pages', 'searchforge' ),
-			__( 'Pages', 'searchforge' ),
+			__( 'Pages', 'searchforge-wordpress-plugin' ),
+			__( 'Pages', 'searchforge-wordpress-plugin' ),
 			'manage_options',
 			'searchforge-pages',
 			[ $this, 'render_pages' ]
@@ -41,8 +41,8 @@ class Menu {
 
 		add_submenu_page(
 			'searchforge',
-			__( 'Keywords', 'searchforge' ),
-			__( 'Keywords', 'searchforge' ),
+			__( 'Keywords', 'searchforge-wordpress-plugin' ),
+			__( 'Keywords', 'searchforge-wordpress-plugin' ),
 			'manage_options',
 			'searchforge-keywords',
 			[ $this, 'render_keywords' ]
@@ -50,8 +50,8 @@ class Menu {
 
 		add_submenu_page(
 			'searchforge',
-			__( 'Analysis', 'searchforge' ),
-			__( 'Analysis', 'searchforge' ),
+			__( 'Analysis', 'searchforge-wordpress-plugin' ),
+			__( 'Analysis', 'searchforge-wordpress-plugin' ),
 			'manage_options',
 			'searchforge-analysis',
 			[ $this, 'render_analysis' ]
@@ -59,8 +59,8 @@ class Menu {
 
 		add_submenu_page(
 			'searchforge',
-			__( 'Competitors', 'searchforge' ),
-			__( 'Competitors', 'searchforge' ),
+			__( 'Competitors', 'searchforge-wordpress-plugin' ),
+			__( 'Competitors', 'searchforge-wordpress-plugin' ),
 			'manage_options',
 			'searchforge-competitors',
 			[ $this, 'render_competitors' ]
@@ -68,8 +68,8 @@ class Menu {
 
 		add_submenu_page(
 			'searchforge',
-			__( 'Monitoring', 'searchforge' ),
-			__( 'Monitoring', 'searchforge' ),
+			__( 'Monitoring', 'searchforge-wordpress-plugin' ),
+			__( 'Monitoring', 'searchforge-wordpress-plugin' ),
 			'manage_options',
 			'searchforge-monitoring',
 			[ $this, 'render_monitoring' ]
@@ -77,8 +77,8 @@ class Menu {
 
 		add_submenu_page(
 			'searchforge',
-			__( 'Export', 'searchforge' ),
-			__( 'Export', 'searchforge' ),
+			__( 'Export', 'searchforge-wordpress-plugin' ),
+			__( 'Export', 'searchforge-wordpress-plugin' ),
 			'manage_options',
 			'searchforge-export',
 			[ $this, 'render_export' ]
@@ -86,8 +86,8 @@ class Menu {
 
 		add_submenu_page(
 			'searchforge',
-			__( 'Comparison', 'searchforge' ),
-			__( 'Comparison', 'searchforge' ),
+			__( 'Comparison', 'searchforge-wordpress-plugin' ),
+			__( 'Comparison', 'searchforge-wordpress-plugin' ),
 			'manage_options',
 			'searchforge-comparison',
 			[ $this, 'render_comparison' ]
@@ -95,8 +95,8 @@ class Menu {
 
 		add_submenu_page(
 			'searchforge',
-			__( 'Merger Analysis', 'searchforge' ),
-			__( 'Merger Analysis', 'searchforge' ),
+			__( 'Merger Analysis', 'searchforge-wordpress-plugin' ),
+			__( 'Merger Analysis', 'searchforge-wordpress-plugin' ),
 			'manage_options',
 			'searchforge-merger',
 			[ $this, 'render_merger' ]
@@ -104,8 +104,8 @@ class Menu {
 
 		add_submenu_page(
 			'searchforge',
-			__( 'Instructions', 'searchforge' ),
-			__( 'Instructions', 'searchforge' ),
+			__( 'Instructions', 'searchforge-wordpress-plugin' ),
+			__( 'Instructions', 'searchforge-wordpress-plugin' ),
 			'manage_options',
 			'searchforge-instructions',
 			[ $this, 'render_instructions' ]
@@ -113,8 +113,8 @@ class Menu {
 
 		add_submenu_page(
 			'searchforge',
-			__( 'Settings', 'searchforge' ),
-			__( 'Settings', 'searchforge' ),
+			__( 'Settings', 'searchforge-wordpress-plugin' ),
+			__( 'Settings', 'searchforge-wordpress-plugin' ),
 			'manage_options',
 			'searchforge-settings',
 			[ $this, 'render_settings' ]
@@ -123,59 +123,64 @@ class Menu {
 		// Hidden page detail view (no menu entry).
 		add_submenu_page(
 			null,
-			__( 'Page Detail', 'searchforge' ),
-			__( 'Page Detail', 'searchforge' ),
+			__( 'Page Detail', 'searchforge-wordpress-plugin' ),
+			__( 'Page Detail', 'searchforge-wordpress-plugin' ),
 			'manage_options',
 			'searchforge-page-detail',
 			[ $this, 'render_page_detail' ]
 		);
 	}
 
+	private function render_template( string $template ): void {
+		include SEARCHFORGE_PATH . 'templates/' . $template;
+		include SEARCHFORGE_PATH . 'templates/partials/admin-footer.php';
+	}
+
 	public function render_dashboard(): void {
-		include SEARCHFORGE_PATH . 'templates/dashboard.php';
+		$this->render_template( 'dashboard.php' );
 	}
 
 	public function render_pages(): void {
-		include SEARCHFORGE_PATH . 'templates/pages.php';
+		$this->render_template( 'pages.php' );
 	}
 
 	public function render_keywords(): void {
-		include SEARCHFORGE_PATH . 'templates/keywords.php';
+		$this->render_template( 'keywords.php' );
 	}
 
 	public function render_analysis(): void {
-		include SEARCHFORGE_PATH . 'templates/analysis.php';
+		$this->render_template( 'analysis.php' );
 	}
 
 	public function render_monitoring(): void {
-		include SEARCHFORGE_PATH . 'templates/monitoring.php';
+		$this->render_template( 'monitoring.php' );
 	}
 
 	public function render_export(): void {
-		include SEARCHFORGE_PATH . 'templates/export.php';
+		$this->render_template( 'export.php' );
 	}
 
 	public function render_settings(): void {
-		include SEARCHFORGE_PATH . 'templates/settings.php';
+		$this->render_template( 'settings.php' );
 	}
 
 	public function render_competitors(): void {
-		include SEARCHFORGE_PATH . 'templates/competitors.php';
+		$this->render_template( 'competitors.php' );
 	}
 
 	public function render_page_detail(): void {
-		include SEARCHFORGE_PATH . 'templates/page-detail.php';
+		$this->render_template( 'page-detail.php' );
 	}
 
 	public function render_instructions(): void {
-		include SEARCHFORGE_PATH . 'templates/instructions.php';
+		$this->render_template( 'instructions.php' );
 	}
 
 	public function render_comparison(): void {
-		include SEARCHFORGE_PATH . 'templates/comparison.php';
+		$this->render_template( 'comparison.php' );
 	}
 
 	public function render_merger(): void {
-		include SEARCHFORGE_PATH . 'templates/merger-analysis.php';
+		$this->render_template( 'merger-analysis.php' );
 	}
 }

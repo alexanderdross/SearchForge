@@ -16,6 +16,7 @@ class PageDetail {
 
 		global $wpdb;
 
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 		$latest_date = $wpdb->get_var( $wpdb->prepare(
 			"SELECT MAX(snapshot_date) FROM {$wpdb->prefix}sf_snapshots
 			WHERE page_path = %s AND source = 'gsc' AND device = 'all' AND property_id = %d",
@@ -28,6 +29,7 @@ class PageDetail {
 		}
 
 		// Current metrics.
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 		$metrics = $wpdb->get_row( $wpdb->prepare(
 			"SELECT clicks, impressions, ctr, position
 			FROM {$wpdb->prefix}sf_snapshots
@@ -59,6 +61,7 @@ class PageDetail {
 
 		global $wpdb;
 
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 		$latest_date = $wpdb->get_var( $wpdb->prepare(
 			"SELECT MAX(snapshot_date) FROM {$wpdb->prefix}sf_keywords
 			WHERE page_path = %s AND source = 'gsc' AND property_id = %d",
@@ -70,6 +73,7 @@ class PageDetail {
 			return [];
 		}
 
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 		return $wpdb->get_results( $wpdb->prepare(
 			"SELECT query, clicks, impressions, ctr, position
 			FROM {$wpdb->prefix}sf_keywords
@@ -91,6 +95,7 @@ class PageDetail {
 
 		global $wpdb;
 
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 		$latest_date = $wpdb->get_var( $wpdb->prepare(
 			"SELECT MAX(snapshot_date) FROM {$wpdb->prefix}sf_snapshots
 			WHERE page_path = %s AND source = 'gsc' AND property_id = %d",
@@ -102,6 +107,7 @@ class PageDetail {
 			return [];
 		}
 
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 		return $wpdb->get_results( $wpdb->prepare(
 			"SELECT device, clicks, impressions, ctr, position
 			FROM {$wpdb->prefix}sf_snapshots
@@ -124,6 +130,7 @@ class PageDetail {
 
 		$cutoff = gmdate( 'Y-m-d', strtotime( "-{$days} days" ) );
 
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 		return $wpdb->get_results( $wpdb->prepare(
 			"SELECT snapshot_date, clicks, impressions, ctr, position
 			FROM {$wpdb->prefix}sf_snapshots
@@ -144,6 +151,7 @@ class PageDetail {
 
 		global $wpdb;
 
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 		$latest_date = $wpdb->get_var( $wpdb->prepare(
 			"SELECT MAX(snapshot_date) FROM {$wpdb->prefix}sf_snapshots
 			WHERE page_path = %s AND source = 'bing' AND device = 'all' AND property_id = %d",
@@ -155,6 +163,7 @@ class PageDetail {
 			return null;
 		}
 
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 		return $wpdb->get_row( $wpdb->prepare(
 			"SELECT clicks, impressions, ctr, position
 			FROM {$wpdb->prefix}sf_snapshots
@@ -176,10 +185,12 @@ class PageDetail {
 		$table = $wpdb->prefix . 'sf_ga4_metrics';
 
 		// Check if table exists.
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 		if ( $wpdb->get_var( "SHOW TABLES LIKE '{$table}'" ) !== $table ) {
 			return null;
 		}
 
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 		return $wpdb->get_row( $wpdb->prepare(
 			"SELECT page_path, sessions, bounce_rate, avg_session_dur,
 				conversions, pageviews
@@ -200,6 +211,7 @@ class PageDetail {
 
 		global $wpdb;
 
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 		$latest_date = $wpdb->get_var( $wpdb->prepare(
 			"SELECT MAX(snapshot_date) FROM {$wpdb->prefix}sf_keywords
 			WHERE page_path = %s AND source = 'gsc' AND property_id = %d",
@@ -219,6 +231,7 @@ class PageDetail {
 			'50+'   => 0,
 		];
 
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 		$keywords = $wpdb->get_results( $wpdb->prepare(
 			"SELECT position FROM {$wpdb->prefix}sf_keywords
 			WHERE page_path = %s AND snapshot_date = %s AND source = 'gsc' AND property_id = %d",
@@ -253,6 +266,7 @@ class PageDetail {
 
 		global $wpdb;
 
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 		$latest_date = $wpdb->get_var( $wpdb->prepare(
 			"SELECT MAX(snapshot_date) FROM {$wpdb->prefix}sf_keywords
 			WHERE page_path = %s AND source = 'gsc' AND property_id = %d",
@@ -265,6 +279,7 @@ class PageDetail {
 		}
 
 		// Find queries where this page competes with other pages.
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 		return $wpdb->get_results( $wpdb->prepare(
 			"SELECT k1.query, k1.clicks AS my_clicks, k1.position AS my_position,
 				k2.page_path AS competing_page, k2.clicks AS their_clicks, k2.position AS their_position

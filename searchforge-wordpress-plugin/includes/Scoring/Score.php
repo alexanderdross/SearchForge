@@ -26,6 +26,7 @@ class Score {
 
 		global $wpdb;
 
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 		$latest_date = $wpdb->get_var( $wpdb->prepare(
 			"SELECT MAX(snapshot_date) FROM {$wpdb->prefix}sf_snapshots
 			WHERE page_path = %s AND source = 'gsc' AND property_id = %d",
@@ -37,6 +38,7 @@ class Score {
 			return null;
 		}
 
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 		$page_data = $wpdb->get_row( $wpdb->prepare(
 			"SELECT clicks, impressions, ctr, position
 			FROM {$wpdb->prefix}sf_snapshots
@@ -50,6 +52,7 @@ class Score {
 			return null;
 		}
 
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 		$keywords = $wpdb->get_results( $wpdb->prepare(
 			"SELECT query, clicks, impressions, ctr, position
 			FROM {$wpdb->prefix}sf_keywords
@@ -94,6 +97,7 @@ class Score {
 
 		global $wpdb;
 
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 		$latest_date = $wpdb->get_var( $wpdb->prepare(
 			"SELECT MAX(snapshot_date) FROM {$wpdb->prefix}sf_snapshots WHERE source = 'gsc' AND property_id = %d",
 			$property_id
@@ -103,6 +107,7 @@ class Score {
 			return null;
 		}
 
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 		$totals = $wpdb->get_row( $wpdb->prepare(
 			"SELECT COUNT(DISTINCT page_path) as pages, SUM(clicks) as clicks,
 				SUM(impressions) as impressions, AVG(ctr) as ctr, AVG(position) as position
@@ -112,6 +117,7 @@ class Score {
 			$property_id
 		), ARRAY_A );
 
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 		$total_keywords = (int) $wpdb->get_var( $wpdb->prepare(
 			"SELECT COUNT(DISTINCT query) FROM {$wpdb->prefix}sf_keywords
 			WHERE source = 'gsc' AND snapshot_date = %s AND property_id = %d",
@@ -265,6 +271,7 @@ class Score {
 		// Compare current snapshot to 14 days ago.
 		$prev_date = gmdate( 'Y-m-d', strtotime( '-14 days' ) );
 
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 		$prev = $wpdb->get_row( $wpdb->prepare(
 			"SELECT clicks, impressions, position
 			FROM {$wpdb->prefix}sf_snapshots
@@ -304,6 +311,7 @@ class Score {
 
 		global $wpdb;
 
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 		$recent = $wpdb->get_var( $wpdb->prepare(
 			"SELECT SUM(clicks) FROM {$wpdb->prefix}sf_snapshots
 			WHERE source = 'gsc' AND device = 'all'
@@ -311,6 +319,7 @@ class Score {
 			$property_id
 		) );
 
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 		$previous = $wpdb->get_var( $wpdb->prepare(
 			"SELECT SUM(clicks) FROM {$wpdb->prefix}sf_snapshots
 			WHERE source = 'gsc' AND device = 'all'

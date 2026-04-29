@@ -17,6 +17,7 @@ class Competitors {
 
 		global $wpdb;
 
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 		return $wpdb->get_results( $wpdb->prepare(
 			"SELECT * FROM {$wpdb->prefix}sf_competitors WHERE property_id = %d ORDER BY added_at ASC",
 			$property_id
@@ -49,6 +50,7 @@ class Competitors {
 			default                => 0,
 		};
 
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 		$current = (int) $wpdb->get_var( $wpdb->prepare(
 			"SELECT COUNT(*) FROM {$wpdb->prefix}sf_competitors WHERE property_id = %d",
 			$property_id
@@ -58,6 +60,7 @@ class Competitors {
 			return false;
 		}
 
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
 		return (bool) $wpdb->insert(
 			$wpdb->prefix . 'sf_competitors',
 			[
@@ -78,8 +81,10 @@ class Competitors {
 		global $wpdb;
 
 		// Delete keywords first.
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
 		$wpdb->delete( $wpdb->prefix . 'sf_competitor_keywords', [ 'competitor_id' => $id ], [ '%d' ] );
 
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
 		return (bool) $wpdb->delete( $wpdb->prefix . 'sf_competitors', [ 'id' => $id, 'property_id' => $property_id ], [ '%d', '%d' ] );
 	}
 
@@ -93,6 +98,7 @@ class Competitors {
 
 		global $wpdb;
 
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 		$latest_date = $wpdb->get_var( $wpdb->prepare(
 			"SELECT MAX(snapshot_date) FROM {$wpdb->prefix}sf_keywords
 			WHERE source = 'gsc' AND property_id = %d",
@@ -111,6 +117,7 @@ class Competitors {
 		$comp_ids = array_column( $competitors, 'id' );
 		$placeholders = implode( ',', array_fill( 0, count( $comp_ids ), '%d' ) );
 
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 		$comp_latest = $wpdb->get_var( $wpdb->prepare(
 			"SELECT MAX(snapshot_date) FROM {$wpdb->prefix}sf_competitor_keywords
 			WHERE competitor_id IN ({$placeholders})",
@@ -122,6 +129,7 @@ class Competitors {
 		}
 
 		// Find keywords where we rank AND at least one competitor ranks.
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 		$results = $wpdb->get_results( $wpdb->prepare(
 			"SELECT
 				k.query,
@@ -159,6 +167,7 @@ class Competitors {
 
 		global $wpdb;
 
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 		$latest_date = $wpdb->get_var( $wpdb->prepare(
 			"SELECT MAX(snapshot_date) FROM {$wpdb->prefix}sf_keywords
 			WHERE source = 'gsc' AND property_id = %d",
@@ -173,6 +182,7 @@ class Competitors {
 		$comp_ids = array_column( $competitors, 'id' );
 		$placeholders = implode( ',', array_fill( 0, count( $comp_ids ), '%d' ) );
 
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 		$comp_latest = $wpdb->get_var( $wpdb->prepare(
 			"SELECT MAX(snapshot_date) FROM {$wpdb->prefix}sf_competitor_keywords
 			WHERE competitor_id IN ({$placeholders})",
@@ -183,6 +193,7 @@ class Competitors {
 			return [];
 		}
 
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 		$results = $wpdb->get_results( $wpdb->prepare(
 			"SELECT
 				ck.query,
@@ -220,6 +231,7 @@ class Competitors {
 
 		global $wpdb;
 
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 		$latest_date = $wpdb->get_var( $wpdb->prepare(
 			"SELECT MAX(snapshot_date) FROM {$wpdb->prefix}sf_keywords
 			WHERE source = 'gsc' AND property_id = %d",
@@ -229,6 +241,7 @@ class Competitors {
 		// Your visibility.
 		$your_visibility = 0.0;
 		if ( $latest_date ) {
+			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 			$your_visibility = (float) $wpdb->get_var( $wpdb->prepare(
 				"SELECT SUM(1.0 / GREATEST(position, 1))
 				FROM {$wpdb->prefix}sf_keywords
@@ -238,6 +251,7 @@ class Competitors {
 			) );
 		}
 
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 		$your_keywords = $latest_date ? (int) $wpdb->get_var( $wpdb->prepare(
 			"SELECT COUNT(DISTINCT query) FROM {$wpdb->prefix}sf_keywords
 			WHERE source = 'gsc' AND snapshot_date = %s AND property_id = %d",
@@ -255,6 +269,7 @@ class Competitors {
 
 		$competitors = self::get_all( $property_id );
 		foreach ( $competitors as $comp ) {
+			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 			$comp_latest = $wpdb->get_var( $wpdb->prepare(
 				"SELECT MAX(snapshot_date) FROM {$wpdb->prefix}sf_competitor_keywords
 				WHERE competitor_id = %d",
@@ -264,6 +279,7 @@ class Competitors {
 			$vis = 0.0;
 			$kw_count = 0;
 			if ( $comp_latest ) {
+				// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 				$vis = (float) $wpdb->get_var( $wpdb->prepare(
 					"SELECT SUM(1.0 / GREATEST(position, 1))
 					FROM {$wpdb->prefix}sf_competitor_keywords
@@ -272,6 +288,7 @@ class Competitors {
 					$comp_latest
 				) );
 
+				// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 				$kw_count = (int) $wpdb->get_var( $wpdb->prepare(
 					"SELECT COUNT(DISTINCT query) FROM {$wpdb->prefix}sf_competitor_keywords
 					WHERE competitor_id = %d AND snapshot_date = %s",
@@ -303,6 +320,7 @@ class Competitors {
 
 		global $wpdb;
 
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 		$comp = $wpdb->get_row( $wpdb->prepare(
 			"SELECT * FROM {$wpdb->prefix}sf_competitors WHERE id = %d AND property_id = %d",
 			$competitor_id,
@@ -317,6 +335,7 @@ class Competitors {
 		// also appears. We create simulated position data based on
 		// impressions (higher impressions = likely better ranking).
 		// In production, this would use a 3rd-party SERP API.
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 		$latest_date = $wpdb->get_var( $wpdb->prepare(
 			"SELECT MAX(snapshot_date) FROM {$wpdb->prefix}sf_keywords
 			WHERE source = 'gsc' AND property_id = %d",
@@ -328,6 +347,7 @@ class Competitors {
 		}
 
 		// Get our top keywords — the competitor likely ranks for many of the same.
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 		$our_keywords = $wpdb->get_results( $wpdb->prepare(
 			"SELECT DISTINCT query, position
 			FROM {$wpdb->prefix}sf_keywords
@@ -346,6 +366,7 @@ class Competitors {
 		$inserted = 0;
 
 		// Clear old data for this competitor for today.
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
 		$wpdb->delete(
 			$wpdb->prefix . 'sf_competitor_keywords',
 			[ 'competitor_id' => $competitor_id, 'snapshot_date' => $today ],
@@ -353,6 +374,7 @@ class Competitors {
 		);
 
 		foreach ( $our_keywords as $kw ) {
+			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
 			$wpdb->insert(
 				$wpdb->prefix . 'sf_competitor_keywords',
 				[

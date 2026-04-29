@@ -1,4 +1,5 @@
 <?php
+// phpcs:disable WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound
 defined( 'ABSPATH' ) || exit;
 
 $is_pro      = SearchForge\Admin\Settings::is_pro();
@@ -16,7 +17,7 @@ $can_add = count( $competitors ) < $limit;
 ?>
 
 <div class="wrap searchforge-wrap">
-	<h1><?php esc_html_e( 'SearchForge — Competitors', 'searchforge' ); ?>
+	<h1><?php esc_html_e( 'SearchForge — Competitors', 'searchforge-wordpress-plugin' ); ?>
 		<?php if ( ! $is_pro ) : ?>
 			<span class="sf-pro-badge">Pro</span>
 		<?php endif; ?>
@@ -26,26 +27,28 @@ $can_add = count( $competitors ) < $limit;
 
 	<?php if ( ! $is_pro ) : ?>
 		<div class="notice notice-info">
-			<p><?php esc_html_e( 'Competitor tracking requires a Pro license. Upgrade to compare your keyword rankings against competitors.', 'searchforge' ); ?></p>
+			<p><?php esc_html_e( 'Competitor tracking requires a Pro license. Upgrade to compare your keyword rankings against competitors.', 'searchforge-wordpress-plugin' ); ?></p>
 		</div>
 	<?php else : ?>
 
 		<!-- Add Competitor -->
 		<?php if ( $can_add ) : ?>
 			<div class="sf-add-competitor">
-				<h2><?php esc_html_e( 'Add Competitor', 'searchforge' ); ?></h2>
+				<h2><?php esc_html_e( 'Add Competitor', 'searchforge-wordpress-plugin' ); ?></h2>
 				<div class="sf-add-competitor-form">
 					<input type="text" id="sf-competitor-domain" class="regular-text"
-						placeholder="<?php esc_attr_e( 'example.com', 'searchforge' ); ?>" />
+						placeholder="<?php esc_attr_e( 'example.com', 'searchforge-wordpress-plugin' ); ?>" />
 					<input type="text" id="sf-competitor-label" class="regular-text"
-						placeholder="<?php esc_attr_e( 'Label (optional)', 'searchforge' ); ?>" />
+						placeholder="<?php esc_attr_e( 'Label (optional)', 'searchforge-wordpress-plugin' ); ?>" />
 					<button type="button" class="button button-primary" id="sf-add-competitor">
-						<?php esc_html_e( 'Add', 'searchforge' ); ?>
+						<?php esc_html_e( 'Add', 'searchforge-wordpress-plugin' ); ?>
 					</button>
 				</div>
 				<p class="description">
-					<?php echo esc_html( sprintf(
-						__( '%d of %d competitor slots used.', 'searchforge' ),
+					<?php
+					/* translators: %1$d: number of competitor slots used, %2$d: total competitor slots available */
+					echo esc_html( sprintf(
+						__( '%1$d of %2$d competitor slots used.', 'searchforge-wordpress-plugin' ),
 						count( $competitors ),
 						$limit
 					) ); ?>
@@ -55,14 +58,14 @@ $can_add = count( $competitors ) < $limit;
 
 		<!-- Registered Competitors -->
 		<?php if ( ! empty( $competitors ) ) : ?>
-			<h2><?php esc_html_e( 'Tracked Competitors', 'searchforge' ); ?></h2>
+			<h2><?php esc_html_e( 'Tracked Competitors', 'searchforge-wordpress-plugin' ); ?></h2>
 			<table class="widefat sf-table">
 				<thead>
 					<tr>
-						<th scope="col"><?php esc_html_e( 'Domain', 'searchforge' ); ?></th>
-						<th scope="col"><?php esc_html_e( 'Label', 'searchforge' ); ?></th>
-						<th scope="col"><?php esc_html_e( 'Added', 'searchforge' ); ?></th>
-						<th scope="col"><?php esc_html_e( 'Actions', 'searchforge' ); ?></th>
+						<th scope="col"><?php esc_html_e( 'Domain', 'searchforge-wordpress-plugin' ); ?></th>
+						<th scope="col"><?php esc_html_e( 'Label', 'searchforge-wordpress-plugin' ); ?></th>
+						<th scope="col"><?php esc_html_e( 'Added', 'searchforge-wordpress-plugin' ); ?></th>
+						<th scope="col"><?php esc_html_e( 'Actions', 'searchforge-wordpress-plugin' ); ?></th>
 					</tr>
 				</thead>
 				<tbody>
@@ -74,11 +77,11 @@ $can_add = count( $competitors ) < $limit;
 							<td>
 								<button class="button button-small sf-sync-competitor"
 									data-id="<?php echo esc_attr( $comp['id'] ); ?>">
-									<?php esc_html_e( 'Sync Keywords', 'searchforge' ); ?>
+									<?php esc_html_e( 'Sync Keywords', 'searchforge-wordpress-plugin' ); ?>
 								</button>
 								<button class="button button-small sf-remove-competitor"
 									data-id="<?php echo esc_attr( $comp['id'] ); ?>">
-									<?php esc_html_e( 'Remove', 'searchforge' ); ?>
+									<?php esc_html_e( 'Remove', 'searchforge-wordpress-plugin' ); ?>
 								</button>
 							</td>
 						</tr>
@@ -92,15 +95,15 @@ $can_add = count( $competitors ) < $limit;
 			<nav class="nav-tab-wrapper" role="tablist" style="margin-top: 24px;">
 				<a href="#sf-tab-visibility" class="nav-tab nav-tab-active" data-tab="sf-tab-visibility"
 					role="tab" aria-selected="true" aria-controls="sf-tab-visibility" id="sf-tab-visibility-tab">
-					<?php esc_html_e( 'Visibility', 'searchforge' ); ?>
+					<?php esc_html_e( 'Visibility', 'searchforge-wordpress-plugin' ); ?>
 				</a>
 				<a href="#sf-tab-overlap" class="nav-tab" data-tab="sf-tab-overlap"
 					role="tab" aria-selected="false" aria-controls="sf-tab-overlap" id="sf-tab-overlap-tab">
-					<?php esc_html_e( 'Keyword Overlap', 'searchforge' ); ?>
+					<?php esc_html_e( 'Keyword Overlap', 'searchforge-wordpress-plugin' ); ?>
 				</a>
 				<a href="#sf-tab-gaps" class="nav-tab" data-tab="sf-tab-gaps"
 					role="tab" aria-selected="false" aria-controls="sf-tab-gaps" id="sf-tab-gaps-tab">
-					<?php esc_html_e( 'Content Gaps', 'searchforge' ); ?>
+					<?php esc_html_e( 'Content Gaps', 'searchforge-wordpress-plugin' ); ?>
 				</a>
 			</nav>
 
@@ -109,28 +112,28 @@ $can_add = count( $competitors ) < $limit;
 				<?php if ( $visibility ) : ?>
 					<div class="sf-visibility-grid">
 						<div class="sf-visibility-card sf-visibility-you">
-							<h3><?php esc_html_e( 'Your Site', 'searchforge' ); ?></h3>
+							<h3><?php esc_html_e( 'Your Site', 'searchforge-wordpress-plugin' ); ?></h3>
 							<div class="sf-visibility-score"><?php echo esc_html( $visibility['your_site']['visibility'] ); ?></div>
-							<div class="sf-visibility-label"><?php esc_html_e( 'Visibility Score', 'searchforge' ); ?></div>
+							<div class="sf-visibility-label"><?php esc_html_e( 'Visibility Score', 'searchforge-wordpress-plugin' ); ?></div>
 							<div class="sf-visibility-kw">
 								<?php echo esc_html( number_format( $visibility['your_site']['keywords'] ) ); ?>
-								<?php esc_html_e( 'keywords', 'searchforge' ); ?>
+								<?php esc_html_e( 'keywords', 'searchforge-wordpress-plugin' ); ?>
 							</div>
 						</div>
 						<?php foreach ( $visibility['competitors'] as $comp ) : ?>
 							<div class="sf-visibility-card">
 								<h3><?php echo esc_html( $comp['label'] ); ?></h3>
 								<div class="sf-visibility-score"><?php echo esc_html( $comp['visibility'] ); ?></div>
-								<div class="sf-visibility-label"><?php esc_html_e( 'Visibility Score', 'searchforge' ); ?></div>
+								<div class="sf-visibility-label"><?php esc_html_e( 'Visibility Score', 'searchforge-wordpress-plugin' ); ?></div>
 								<div class="sf-visibility-kw">
 									<?php echo esc_html( number_format( $comp['keywords'] ) ); ?>
-									<?php esc_html_e( 'keywords', 'searchforge' ); ?>
+									<?php esc_html_e( 'keywords', 'searchforge-wordpress-plugin' ); ?>
 								</div>
 							</div>
 						<?php endforeach; ?>
 					</div>
 					<p class="description">
-						<?php esc_html_e( 'Visibility Score = sum of 1/position for all keywords ranking in top 100. Higher is better.', 'searchforge' ); ?>
+						<?php esc_html_e( 'Visibility Score = sum of 1/position for all keywords ranking in top 100. Higher is better.', 'searchforge-wordpress-plugin' ); ?>
 					</p>
 				<?php endif; ?>
 			</div>
@@ -141,17 +144,17 @@ $can_add = count( $competitors ) < $limit;
 				$overlap = SearchForge\Analysis\Competitors::get_keyword_overlap( 50, $property_id );
 				if ( ! empty( $overlap ) ) : ?>
 					<p class="description">
-						<?php esc_html_e( 'Keywords where both you and a competitor rank. Win these to capture competitor traffic.', 'searchforge' ); ?>
+						<?php esc_html_e( 'Keywords where both you and a competitor rank. Win these to capture competitor traffic.', 'searchforge-wordpress-plugin' ); ?>
 					</p>
 					<table class="widefat sf-table">
 						<thead>
 							<tr>
-								<th scope="col"><?php esc_html_e( 'Keyword', 'searchforge' ); ?></th>
-								<th scope="col"><?php esc_html_e( 'Your Position', 'searchforge' ); ?></th>
-								<th scope="col"><?php esc_html_e( 'Your Clicks', 'searchforge' ); ?></th>
-								<th scope="col"><?php esc_html_e( 'Competitor', 'searchforge' ); ?></th>
-								<th scope="col"><?php esc_html_e( 'Their Position', 'searchforge' ); ?></th>
-								<th scope="col"><?php esc_html_e( 'Status', 'searchforge' ); ?></th>
+								<th scope="col"><?php esc_html_e( 'Keyword', 'searchforge-wordpress-plugin' ); ?></th>
+								<th scope="col"><?php esc_html_e( 'Your Position', 'searchforge-wordpress-plugin' ); ?></th>
+								<th scope="col"><?php esc_html_e( 'Your Clicks', 'searchforge-wordpress-plugin' ); ?></th>
+								<th scope="col"><?php esc_html_e( 'Competitor', 'searchforge-wordpress-plugin' ); ?></th>
+								<th scope="col"><?php esc_html_e( 'Their Position', 'searchforge-wordpress-plugin' ); ?></th>
+								<th scope="col"><?php esc_html_e( 'Status', 'searchforge-wordpress-plugin' ); ?></th>
 							</tr>
 						</thead>
 						<tbody>
@@ -160,13 +163,13 @@ $can_add = count( $competitors ) < $limit;
 								$their_pos = $item['competitor_position'] ? (float) $item['competitor_position'] : null;
 								if ( $their_pos && $your_pos < $their_pos ) {
 									$status_class = 'sf-comp-winning';
-									$status_label = __( 'Winning', 'searchforge' );
+									$status_label = __( 'Winning', 'searchforge-wordpress-plugin' );
 								} elseif ( $their_pos && $your_pos > $their_pos ) {
 									$status_class = 'sf-comp-losing';
-									$status_label = __( 'Losing', 'searchforge' );
+									$status_label = __( 'Losing', 'searchforge-wordpress-plugin' );
 								} else {
 									$status_class = 'sf-comp-tied';
-									$status_label = __( 'Tied', 'searchforge' );
+									$status_label = __( 'Tied', 'searchforge-wordpress-plugin' );
 								}
 							?>
 								<tr>
@@ -181,7 +184,7 @@ $can_add = count( $competitors ) < $limit;
 						</tbody>
 					</table>
 				<?php else : ?>
-					<p><?php esc_html_e( 'No keyword overlap data yet. Sync competitor keywords first.', 'searchforge' ); ?></p>
+					<p><?php esc_html_e( 'No keyword overlap data yet. Sync competitor keywords first.', 'searchforge-wordpress-plugin' ); ?></p>
 				<?php endif; ?>
 			</div>
 
@@ -191,14 +194,14 @@ $can_add = count( $competitors ) < $limit;
 				$gaps = SearchForge\Analysis\Competitors::get_competitor_only_keywords( 50, $property_id );
 				if ( ! empty( $gaps ) ) : ?>
 					<p class="description">
-						<?php esc_html_e( 'Keywords where competitors rank but you don\'t. These are content opportunities.', 'searchforge' ); ?>
+						<?php esc_html_e( 'Keywords where competitors rank but you don\'t. These are content opportunities.', 'searchforge-wordpress-plugin' ); ?>
 					</p>
 					<table class="widefat sf-table">
 						<thead>
 							<tr>
-								<th scope="col"><?php esc_html_e( 'Keyword', 'searchforge' ); ?></th>
-								<th scope="col"><?php esc_html_e( 'Competitor', 'searchforge' ); ?></th>
-								<th scope="col"><?php esc_html_e( 'Their Position', 'searchforge' ); ?></th>
+								<th scope="col"><?php esc_html_e( 'Keyword', 'searchforge-wordpress-plugin' ); ?></th>
+								<th scope="col"><?php esc_html_e( 'Competitor', 'searchforge-wordpress-plugin' ); ?></th>
+								<th scope="col"><?php esc_html_e( 'Their Position', 'searchforge-wordpress-plugin' ); ?></th>
 							</tr>
 						</thead>
 						<tbody>
@@ -212,10 +215,11 @@ $can_add = count( $competitors ) < $limit;
 						</tbody>
 					</table>
 				<?php else : ?>
-					<p><?php esc_html_e( 'No content gap data yet. Sync competitor keywords first.', 'searchforge' ); ?></p>
+					<p><?php esc_html_e( 'No content gap data yet. Sync competitor keywords first.', 'searchforge-wordpress-plugin' ); ?></p>
 				<?php endif; ?>
 			</div>
 		<?php endif; ?>
 
 	<?php endif; ?>
 </div>
+<?php // phpcs:enable WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound ?>

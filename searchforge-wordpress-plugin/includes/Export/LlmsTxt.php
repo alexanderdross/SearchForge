@@ -85,6 +85,7 @@ class LlmsTxt {
 
 		global $wpdb;
 
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 		$latest_date = $wpdb->get_var( $wpdb->prepare(
 			"SELECT MAX(snapshot_date) FROM {$wpdb->prefix}sf_snapshots WHERE source = 'gsc' AND property_id = %d",
 			$property_id
@@ -94,6 +95,7 @@ class LlmsTxt {
 			return $txt;
 		}
 
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 		$top_pages = $wpdb->get_results( $wpdb->prepare(
 			"SELECT page_path, clicks, impressions, position
 			FROM {$wpdb->prefix}sf_snapshots
@@ -123,6 +125,7 @@ class LlmsTxt {
 		}
 
 		// Top keywords.
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 		$top_keywords = $wpdb->get_results( $wpdb->prepare(
 			"SELECT query, SUM(clicks) as clicks, AVG(position) as position
 			FROM {$wpdb->prefix}sf_keywords

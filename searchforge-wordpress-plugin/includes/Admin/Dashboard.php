@@ -26,6 +26,7 @@ class Dashboard {
 
 		global $wpdb;
 
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 		$latest_date = $wpdb->get_var( $wpdb->prepare(
 			"SELECT MAX(snapshot_date) FROM {$wpdb->prefix}sf_snapshots WHERE source = 'gsc' AND property_id = %d",
 			$property_id
@@ -44,6 +45,7 @@ class Dashboard {
 			];
 		}
 
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 		$page_stats = $wpdb->get_row( $wpdb->prepare(
 			"SELECT
 				COUNT(DISTINCT page_path) as total_pages,
@@ -57,6 +59,7 @@ class Dashboard {
 			$property_id
 		) );
 
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 		$keyword_count = (int) $wpdb->get_var( $wpdb->prepare(
 			"SELECT COUNT(DISTINCT query) FROM {$wpdb->prefix}sf_keywords
 			WHERE source = 'gsc' AND snapshot_date = %s AND property_id = %d",
@@ -64,6 +67,7 @@ class Dashboard {
 			$property_id
 		) );
 
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 		$last_sync = $wpdb->get_row( $wpdb->prepare(
 			"SELECT started_at, status FROM {$wpdb->prefix}sf_sync_log
 			WHERE source = 'gsc' AND property_id = %d ORDER BY id DESC LIMIT 1",
@@ -104,6 +108,7 @@ class Dashboard {
 		global $wpdb;
 
 		if ( ! $date ) {
+			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 			$date = $wpdb->get_var( $wpdb->prepare(
 				"SELECT MAX(snapshot_date) FROM {$wpdb->prefix}sf_snapshots WHERE source = 'gsc' AND property_id = %d",
 				$property_id
@@ -127,6 +132,7 @@ class Dashboard {
 			$where .= $wpdb->prepare( " AND page_path LIKE %s", '%' . $wpdb->esc_like( $search ) . '%' );
 		}
 
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 		return $wpdb->get_results(
 			"SELECT page_path, clicks, impressions, ctr, position
 			FROM {$wpdb->prefix}sf_snapshots
@@ -145,6 +151,7 @@ class Dashboard {
 
 		global $wpdb;
 
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 		$date = $wpdb->get_var( $wpdb->prepare(
 			"SELECT MAX(snapshot_date) FROM {$wpdb->prefix}sf_snapshots WHERE source = 'gsc' AND property_id = %d",
 			$property_id
@@ -164,6 +171,7 @@ class Dashboard {
 			$where .= $wpdb->prepare( " AND page_path LIKE %s", '%' . $wpdb->esc_like( $search ) . '%' );
 		}
 
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 		return (int) $wpdb->get_var(
 			"SELECT COUNT(*) FROM {$wpdb->prefix}sf_snapshots WHERE {$where}" // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 		);
@@ -178,6 +186,7 @@ class Dashboard {
 		global $wpdb;
 
 		if ( ! $date ) {
+			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 			$date = $wpdb->get_var( $wpdb->prepare(
 				"SELECT MAX(snapshot_date) FROM {$wpdb->prefix}sf_keywords WHERE source = 'gsc' AND property_id = %d",
 				$property_id
@@ -199,6 +208,7 @@ class Dashboard {
 			$where .= $wpdb->prepare( " AND (query LIKE %s OR page_path LIKE %s)", $like, $like );
 		}
 
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 		return $wpdb->get_results(
 			"SELECT query, page_path, clicks, impressions, ctr, position
 			FROM {$wpdb->prefix}sf_keywords
@@ -217,6 +227,7 @@ class Dashboard {
 
 		global $wpdb;
 
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 		$date = $wpdb->get_var( $wpdb->prepare(
 			"SELECT MAX(snapshot_date) FROM {$wpdb->prefix}sf_keywords WHERE source = 'gsc' AND property_id = %d",
 			$property_id
@@ -237,6 +248,7 @@ class Dashboard {
 			$where .= $wpdb->prepare( " AND (query LIKE %s OR page_path LIKE %s)", $like, $like );
 		}
 
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 		return (int) $wpdb->get_var(
 			"SELECT COUNT(*) FROM {$wpdb->prefix}sf_keywords WHERE {$where}" // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 		);

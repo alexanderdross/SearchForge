@@ -137,7 +137,7 @@ class Client {
 		$rsid          = $property['adobe_report_suite_id'] ?? '';
 
 		if ( empty( $org_id ) || empty( $client_id ) || empty( $client_secret ) || empty( $rsid ) ) {
-			return new \WP_Error( 'adobe_config', __( 'Adobe Analytics credentials not configured for this property.', 'searchforge' ) );
+			return new \WP_Error( 'adobe_config', __( 'Adobe Analytics credentials not configured for this property.', 'searchforge-wordpress-plugin' ) );
 		}
 
 		return [

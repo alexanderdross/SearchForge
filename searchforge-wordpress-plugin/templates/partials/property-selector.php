@@ -1,4 +1,5 @@
 <?php
+// phpcs:disable WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound
 defined( 'ABSPATH' ) || exit;
 
 $properties = SearchForge\Models\Property::get_all();
@@ -8,7 +9,7 @@ if ( count( $properties ) < 2 ) {
 $active_id = SearchForge\Models\Property::get_active_property_id();
 ?>
 <div class="sf-property-selector" style="margin: 10px 0 16px; display: flex; align-items: center; gap: 8px;">
-	<label for="sf-property-selector"><?php esc_html_e( 'Property:', 'searchforge' ); ?></label>
+	<label for="sf-property-selector"><?php esc_html_e( 'Property:', 'searchforge-wordpress-plugin' ); ?></label>
 	<select id="sf-property-selector" data-nonce="<?php echo esc_attr( wp_create_nonce( 'searchforge_nonce' ) ); ?>">
 		<?php foreach ( $properties as $prop ) : ?>
 			<option value="<?php echo esc_attr( $prop['id'] ); ?>" <?php selected( (int) $prop['id'], $active_id ); ?>>
@@ -17,3 +18,4 @@ $active_id = SearchForge\Models\Property::get_active_property_id();
 		<?php endforeach; ?>
 	</select>
 </div>
+<?php // phpcs:enable WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound ?>

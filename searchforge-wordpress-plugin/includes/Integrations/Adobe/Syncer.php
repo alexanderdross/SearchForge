@@ -17,16 +17,16 @@ class Syncer {
 
 	public function sync(): array|\WP_Error {
 		if ( ! Settings::is_pro() ) {
-			return new \WP_Error( 'not_pro', __( 'Adobe Analytics integration requires a Pro license.', 'searchforge' ) );
+			return new \WP_Error( 'not_pro', __( 'Adobe Analytics integration requires a Pro license.', 'searchforge-wordpress-plugin' ) );
 		}
 
 		$prop = Property::get( $this->property_id );
 		if ( ! $prop ) {
-			return new \WP_Error( 'no_property', __( 'Property not found.', 'searchforge' ) );
+			return new \WP_Error( 'no_property', __( 'Property not found.', 'searchforge-wordpress-plugin' ) );
 		}
 
 		if ( empty( $prop['adobe_enabled'] ) || empty( $prop['adobe_client_id'] ) ) {
-			return new \WP_Error( 'no_adobe', __( 'Adobe Analytics not configured for this property.', 'searchforge' ) );
+			return new \WP_Error( 'no_adobe', __( 'Adobe Analytics not configured for this property.', 'searchforge-wordpress-plugin' ) );
 		}
 
 		global $wpdb;
@@ -40,10 +40,12 @@ class Syncer {
 
 		$synced = 0;
 
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
 		$wpdb->query( 'START TRANSACTION' );
 
 		try {
 			foreach ( $page_metrics as $path => $metrics ) {
+				// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 				$existing = $wpdb->get_var( $wpdb->prepare(
 					"SELECT id FROM {$table} WHERE page_path = %s AND snapshot_date = %s AND property_id = %d",
 					$path,
@@ -52,6 +54,7 @@ class Syncer {
 				) );
 
 				if ( $existing ) {
+					// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
 					$wpdb->update(
 						$table,
 						[
@@ -66,6 +69,7 @@ class Syncer {
 						[ '%d' ]
 					);
 				} else {
+					// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
 					$wpdb->insert( $table, [
 						'page_path'       => $path,
 						'snapshot_date'   => $today,
@@ -85,12 +89,15 @@ class Syncer {
 				$synced++;
 			}
 
+			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
 			$wpdb->query( 'COMMIT' );
 		} catch ( \Throwable $e ) {
+			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
 			$wpdb->query( 'ROLLBACK' );
 			throw $e;
 		}
 
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
 		$wpdb->insert( $wpdb->prefix . 'sf_sync_log', [
 			'source'          => 'adobe',
 			'status'          => 'completed',

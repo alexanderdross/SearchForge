@@ -27,6 +27,7 @@ class Engine {
 		$cutoff    = gmdate( 'Y-m-d', strtotime( "-{$retention} days" ) );
 
 		// Get weekly aggregated snapshots.
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 		$snapshots = $wpdb->get_results( $wpdb->prepare(
 			"SELECT
 				MIN(snapshot_date) as date,
@@ -107,6 +108,7 @@ class Engine {
 		$prev_end   = gmdate( 'Y-m-d', strtotime( '-2 days -1 year' ) );
 		$prev_start = gmdate( 'Y-m-d', strtotime( '-30 days -1 year' ) );
 
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 		$current = $wpdb->get_row( $wpdb->prepare(
 			"SELECT SUM(clicks) as clicks, SUM(impressions) as impressions,
 				AVG(position) as position, AVG(ctr) as ctr
@@ -120,6 +122,7 @@ class Engine {
 			$property_id
 		), ARRAY_A );
 
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 		$previous = $wpdb->get_row( $wpdb->prepare(
 			"SELECT SUM(clicks) as clicks, SUM(impressions) as impressions,
 				AVG(position) as position, AVG(ctr) as ctr
@@ -166,6 +169,7 @@ class Engine {
 		$prev_end     = gmdate( 'Y-m-d', strtotime( '-16 days' ) );
 		$prev_start   = gmdate( 'Y-m-d', strtotime( '-30 days' ) );
 
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 		$results = $wpdb->get_results( $wpdb->prepare(
 			"SELECT
 				r.page_path,
@@ -218,6 +222,7 @@ class Engine {
 		$recent_date = gmdate( 'Y-m-d', strtotime( "-{$days} days" ) );
 		$prev_date   = gmdate( 'Y-m-d', strtotime( '-' . ( $days * 2 ) . ' days' ) );
 
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 		$results = $wpdb->get_results( $wpdb->prepare(
 			"SELECT r.page_path, COUNT(DISTINCT r.query) AS new_keywords
 			FROM {$wpdb->prefix}sf_keywords r

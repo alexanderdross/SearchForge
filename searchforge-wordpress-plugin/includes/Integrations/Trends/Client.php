@@ -160,7 +160,7 @@ class Client {
 	private static function api_request( array $params ): array|\WP_Error {
 		$api_key = Settings::get( 'serpapi_key', '' );
 		if ( empty( $api_key ) ) {
-			return new \WP_Error( 'no_api_key', __( 'SerpApi key not configured.', 'searchforge' ) );
+			return new \WP_Error( 'no_api_key', __( 'SerpApi key not configured.', 'searchforge-wordpress-plugin' ) );
 		}
 
 		$params['api_key'] = $api_key;

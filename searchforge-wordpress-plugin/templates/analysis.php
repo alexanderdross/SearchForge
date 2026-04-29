@@ -1,8 +1,9 @@
 <?php
+// phpcs:disable WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound
 defined( 'ABSPATH' ) || exit;
 
 $is_pro      = SearchForge\Admin\Settings::is_pro();
-$tab         = sanitize_text_field( $_GET['tab'] ?? 'cannibalization' );
+$tab         = sanitize_text_field( wp_unslash( $_GET['tab'] ?? 'cannibalization' ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 $property_id = SearchForge\Models\Property::get_active_property_id();
 
 $cannibalization = [];
@@ -18,7 +19,7 @@ if ( $is_pro ) {
 ?>
 
 <div class="wrap searchforge-wrap">
-	<h1><?php esc_html_e( 'SearchForge — Analysis', 'searchforge' ); ?>
+	<h1><?php esc_html_e( 'SearchForge — Analysis', 'searchforge-wordpress-plugin' ); ?>
 		<?php if ( ! $is_pro ) : ?>
 			<span class="sf-pro-badge">Pro</span>
 		<?php endif; ?>
@@ -28,7 +29,7 @@ if ( $is_pro ) {
 
 	<?php if ( ! $is_pro ) : ?>
 		<div class="notice notice-info">
-			<p><?php esc_html_e( 'Analysis features require a Pro license. Upgrade to unlock cannibalization detection, keyword clustering, and AI content briefs.', 'searchforge' ); ?></p>
+			<p><?php esc_html_e( 'Analysis features require a Pro license. Upgrade to unlock cannibalization detection, keyword clustering, and AI content briefs.', 'searchforge-wordpress-plugin' ); ?></p>
 		</div>
 	<?php else : ?>
 
@@ -36,23 +37,23 @@ if ( $is_pro ) {
 			<a href="<?php echo esc_url( admin_url( 'admin.php?page=searchforge-analysis&tab=cannibalization' ) ); ?>"
 				class="nav-tab <?php echo $tab === 'cannibalization' ? 'nav-tab-active' : ''; ?>"
 				role="tab" aria-selected="<?php echo $tab === 'cannibalization' ? 'true' : 'false'; ?>">
-				<?php esc_html_e( 'Cannibalization', 'searchforge' ); ?>
+				<?php esc_html_e( 'Cannibalization', 'searchforge-wordpress-plugin' ); ?>
 			</a>
 			<a href="<?php echo esc_url( admin_url( 'admin.php?page=searchforge-analysis&tab=clusters' ) ); ?>"
 				class="nav-tab <?php echo $tab === 'clusters' ? 'nav-tab-active' : ''; ?>"
 				role="tab" aria-selected="<?php echo $tab === 'clusters' ? 'true' : 'false'; ?>">
-				<?php esc_html_e( 'Keyword Clusters', 'searchforge' ); ?>
+				<?php esc_html_e( 'Keyword Clusters', 'searchforge-wordpress-plugin' ); ?>
 			</a>
 		</nav>
 
 		<?php if ( $tab === 'cannibalization' ) : ?>
 			<div class="sf-analysis-section">
 				<p class="description">
-					<?php esc_html_e( 'Keywords where multiple pages from your site compete for the same query, potentially splitting ranking signals.', 'searchforge' ); ?>
+					<?php esc_html_e( 'Keywords where multiple pages from your site compete for the same query, potentially splitting ranking signals.', 'searchforge-wordpress-plugin' ); ?>
 				</p>
 
 				<?php if ( empty( $cannibalization ) ) : ?>
-					<p><?php esc_html_e( 'No cannibalization detected. This is good! Each keyword maps to a single page.', 'searchforge' ); ?></p>
+					<p><?php esc_html_e( 'No cannibalization detected. This is good! Each keyword maps to a single page.', 'searchforge-wordpress-plugin' ); ?></p>
 				<?php else : ?>
 					<?php foreach ( $cannibalization as $item ) : ?>
 						<div class="sf-cannibal-item sf-cannibal-<?php echo esc_attr( $item['severity'] ); ?>">
@@ -62,8 +63,10 @@ if ( $is_pro ) {
 									<?php echo esc_html( ucfirst( $item['severity'] ) ); ?>
 								</span>
 								<span class="sf-cannibal-meta">
-									<?php echo esc_html( sprintf(
-										__( '%d pages | %s clicks | %s impressions | spread: %s pos', 'searchforge' ),
+									<?php
+									/* translators: %1$d: number of pages, %2$s: total clicks, %3$s: total impressions, %4$s: position spread */
+									echo esc_html( sprintf(
+										__( '%1$d pages | %2$s clicks | %3$s impressions | spread: %4$s pos', 'searchforge-wordpress-plugin' ),
 										$item['page_count'],
 										number_format( $item['total_clicks'] ),
 										number_format( $item['total_impressions'] ),
@@ -74,11 +77,11 @@ if ( $is_pro ) {
 							<table class="widefat sf-table sf-cannibal-table">
 								<thead>
 									<tr>
-										<th scope="col"><?php esc_html_e( 'Page', 'searchforge' ); ?></th>
-										<th scope="col"><?php esc_html_e( 'Position', 'searchforge' ); ?></th>
-										<th scope="col"><?php esc_html_e( 'Clicks', 'searchforge' ); ?></th>
-										<th scope="col"><?php esc_html_e( 'Impressions', 'searchforge' ); ?></th>
-										<th scope="col"><?php esc_html_e( 'CTR', 'searchforge' ); ?></th>
+										<th scope="col"><?php esc_html_e( 'Page', 'searchforge-wordpress-plugin' ); ?></th>
+										<th scope="col"><?php esc_html_e( 'Position', 'searchforge-wordpress-plugin' ); ?></th>
+										<th scope="col"><?php esc_html_e( 'Clicks', 'searchforge-wordpress-plugin' ); ?></th>
+										<th scope="col"><?php esc_html_e( 'Impressions', 'searchforge-wordpress-plugin' ); ?></th>
+										<th scope="col"><?php esc_html_e( 'CTR', 'searchforge-wordpress-plugin' ); ?></th>
 									</tr>
 								</thead>
 								<tbody>
@@ -101,19 +104,21 @@ if ( $is_pro ) {
 		<?php elseif ( $tab === 'clusters' ) : ?>
 			<div class="sf-analysis-section">
 				<p class="description">
-					<?php esc_html_e( 'Keywords grouped by topical similarity. Use clusters to identify content themes and optimize internal linking.', 'searchforge' ); ?>
+					<?php esc_html_e( 'Keywords grouped by topical similarity. Use clusters to identify content themes and optimize internal linking.', 'searchforge-wordpress-plugin' ); ?>
 				</p>
 
 				<?php if ( empty( $clusters ) ) : ?>
-					<p><?php esc_html_e( 'Not enough keyword data to form clusters. Sync more data first.', 'searchforge' ); ?></p>
+					<p><?php esc_html_e( 'Not enough keyword data to form clusters. Sync more data first.', 'searchforge-wordpress-plugin' ); ?></p>
 				<?php else : ?>
 					<?php foreach ( $clusters as $i => $cluster ) : ?>
 						<div class="sf-cluster-item">
 							<div class="sf-cluster-header">
 								<strong><?php echo esc_html( $cluster['name'] ); ?></strong>
 								<span class="sf-cluster-meta">
-									<?php echo esc_html( sprintf(
-										__( '%d keywords | %s clicks | %s impressions', 'searchforge' ),
+									<?php
+									/* translators: %1$d: number of keywords, %2$s: total clicks, %3$s: total impressions */
+									echo esc_html( sprintf(
+										__( '%1$d keywords | %2$s clicks | %3$s impressions', 'searchforge-wordpress-plugin' ),
 										count( $cluster['keywords'] ),
 										number_format( $cluster['total_clicks'] ),
 										number_format( $cluster['total_impressions'] )
@@ -123,10 +128,10 @@ if ( $is_pro ) {
 							<table class="widefat sf-table sf-cluster-table">
 								<thead>
 									<tr>
-										<th scope="col"><?php esc_html_e( 'Keyword', 'searchforge' ); ?></th>
-										<th scope="col"><?php esc_html_e( 'Clicks', 'searchforge' ); ?></th>
-										<th scope="col"><?php esc_html_e( 'Impressions', 'searchforge' ); ?></th>
-										<th scope="col"><?php esc_html_e( 'Avg Position', 'searchforge' ); ?></th>
+										<th scope="col"><?php esc_html_e( 'Keyword', 'searchforge-wordpress-plugin' ); ?></th>
+										<th scope="col"><?php esc_html_e( 'Clicks', 'searchforge-wordpress-plugin' ); ?></th>
+										<th scope="col"><?php esc_html_e( 'Impressions', 'searchforge-wordpress-plugin' ); ?></th>
+										<th scope="col"><?php esc_html_e( 'Avg Position', 'searchforge-wordpress-plugin' ); ?></th>
 									</tr>
 								</thead>
 								<tbody>
@@ -148,3 +153,4 @@ if ( $is_pro ) {
 
 	<?php endif; ?>
 </div>
+<?php // phpcs:enable WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound ?>

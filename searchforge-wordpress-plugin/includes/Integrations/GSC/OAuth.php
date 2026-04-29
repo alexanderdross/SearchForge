@@ -60,7 +60,7 @@ class OAuth {
 	 * Handle OAuth callback — exchange code for tokens.
 	 */
 	public function handle_oauth_callback(): void {
-		if ( ! isset( $_GET['page'], $_GET['code'] ) || 'searchforge-settings' !== $_GET['page'] ) {
+		if ( ! isset( $_GET['page'], $_GET['code'] ) || 'searchforge-settings' !== sanitize_text_field( wp_unslash( $_GET['page'] ) ) ) {
 			return;
 		}
 
@@ -68,29 +68,29 @@ class OAuth {
 			return;
 		}
 
-		$raw_state = sanitize_text_field( $_GET['state'] ?? '' );
+		$raw_state = sanitize_text_field( wp_unslash( $_GET['state'] ?? '' ) );
 		$state     = json_decode( base64_decode( $raw_state ), true );
 
 		if ( ! is_array( $state ) || empty( $state['nonce'] ) ) {
 			add_action( 'admin_notices', function () {
 				echo '<div class="notice notice-error"><p>' .
-					esc_html__( 'SearchForge: OAuth verification failed. Please try again.', 'searchforge' ) .
+					esc_html__( 'SearchForge: OAuth verification failed. Please try again.', 'searchforge-wordpress-plugin' ) .
 					'</p></div>';
 			} );
 			return;
 		}
 
-		if ( ! wp_verify_nonce( $state['nonce'], 'searchforge_oauth' ) ) {
+		if ( ! wp_verify_nonce( sanitize_text_field( $state['nonce'] ), 'searchforge_oauth' ) ) {
 			add_action( 'admin_notices', function () {
 				echo '<div class="notice notice-error"><p>' .
-					esc_html__( 'SearchForge: OAuth verification failed. Please try again.', 'searchforge' ) .
+					esc_html__( 'SearchForge: OAuth verification failed. Please try again.', 'searchforge-wordpress-plugin' ) .
 					'</p></div>';
 			} );
 			return;
 		}
 
 		$property_id = (int) ( $state['property_id'] ?? 0 );
-		$code        = sanitize_text_field( $_GET['code'] );
+		$code        = sanitize_text_field( wp_unslash( $_GET['code'] ) );
 
 		// Load property config for client credentials, fall back to global settings.
 		$prop     = $property_id ? Property::get( $property_id ) : null;
@@ -112,8 +112,9 @@ class OAuth {
 		if ( is_wp_error( $response ) ) {
 			add_action( 'admin_notices', function () use ( $response ) {
 				echo '<div class="notice notice-error"><p>' .
+					/* translators: %s: error message from token exchange */
 					esc_html( sprintf(
-						__( 'SearchForge: Token exchange failed: %s', 'searchforge' ),
+						__( 'SearchForge: Token exchange failed: %s', 'searchforge-wordpress-plugin' ),
 						$response->get_error_message()
 					) ) .
 					'</p></div>';
@@ -126,8 +127,9 @@ class OAuth {
 		if ( isset( $body['error'] ) ) {
 			add_action( 'admin_notices', function () use ( $body ) {
 				echo '<div class="notice notice-error"><p>' .
+					/* translators: %s: Google OAuth error description */
 					esc_html( sprintf(
-						__( 'SearchForge: Google OAuth error: %s', 'searchforge' ),
+						__( 'SearchForge: Google OAuth error: %s', 'searchforge-wordpress-plugin' ),
 						$body['error_description'] ?? $body['error']
 					) ) .
 					'</p></div>';
@@ -173,7 +175,7 @@ class OAuth {
 		}
 
 		if ( empty( $settings['gsc_access_token'] ) ) {
-			return new \WP_Error( 'no_token', __( 'GSC not connected.', 'searchforge' ) );
+			return new \WP_Error( 'no_token', __( 'GSC not connected.', 'searchforge-wordpress-plugin' ) );
 		}
 
 		// Token still valid.
@@ -184,7 +186,7 @@ class OAuth {
 
 		// Refresh.
 		if ( empty( $settings['gsc_refresh_token'] ) ) {
-			return new \WP_Error( 'no_refresh_token', __( 'No refresh token. Please reconnect GSC.', 'searchforge' ) );
+			return new \WP_Error( 'no_refresh_token', __( 'No refresh token. Please reconnect GSC.', 'searchforge-wordpress-plugin' ) );
 		}
 
 		$client_id     = $settings['gsc_client_id'] ?? '';

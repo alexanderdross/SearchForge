@@ -277,7 +277,12 @@ class Commands {
 		}
 
 		if ( $file ) {
-			file_put_contents( $file, $data );
+			global $wp_filesystem;
+			if ( ! function_exists( 'WP_Filesystem' ) ) {
+				require_once ABSPATH . 'wp-admin/includes/file.php';
+			}
+			WP_Filesystem();
+			$wp_filesystem->put_contents( $file, $data, FS_CHMOD_FILE );
 			\WP_CLI::success( "Exported to {$file}" );
 		} else {
 			\WP_CLI::log( $data );
@@ -410,7 +415,12 @@ class Commands {
 		$markdown = $analyzer->generate_markdown();
 		$file = $assoc_args['file'] ?? null;
 		if ( $file ) {
-			file_put_contents( $file, $markdown );
+			global $wp_filesystem;
+			if ( ! function_exists( 'WP_Filesystem' ) ) {
+				require_once ABSPATH . 'wp-admin/includes/file.php';
+			}
+			WP_Filesystem();
+			$wp_filesystem->put_contents( $file, $markdown, FS_CHMOD_FILE );
 			\WP_CLI::success( "Merger analysis exported to {$file}" );
 		} else {
 			\WP_CLI::log( $markdown );

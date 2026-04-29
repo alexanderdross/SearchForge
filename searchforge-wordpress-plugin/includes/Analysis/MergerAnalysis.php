@@ -67,6 +67,7 @@ class MergerAnalysis {
 		$patterns = [];
 
 		foreach ( $this->property_ids as $pid ) {
+			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 			$rows = $wpdb->get_results( $wpdb->prepare(
 				"SELECT DISTINCT page_path FROM {$wpdb->prefix}sf_snapshots
 				WHERE property_id = %d AND source = 'gsc' AND device = 'all'
@@ -106,6 +107,7 @@ class MergerAnalysis {
 		$all_pages = [];
 
 		foreach ( $this->property_ids as $pid ) {
+			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 			$latest = $wpdb->get_var( $wpdb->prepare(
 				"SELECT MAX(snapshot_date) FROM {$wpdb->prefix}sf_snapshots
 				WHERE property_id = %d AND source = 'gsc' AND device = 'all'",
@@ -115,6 +117,7 @@ class MergerAnalysis {
 				continue;
 			}
 
+			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 			$pages = $wpdb->get_results( $wpdb->prepare(
 				"SELECT s.page_path, s.clicks, s.impressions, s.position, s.ctr
 				FROM {$wpdb->prefix}sf_snapshots s
@@ -134,6 +137,7 @@ class MergerAnalysis {
 				$bounce      = $ga4 ? (float) $ga4['bounce_rate'] : 50.0;
 				$conversions = $ga4 ? (int) $ga4['conversions'] : 0;
 
+				// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 				$kw_count = (int) $wpdb->get_var( $wpdb->prepare(
 					"SELECT COUNT(DISTINCT query) FROM {$wpdb->prefix}sf_keywords
 					WHERE property_id = %d AND page_path = %s AND source = 'gsc'
@@ -248,6 +252,7 @@ class MergerAnalysis {
 
 		$all_keywords = [];
 		foreach ( $this->property_ids as $pid ) {
+			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 			$latest = $wpdb->get_var( $wpdb->prepare(
 				"SELECT MAX(snapshot_date) FROM {$wpdb->prefix}sf_keywords
 				WHERE property_id = %d AND source = 'gsc'",
@@ -257,6 +262,7 @@ class MergerAnalysis {
 				continue;
 			}
 
+			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 			$rows = $wpdb->get_results( $wpdb->prepare(
 				"SELECT page_path, query, clicks, impressions, position
 				FROM {$wpdb->prefix}sf_keywords
@@ -401,6 +407,7 @@ class MergerAnalysis {
 		$engagement_paths     = [];
 
 		foreach ( $this->property_ids as $pid ) {
+			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 			$latest = $wpdb->get_var( $wpdb->prepare(
 				"SELECT MAX(snapshot_date) FROM {$wpdb->prefix}sf_ga4_metrics
 				WHERE property_id = %d",
@@ -410,6 +417,7 @@ class MergerAnalysis {
 				continue;
 			}
 
+			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 			$rows = $wpdb->get_results( $wpdb->prepare(
 				"SELECT page_path, sessions, bounce_rate, avg_session_dur,
 					conversions, organic_sessions, organic_bounce, organic_conversions,
@@ -489,6 +497,7 @@ class MergerAnalysis {
 		$kw_map = [];
 
 		foreach ( $this->property_ids as $pid ) {
+			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 			$latest = $wpdb->get_var( $wpdb->prepare(
 				"SELECT MAX(snapshot_date) FROM {$wpdb->prefix}sf_keywords
 				WHERE property_id = %d AND source = 'gsc'",
@@ -498,6 +507,7 @@ class MergerAnalysis {
 				continue;
 			}
 
+			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 			$rows = $wpdb->get_results( $wpdb->prepare(
 				"SELECT query, page_path, clicks, impressions, position
 				FROM {$wpdb->prefix}sf_keywords
@@ -550,6 +560,7 @@ class MergerAnalysis {
 	private function get_ga4_lookup( int $pid, string $date ): array {
 		global $wpdb;
 
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 		$rows = $wpdb->get_results( $wpdb->prepare(
 			"SELECT page_path, sessions, bounce_rate, avg_session_dur, conversions,
 				organic_sessions, organic_bounce, organic_conversions

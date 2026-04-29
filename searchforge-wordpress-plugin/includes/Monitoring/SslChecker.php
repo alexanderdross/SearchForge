@@ -30,6 +30,7 @@ class SslChecker {
 			],
 		] );
 
+		// phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fclose
 		$client = @stream_socket_client(
 			"ssl://{$host}:{$port}",
 			$errno,
@@ -42,17 +43,17 @@ class SslChecker {
 		if ( ! $client ) {
 			return [
 				'status'  => 'error',
-				'message' => $errstr ?: __( 'Could not connect to SSL endpoint.', 'searchforge' ),
+				'message' => $errstr ?: __( 'Could not connect to SSL endpoint.', 'searchforge-wordpress-plugin' ),
 			];
 		}
 
 		$params = stream_context_get_params( $client );
-		fclose( $client );
+		fclose( $client ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fclose
 
 		if ( empty( $params['options']['ssl']['peer_certificate'] ) ) {
 			return [
 				'status'  => 'error',
-				'message' => __( 'No SSL certificate found.', 'searchforge' ),
+				'message' => __( 'No SSL certificate found.', 'searchforge-wordpress-plugin' ),
 			];
 		}
 
@@ -60,13 +61,13 @@ class SslChecker {
 		if ( ! $cert_info ) {
 			return [
 				'status'  => 'error',
-				'message' => __( 'Could not parse SSL certificate.', 'searchforge' ),
+				'message' => __( 'Could not parse SSL certificate.', 'searchforge-wordpress-plugin' ),
 			];
 		}
 
 		$valid_from = $cert_info['validFrom_time_t'] ?? 0;
 		$valid_to   = $cert_info['validTo_time_t'] ?? 0;
-		$issuer     = $cert_info['issuer']['O'] ?? $cert_info['issuer']['CN'] ?? __( 'Unknown', 'searchforge' );
+		$issuer     = $cert_info['issuer']['O'] ?? $cert_info['issuer']['CN'] ?? __( 'Unknown', 'searchforge-wordpress-plugin' );
 		$subject    = $cert_info['subject']['CN'] ?? $host;
 		$now        = time();
 		$days_left  = max( 0, (int) floor( ( $valid_to - $now ) / 86400 ) );
@@ -110,17 +111,19 @@ class SslChecker {
 		};
 
 		if ( $result['status'] === 'expired' ) {
-			$title = __( 'SSL certificate has expired!', 'searchforge' );
+			$title = __( 'SSL certificate has expired!', 'searchforge-wordpress-plugin' );
 		} elseif ( $result['status'] === 'error' ) {
-			$title = __( 'SSL certificate check failed', 'searchforge' );
+			$title = __( 'SSL certificate check failed', 'searchforge-wordpress-plugin' );
 		} else {
+			/* translators: %d: number of days until SSL certificate expiry */
 			$title = sprintf(
-				__( 'SSL certificate expires in %d days', 'searchforge' ),
+				__( 'SSL certificate expires in %d days', 'searchforge-wordpress-plugin' ),
 				$result['days_left']
 			);
 		}
 
 		// Avoid duplicate alerts within 24h.
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 		$existing = $wpdb->get_var( $wpdb->prepare(
 			"SELECT COUNT(*) FROM {$wpdb->prefix}sf_alerts
 			WHERE alert_type = 'ssl_expiry'
@@ -133,6 +136,7 @@ class SslChecker {
 			return;
 		}
 
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
 		$wpdb->insert( "{$wpdb->prefix}sf_alerts", [
 			'alert_type' => 'ssl_expiry',
 			'title'      => $title,

@@ -19,6 +19,7 @@ class PropertyComparison {
 				continue;
 			}
 
+			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 			$latest_date = $wpdb->get_var( $wpdb->prepare(
 				"SELECT MAX(snapshot_date) FROM {$wpdb->prefix}sf_snapshots
 				WHERE property_id = %d AND source = 'gsc'",
@@ -27,6 +28,7 @@ class PropertyComparison {
 
 			$stats = null;
 			if ( $latest_date ) {
+				// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 				$stats = $wpdb->get_row( $wpdb->prepare(
 					"SELECT
 						COUNT(DISTINCT page_path) as total_pages,
@@ -41,6 +43,7 @@ class PropertyComparison {
 				) );
 			}
 
+			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 			$keyword_count = $latest_date ? (int) $wpdb->get_var( $wpdb->prepare(
 				"SELECT COUNT(DISTINCT query) FROM {$wpdb->prefix}sf_keywords
 				WHERE property_id = %d AND source = 'gsc' AND snapshot_date = %s",
@@ -74,6 +77,7 @@ class PropertyComparison {
 
 		$placeholders = implode( ',', array_fill( 0, count( $property_ids ), '%d' ) );
 
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 		$rows = $wpdb->get_results( $wpdb->prepare(
 			"SELECT
 				s.property_id,
@@ -137,6 +141,7 @@ class PropertyComparison {
 
 		$placeholders = implode( ',', array_fill( 0, count( $property_ids ), '%d' ) );
 
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 		$rows = $wpdb->get_results( $wpdb->prepare(
 			"SELECT
 				k.property_id,
@@ -202,6 +207,7 @@ class PropertyComparison {
 
 		foreach ( $properties as $prop ) {
 			$pid = (int) $prop['id'];
+			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 			$latest_date = $wpdb->get_var( $wpdb->prepare(
 				"SELECT MAX(snapshot_date) FROM {$wpdb->prefix}sf_snapshots
 				WHERE property_id = %d AND source = 'gsc'",
@@ -212,6 +218,7 @@ class PropertyComparison {
 				continue;
 			}
 
+			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 			$stats = $wpdb->get_row( $wpdb->prepare(
 				"SELECT
 					COUNT(DISTINCT page_path) as pages,
@@ -223,6 +230,7 @@ class PropertyComparison {
 				$latest_date
 			) );
 
+			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 			$kw_count = (int) $wpdb->get_var( $wpdb->prepare(
 				"SELECT COUNT(DISTINCT query) FROM {$wpdb->prefix}sf_keywords
 				WHERE property_id = %d AND source = 'gsc' AND snapshot_date = %s",

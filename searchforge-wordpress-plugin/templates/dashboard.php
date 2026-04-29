@@ -1,33 +1,37 @@
 <?php
 defined( 'ABSPATH' ) || exit;
 
-$summary    = SearchForge\Admin\Dashboard::get_summary();
-$pages      = SearchForge\Admin\Dashboard::get_top_pages( 10 );
-$keywords   = SearchForge\Admin\Dashboard::get_top_keywords( 15 );
-$settings   = SearchForge\Admin\Settings::get_all();
-$connected  = ! empty( $settings['gsc_access_token'] );
-$site_score = SearchForge\Scoring\Score::calculate_site_score();
-$decaying   = SearchForge\Trends\Engine::get_decaying_pages( 'gsc', 5 );
-$is_pro     = SearchForge\Admin\Settings::is_pro();
+$property_id = SearchForge\Models\Property::get_active_property_id();
+$property    = SearchForge\Models\Property::get( $property_id );
+$summary     = SearchForge\Admin\Dashboard::get_summary( $property_id );
+$pages       = SearchForge\Admin\Dashboard::get_top_pages( 10, '', 0, '', $property_id );
+$keywords    = SearchForge\Admin\Dashboard::get_top_keywords( 15, '', 0, '', $property_id );
+$settings    = SearchForge\Admin\Settings::get_all();
+$connected   = $property && ! empty( $property['gsc_access_token'] );
+$site_score  = SearchForge\Scoring\Score::calculate_site_score( $property_id );
+$decaying    = SearchForge\Trends\Engine::get_decaying_pages( 'gsc', 5, $property_id );
+$is_pro      = SearchForge\Admin\Settings::is_pro();
 
 // 14-day trend for dashboard chart.
-$daily_trend = SearchForge\Monitoring\PerformanceTrend::get_daily_trends( 14 );
+$daily_trend    = SearchForge\Monitoring\PerformanceTrend::get_daily_trends( 14, $property_id );
 $cannibal_count = 0;
 if ( $is_pro ) {
-	$cannibalization = SearchForge\Analysis\Cannibalization::detect( 5 );
+	$cannibalization = SearchForge\Analysis\Cannibalization::detect( 5, $property_id );
 	$cannibal_count  = count( $cannibalization );
 }
 
 // Recent alerts.
 global $wpdb;
-$recent_alerts = $wpdb->get_results(
-	"SELECT * FROM {$wpdb->prefix}sf_alerts ORDER BY created_at DESC LIMIT 5",
-	ARRAY_A
-);
+$recent_alerts = $wpdb->get_results( $wpdb->prepare(
+	"SELECT * FROM {$wpdb->prefix}sf_alerts WHERE property_id = %d ORDER BY created_at DESC LIMIT 5",
+	$property_id
+), ARRAY_A );
 ?>
 
 <div class="wrap searchforge-wrap">
 	<h1><?php esc_html_e( 'SearchForge Dashboard', 'searchforge' ); ?></h1>
+
+	<?php include SEARCHFORGE_PATH . 'templates/partials/property-selector.php'; ?>
 
 	<?php if ( ! $connected ) : ?>
 		<div class="notice notice-warning">

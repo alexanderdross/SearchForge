@@ -2,8 +2,9 @@
 defined( 'ABSPATH' ) || exit;
 
 $is_pro      = SearchForge\Admin\Settings::is_pro();
-$competitors = SearchForge\Analysis\Competitors::get_all();
-$visibility  = $is_pro ? SearchForge\Analysis\Competitors::get_visibility_comparison() : null;
+$property_id = SearchForge\Models\Property::get_active_property_id();
+$competitors = SearchForge\Analysis\Competitors::get_all( $property_id );
+$visibility  = $is_pro ? SearchForge\Analysis\Competitors::get_visibility_comparison( $property_id ) : null;
 
 $tier  = SearchForge\Admin\Settings::get( 'license_tier' );
 $limit = match ( $tier ) {
@@ -20,6 +21,8 @@ $can_add = count( $competitors ) < $limit;
 			<span class="sf-pro-badge">Pro</span>
 		<?php endif; ?>
 	</h1>
+
+	<?php include SEARCHFORGE_PATH . 'templates/partials/property-selector.php'; ?>
 
 	<?php if ( ! $is_pro ) : ?>
 		<div class="notice notice-info">
@@ -135,7 +138,7 @@ $can_add = count( $competitors ) < $limit;
 			<!-- Tab: Keyword Overlap -->
 			<div id="sf-tab-overlap" class="sf-tab-panel" role="tabpanel" aria-labelledby="sf-tab-overlap-tab" tabindex="0">
 				<?php
-				$overlap = SearchForge\Analysis\Competitors::get_keyword_overlap( 50 );
+				$overlap = SearchForge\Analysis\Competitors::get_keyword_overlap( 50, $property_id );
 				if ( ! empty( $overlap ) ) : ?>
 					<p class="description">
 						<?php esc_html_e( 'Keywords where both you and a competitor rank. Win these to capture competitor traffic.', 'searchforge' ); ?>
@@ -185,7 +188,7 @@ $can_add = count( $competitors ) < $limit;
 			<!-- Tab: Content Gaps -->
 			<div id="sf-tab-gaps" class="sf-tab-panel" role="tabpanel" aria-labelledby="sf-tab-gaps-tab" tabindex="0">
 				<?php
-				$gaps = SearchForge\Analysis\Competitors::get_competitor_only_keywords( 50 );
+				$gaps = SearchForge\Analysis\Competitors::get_competitor_only_keywords( 50, $property_id );
 				if ( ! empty( $gaps ) ) : ?>
 					<p class="description">
 						<?php esc_html_e( 'Keywords where competitors rank but you don\'t. These are content opportunities.', 'searchforge' ); ?>

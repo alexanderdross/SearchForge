@@ -1,17 +1,18 @@
 <?php
 defined( 'ABSPATH' ) || exit;
 
-$is_pro = SearchForge\Admin\Settings::is_pro();
-$tab    = sanitize_text_field( $_GET['tab'] ?? 'cannibalization' );
+$is_pro      = SearchForge\Admin\Settings::is_pro();
+$tab         = sanitize_text_field( $_GET['tab'] ?? 'cannibalization' );
+$property_id = SearchForge\Models\Property::get_active_property_id();
 
 $cannibalization = [];
 $clusters        = [];
 
 if ( $is_pro ) {
 	if ( $tab === 'cannibalization' ) {
-		$cannibalization = SearchForge\Analysis\Cannibalization::detect( 50 );
+		$cannibalization = SearchForge\Analysis\Cannibalization::detect( 50, $property_id );
 	} elseif ( $tab === 'clusters' ) {
-		$clusters = SearchForge\Analysis\Clustering::cluster_keywords( 0.3, 500 );
+		$clusters = SearchForge\Analysis\Clustering::cluster_keywords( 0.3, 500, $property_id );
 	}
 }
 ?>
@@ -22,6 +23,8 @@ if ( $is_pro ) {
 			<span class="sf-pro-badge">Pro</span>
 		<?php endif; ?>
 	</h1>
+
+	<?php include SEARCHFORGE_PATH . 'templates/partials/property-selector.php'; ?>
 
 	<?php if ( ! $is_pro ) : ?>
 		<div class="notice notice-info">

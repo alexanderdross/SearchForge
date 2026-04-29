@@ -25,73 +25,105 @@ class Commands {
 	 * [--source=<source>]
 	 * : Sync a specific source only. Accepts: gsc, bing, ga4, kwp.
 	 *
+	 * [--property=<id>]
+	 * : Sync a specific property only. If omitted, syncs all properties.
+	 *
 	 * ## EXAMPLES
 	 *
 	 *     wp searchforge sync
 	 *     wp searchforge sync --source=gsc
+	 *     wp searchforge sync --property=2
+	 *     wp searchforge sync --source=gsc --property=1
 	 *
 	 * @param array $args       Positional args.
 	 * @param array $assoc_args Named args.
 	 */
 	public function sync( $args, $assoc_args ): void {
-		$source   = $assoc_args['source'] ?? 'all';
-		$settings = Settings::get_all();
+		$source      = $assoc_args['source'] ?? 'all';
+		$property_id = absint( $assoc_args['property'] ?? 0 );
 
-		if ( in_array( $source, [ 'all', 'gsc' ], true ) ) {
-			if ( empty( $settings['gsc_access_token'] ) ) {
-				\WP_CLI::warning( 'GSC not connected. Skipping.' );
-			} else {
-				\WP_CLI::log( 'Syncing Google Search Console...' );
-				$syncer = new \SearchForge\Integrations\GSC\Syncer();
-				$result = $syncer->sync_all();
-				if ( is_wp_error( $result ) ) {
-					\WP_CLI::warning( 'GSC sync failed: ' . $result->get_error_message() );
-				} else {
-					$pages = $result['pages'] ?? $result['pages_synced'] ?? 0;
-					$kw    = $result['keywords'] ?? $result['keywords_synced'] ?? 0;
-					\WP_CLI::success( "GSC: {$pages} pages, {$kw} keywords synced." );
-				}
+		if ( $property_id ) {
+			$property = \SearchForge\Models\Property::get( $property_id );
+			if ( ! $property ) {
+				\WP_CLI::error( "Property {$property_id} not found." );
+			}
+			$properties = [ $property ];
+		} else {
+			$properties = \SearchForge\Models\Property::get_all();
+			if ( empty( $properties ) ) {
+				// Fallback to legacy settings-based sync.
+				$properties = [ null ];
 			}
 		}
 
-		if ( in_array( $source, [ 'all', 'bing' ], true ) ) {
-			if ( ! Settings::is_pro() || empty( $settings['bing_enabled'] ) || empty( $settings['bing_api_key'] ) ) {
-				\WP_CLI::warning( 'Bing not configured or requires Pro. Skipping.' );
-			} else {
-				\WP_CLI::log( 'Syncing Bing Webmaster Tools...' );
-				$syncer = new \SearchForge\Integrations\Bing\Syncer();
-				$result = $syncer->sync_all();
-				if ( is_wp_error( $result ) ) {
-					\WP_CLI::warning( 'Bing sync failed: ' . $result->get_error_message() );
+		foreach ( $properties as $prop ) {
+			$pid = $prop ? (int) $prop['id'] : 0;
+			if ( $prop ) {
+				\WP_CLI::log( "--- Property: {$prop['label']} ({$prop['domain']}) ---" );
+			}
+
+			if ( in_array( $source, [ 'all', 'gsc' ], true ) ) {
+				$gsc_token = $prop ? ( $prop['gsc_access_token'] ?? '' ) : Settings::get( 'gsc_access_token' );
+				if ( empty( $gsc_token ) ) {
+					\WP_CLI::warning( 'GSC not connected. Skipping.' );
 				} else {
-					\WP_CLI::success( 'Bing sync completed.' );
+					\WP_CLI::log( 'Syncing Google Search Console...' );
+					$syncer = new \SearchForge\Integrations\GSC\Syncer( $pid );
+					$result = $syncer->sync_all();
+					if ( is_wp_error( $result ) ) {
+						\WP_CLI::warning( 'GSC sync failed: ' . $result->get_error_message() );
+					} else {
+						$pages = $result['pages'] ?? $result['pages_synced'] ?? 0;
+						$kw    = $result['keywords'] ?? $result['keywords_synced'] ?? 0;
+						\WP_CLI::success( "GSC: {$pages} pages, {$kw} keywords synced." );
+					}
 				}
 			}
-		}
 
-		if ( in_array( $source, [ 'all', 'ga4' ], true ) ) {
-			if ( ! Settings::is_pro() || empty( $settings['ga4_enabled'] ) || empty( $settings['ga4_property_id'] ) ) {
-				\WP_CLI::warning( 'GA4 not configured or requires Pro. Skipping.' );
-			} else {
-				\WP_CLI::log( 'Syncing Google Analytics 4...' );
-				$syncer = new \SearchForge\Integrations\GA4\Syncer();
-				$result = $syncer->sync();
-				if ( is_wp_error( $result ) ) {
-					\WP_CLI::warning( 'GA4 sync failed: ' . $result->get_error_message() );
+			if ( in_array( $source, [ 'all', 'bing' ], true ) ) {
+				$bing_enabled = $prop ? ! empty( $prop['bing_enabled'] ) : ! empty( Settings::get( 'bing_enabled' ) );
+				$bing_key     = $prop ? ( $prop['bing_api_key'] ?? '' ) : Settings::get( 'bing_api_key' );
+				if ( ! Settings::is_pro() || ! $bing_enabled || empty( $bing_key ) ) {
+					\WP_CLI::warning( 'Bing not configured or requires Pro. Skipping.' );
 				} else {
-					\WP_CLI::success( 'GA4 sync completed.' );
+					\WP_CLI::log( 'Syncing Bing Webmaster Tools...' );
+					$syncer = new \SearchForge\Integrations\Bing\Syncer( $pid );
+					$result = $syncer->sync_all();
+					if ( is_wp_error( $result ) ) {
+						\WP_CLI::warning( 'Bing sync failed: ' . $result->get_error_message() );
+					} else {
+						\WP_CLI::success( 'Bing sync completed.' );
+					}
 				}
 			}
-		}
 
-		if ( in_array( $source, [ 'all', 'kwp' ], true ) ) {
-			if ( ! Settings::is_pro() || empty( $settings['kwp_enabled'] ) || empty( $settings['kwp_customer_id'] ) ) {
-				\WP_CLI::warning( 'Keyword Planner not configured or requires Pro. Skipping.' );
-			} else {
-				\WP_CLI::log( 'Enriching keywords via Keyword Planner...' );
-				$enricher = new \SearchForge\Integrations\KeywordPlanner\Enricher();
-				$enricher->enrich_keywords();
-				\WP_CLI::success( 'Keyword enrichment completed.' );
+			if ( in_array( $source, [ 'all', 'ga4' ], true ) ) {
+				$ga4_enabled = $prop ? ! empty( $prop['ga4_enabled'] ) : ! empty( Settings::get( 'ga4_enabled' ) );
+				$ga4_prop_id = $prop ? ( $prop['ga4_property_id'] ?? '' ) : Settings::get( 'ga4_property_id' );
+				if ( ! Settings::is_pro() || ! $ga4_enabled || empty( $ga4_prop_id ) ) {
+					\WP_CLI::warning( 'GA4 not configured or requires Pro. Skipping.' );
+				} else {
+					\WP_CLI::log( 'Syncing Google Analytics 4...' );
+					$syncer = new \SearchForge\Integrations\GA4\Syncer( $pid );
+					$result = $syncer->sync();
+					if ( is_wp_error( $result ) ) {
+						\WP_CLI::warning( 'GA4 sync failed: ' . $result->get_error_message() );
+					} else {
+						\WP_CLI::success( 'GA4 sync completed.' );
+					}
+				}
+			}
+
+			if ( in_array( $source, [ 'all', 'kwp' ], true ) ) {
+				$settings = Settings::get_all();
+				if ( ! Settings::is_pro() || empty( $settings['kwp_enabled'] ) || empty( $settings['kwp_customer_id'] ) ) {
+					\WP_CLI::warning( 'Keyword Planner not configured or requires Pro. Skipping.' );
+				} else {
+					\WP_CLI::log( 'Enriching keywords via Keyword Planner...' );
+					$enricher = new \SearchForge\Integrations\KeywordPlanner\Enricher( $pid );
+					$enricher->enrich_keywords();
+					\WP_CLI::success( 'Keyword enrichment completed.' );
+				}
 			}
 		}
 
@@ -114,11 +146,19 @@ class Commands {
 		\WP_CLI::log( '--- SearchForge Status ---' );
 		\WP_CLI::log( 'Version:       ' . SEARCHFORGE_VERSION );
 		\WP_CLI::log( 'License Tier:  ' . ucfirst( $settings['license_tier'] ) );
-		\WP_CLI::log( 'GSC Connected: ' . ( ! empty( $settings['gsc_access_token'] ) ? 'Yes' : 'No' ) );
-		\WP_CLI::log( 'GSC Property:  ' . ( $settings['gsc_property'] ?: '(none)' ) );
-		\WP_CLI::log( 'Bing Enabled:  ' . ( $settings['bing_enabled'] ? 'Yes' : 'No' ) );
-		\WP_CLI::log( 'GA4 Enabled:   ' . ( $settings['ga4_enabled'] ? 'Yes' : 'No' ) );
 		\WP_CLI::log( 'Sync Schedule: ' . $settings['sync_frequency'] );
+		\WP_CLI::log( '' );
+
+		$properties = \SearchForge\Models\Property::get_all();
+		\WP_CLI::log( 'Properties:    ' . count( $properties ) );
+		foreach ( $properties as $prop ) {
+			$pid = (int) $prop['id'];
+			$gsc = ! empty( $prop['gsc_access_token'] ) ? 'Connected' : 'No';
+			$bing = ! empty( $prop['bing_enabled'] ) ? 'Yes' : 'No';
+			$ga4 = ! empty( $prop['ga4_enabled'] ) ? 'Yes' : 'No';
+			\WP_CLI::log( "  [{$pid}] {$prop['label']} ({$prop['domain']}) — GSC: {$gsc}, Bing: {$bing}, GA4: {$ga4}" );
+		}
+
 		\WP_CLI::log( '' );
 		\WP_CLI::log( '--- Data Summary ---' );
 		\WP_CLI::log( 'Total Pages:       ' . number_format( $summary['total_pages'] ) );
@@ -150,6 +190,9 @@ class Commands {
 	 * [--page=<page_path>]
 	 * : Page path for brief export.
 	 *
+	 * [--property=<id>]
+	 * : Property ID to export data for. Defaults to active property.
+	 *
 	 * [--file=<file>]
 	 * : Output file path. Defaults to stdout.
 	 *
@@ -158,29 +201,40 @@ class Commands {
 	 *     wp searchforge export pages --format=csv --file=pages.csv
 	 *     wp searchforge export keywords --format=json
 	 *     wp searchforge export brief --page=/about/ --format=md
+	 *     wp searchforge export pages --property=2 --format=csv
 	 */
 	public function export( $args, $assoc_args ): void {
-		$type   = $args[0] ?? 'pages';
-		$format = $assoc_args['format'] ?? 'csv';
-		$file   = $assoc_args['file'] ?? null;
+		$type        = $args[0] ?? 'pages';
+		$format      = $assoc_args['format'] ?? 'csv';
+		$file        = $assoc_args['file'] ?? null;
+		$property_id = absint( $assoc_args['property'] ?? 0 );
+
+		if ( $property_id ) {
+			$property = \SearchForge\Models\Property::get( $property_id );
+			if ( ! $property ) {
+				\WP_CLI::error( "Property {$property_id} not found." );
+			}
+		} else {
+			$property_id = \SearchForge\Models\Property::get_active_property_id();
+		}
 
 		$data = '';
 
 		switch ( $type ) {
 			case 'pages':
 				$data = $format === 'json'
-					? \SearchForge\Export\CsvExporter::export_pages_json()
-					: \SearchForge\Export\CsvExporter::export_pages_csv();
+					? \SearchForge\Export\CsvExporter::export_pages_json( $property_id )
+					: \SearchForge\Export\CsvExporter::export_pages_csv( $property_id );
 				break;
 
 			case 'keywords':
 				$data = $format === 'json'
-					? \SearchForge\Export\CsvExporter::export_keywords_json()
-					: \SearchForge\Export\CsvExporter::export_keywords_csv();
+					? \SearchForge\Export\CsvExporter::export_keywords_json( $property_id )
+					: \SearchForge\Export\CsvExporter::export_keywords_csv( $property_id );
 				break;
 
 			case 'alerts':
-				$data = \SearchForge\Export\CsvExporter::export_alerts_csv();
+				$data = \SearchForge\Export\CsvExporter::export_alerts_csv( $property_id );
 				break;
 
 			case 'brief':
@@ -189,7 +243,7 @@ class Commands {
 					\WP_CLI::error( 'The --page argument is required for brief export.' );
 				}
 				$exporter = new \SearchForge\Export\MarkdownExporter();
-				$data = $exporter->generate_page_brief( $page_path );
+				$data = $exporter->generate_page_brief( $page_path, $property_id );
 				if ( is_wp_error( $data ) ) {
 					\WP_CLI::error( $data->get_error_message() );
 				}
@@ -277,5 +331,70 @@ class Commands {
 		}
 
 		\WP_CLI\Utils\format_items( 'table', $table_data, [ 'Service', 'Used', 'Limit', 'Pct', 'Status' ] );
+	}
+
+	/**
+	 * List all registered properties.
+	 *
+	 * ## EXAMPLES
+	 *
+	 *     wp searchforge properties
+	 */
+	public function properties( $args, $assoc_args ): void {
+		$properties = \SearchForge\Models\Property::get_all();
+		if ( empty( $properties ) ) {
+			\WP_CLI::warning( 'No properties registered.' );
+			return;
+		}
+		$table_data = array_map( function( $p ) {
+			return [
+				'ID'      => $p['id'],
+				'Label'   => $p['label'],
+				'Domain'  => $p['domain'],
+				'Default' => $p['is_default'] ? 'Yes' : '',
+				'GSC'     => ! empty( $p['gsc_access_token'] ) ? 'Connected' : '—',
+				'Bing'    => ! empty( $p['bing_enabled'] ) ? 'Enabled' : '—',
+				'GA4'     => ! empty( $p['ga4_enabled'] ) ? 'Enabled' : '—',
+			];
+		}, $properties );
+		\WP_CLI\Utils\format_items( 'table', $table_data, [ 'ID', 'Label', 'Domain', 'Default', 'GSC', 'Bing', 'GA4' ] );
+	}
+
+	/**
+	 * Generate a CMS backend merger analysis brief.
+	 *
+	 * ## OPTIONS
+	 *
+	 * --properties=<ids>
+	 * : Comma-separated property IDs to analyze.
+	 *
+	 * [--file=<file>]
+	 * : Output file path. Defaults to stdout.
+	 *
+	 * ## EXAMPLES
+	 *
+	 *     wp searchforge merger --properties=1,2,3
+	 *     wp searchforge merger --properties=1,2 --file=merger.md
+	 */
+	public function merger( $args, $assoc_args ): void {
+		if ( ! Settings::is_pro() ) {
+			\WP_CLI::error( 'Merger analysis requires a Pro license.' );
+		}
+		$ids_str = $assoc_args['properties'] ?? '';
+		$ids = array_map( 'absint', explode( ',', $ids_str ) );
+		$ids = array_filter( $ids );
+		if ( count( $ids ) < 2 ) {
+			\WP_CLI::error( 'Provide at least 2 property IDs (--properties=1,2).' );
+		}
+		\WP_CLI::log( 'Generating merger analysis for properties: ' . implode( ', ', $ids ) . '...' );
+		$analyzer = new \SearchForge\Analysis\MergerAnalysis( $ids );
+		$markdown = $analyzer->generate_markdown();
+		$file = $assoc_args['file'] ?? null;
+		if ( $file ) {
+			file_put_contents( $file, $markdown );
+			\WP_CLI::success( "Merger analysis exported to {$file}" );
+		} else {
+			\WP_CLI::log( $markdown );
+		}
 	}
 }

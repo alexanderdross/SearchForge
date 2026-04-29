@@ -26,6 +26,7 @@ class Ajax {
 		add_action( 'wp_ajax_searchforge_remove_property', [ $this, 'remove_property' ] );
 		add_action( 'wp_ajax_searchforge_sync_property', [ $this, 'sync_property' ] );
 		add_action( 'wp_ajax_searchforge_generate_merger_brief', [ $this, 'generate_merger_brief' ] );
+		add_action( 'wp_ajax_searchforge_update_property_config', [ $this, 'update_property_config' ] );
 	}
 
 	public function sync_gsc(): void {
@@ -472,6 +473,82 @@ class Ajax {
 		wp_send_json_success( [
 			'markdown' => $markdown,
 			'filename' => 'searchforge-merger-analysis-' . implode( '-', $ids ) . '.md',
+		] );
+	}
+
+	public function update_property_config(): void {
+		check_ajax_referer( 'searchforge_nonce', 'nonce' );
+
+		if ( ! current_user_can( 'manage_options' ) ) {
+			wp_send_json_error( [ 'message' => __( 'Unauthorized.', 'searchforge' ) ], 403 );
+		}
+
+		$property_id = absint( $_POST['property_id'] ?? 0 );
+		if ( ! $property_id || ! \SearchForge\Models\Property::get( $property_id ) ) {
+			wp_send_json_error( [ 'message' => __( 'Invalid property.', 'searchforge' ) ] );
+		}
+
+		$data = [];
+
+		if ( isset( $_POST['gsc_client_id'] ) ) {
+			$data['gsc_client_id'] = sanitize_text_field( $_POST['gsc_client_id'] );
+		}
+		$secret = sanitize_text_field( $_POST['gsc_client_secret'] ?? '' );
+		if ( ! empty( $secret ) && strpos( $secret, '••' ) === false ) {
+			$data['gsc_client_secret'] = $secret;
+		}
+		if ( isset( $_POST['gsc_property'] ) ) {
+			$data['gsc_property'] = sanitize_text_field( $_POST['gsc_property'] );
+		}
+
+		$data['bing_enabled'] = ! empty( $_POST['bing_enabled'] );
+		$bing_key = sanitize_text_field( $_POST['bing_api_key'] ?? '' );
+		if ( ! empty( $bing_key ) && strpos( $bing_key, '••' ) === false ) {
+			$data['bing_api_key'] = $bing_key;
+		}
+		if ( isset( $_POST['bing_site_url'] ) ) {
+			$data['bing_site_url'] = esc_url_raw( $_POST['bing_site_url'] );
+		}
+
+		$data['ga4_enabled'] = ! empty( $_POST['ga4_enabled'] );
+		if ( isset( $_POST['ga4_property_id'] ) ) {
+			$data['ga4_property_id'] = sanitize_text_field( $_POST['ga4_property_id'] );
+		}
+
+		$data['adobe_enabled'] = ! empty( $_POST['adobe_enabled'] );
+		if ( isset( $_POST['adobe_org_id'] ) ) {
+			$data['adobe_org_id'] = sanitize_text_field( $_POST['adobe_org_id'] );
+		}
+		if ( isset( $_POST['adobe_client_id'] ) ) {
+			$data['adobe_client_id'] = sanitize_text_field( $_POST['adobe_client_id'] );
+		}
+		$adobe_secret = sanitize_text_field( $_POST['adobe_client_secret'] ?? '' );
+		if ( ! empty( $adobe_secret ) && strpos( $adobe_secret, '••' ) === false ) {
+			$data['adobe_client_secret'] = $adobe_secret;
+		}
+		if ( isset( $_POST['adobe_report_suite_id'] ) ) {
+			$data['adobe_report_suite_id'] = sanitize_text_field( $_POST['adobe_report_suite_id'] );
+		}
+
+		\SearchForge\Models\Property::update( $property_id, $data );
+
+		$updated   = \SearchForge\Models\Property::get( $property_id );
+		$has_creds = ! empty( $updated['gsc_client_id'] ) && ! empty( $updated['gsc_client_secret'] );
+		$auth_url  = ( $has_creds && empty( $updated['gsc_access_token'] ) )
+			? \SearchForge\Integrations\GSC\OAuth::get_auth_url( $property_id )
+			: '';
+
+		wp_send_json_success( [
+			'message'  => __( 'Configuration saved.', 'searchforge' ),
+			'property' => [
+				'id'             => (int) $updated['id'],
+				'gsc_connected'  => ! empty( $updated['gsc_access_token'] ),
+				'gsc_property'   => $updated['gsc_property'] ?? '',
+				'gsc_auth_url'   => $auth_url,
+				'bing_connected' => ! empty( $updated['bing_enabled'] ) && ! empty( $updated['bing_api_key'] ),
+				'ga4_connected'  => ! empty( $updated['ga4_enabled'] ) && ! empty( $updated['ga4_property_id'] ),
+				'adobe_connected' => ! empty( $updated['adobe_enabled'] ) && ! empty( $updated['adobe_client_id'] ),
+			],
 		] );
 	}
 

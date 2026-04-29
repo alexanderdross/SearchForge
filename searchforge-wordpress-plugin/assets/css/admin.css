@@ -931,6 +931,78 @@
 	color: #646970;
 }
 
+/* Property Config Modal */
+.sf-property-modal-content {
+	max-width: 720px;
+}
+
+.sf-config-nav {
+	margin-bottom: 0;
+	border-bottom: 1px solid #c3c4c7;
+}
+
+.sf-config-nav .nav-tab {
+	position: relative;
+	padding-left: 22px;
+}
+
+.sf-cfg-tab-indicator {
+	display: inline-block;
+	width: 8px;
+	height: 8px;
+	border-radius: 50%;
+	background: #c3c4c7;
+	position: absolute;
+	left: 8px;
+	top: 50%;
+	transform: translateY(-50%);
+}
+
+.sf-cfg-dot-on {
+	background: #00a32a;
+}
+
+.sf-cfg-panel {
+	display: none;
+	padding: 4px 0;
+}
+
+.sf-cfg-panel-active {
+	display: block;
+}
+
+.sf-cfg-panel .form-table th {
+	width: 160px;
+	padding: 12px 10px 12px 0;
+}
+
+.sf-cfg-panel .form-table td {
+	padding: 12px 10px;
+}
+
+.sf-config-footer {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	padding: 16px 0 0;
+	border-top: 1px solid #c3c4c7;
+	margin-top: 8px;
+}
+
+#sf-prop-config-status {
+	margin-left: auto;
+	font-weight: 500;
+	font-size: 13px;
+}
+
+.sf-properties-table .sf-property-actions {
+	white-space: nowrap;
+}
+
+.sf-properties-table .sf-property-actions .button {
+	margin-right: 4px;
+}
+
 /* Reduced Motion */
 @media (prefers-reduced-motion: reduce) {
 	*, *::before, *::after {

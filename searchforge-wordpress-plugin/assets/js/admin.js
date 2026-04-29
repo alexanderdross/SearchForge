@@ -536,6 +536,233 @@
 			$btn.prop('disabled', false).text('Sync Keywords');
 		});
 	});
+	// --- Property Configuration Modal ---
+
+	// Open property config modal.
+	$(document).on('click', '.sf-configure-property', function () {
+		var id = $(this).data('id');
+		var prop = (typeof sfPropertyData !== 'undefined') ? sfPropertyData[id] : null;
+		if (!prop) return;
+
+		$('#sf-prop-config-id').val(id);
+		$('#sf-prop-config-title').text('Configure: ' + prop.label + ' (' + prop.domain + ')');
+
+		// Populate GSC fields.
+		$('#sf-cfg-gsc-client-id').val(prop.gsc_client_id || '');
+		$('#sf-cfg-gsc-client-secret').val('');
+		if (prop.gsc_client_secret_set) {
+			$('#sf-cfg-gsc-secret-status').html('<span class="sf-status sf-status-connected" style="font-size:11px;">Set</span>');
+		} else {
+			$('#sf-cfg-gsc-secret-status').html('');
+		}
+		$('#sf-cfg-gsc-property').val(prop.gsc_property || '');
+		renderGscStatus(prop);
+
+		// Populate Bing fields.
+		$('#sf-cfg-bing-enabled').prop('checked', !!prop.bing_enabled);
+		$('#sf-cfg-bing-api-key').val('');
+		if (prop.bing_api_key_set) {
+			$('#sf-cfg-bing-key-status').html('<span class="sf-status sf-status-connected" style="font-size:11px;">Set</span>');
+		} else {
+			$('#sf-cfg-bing-key-status').html('');
+		}
+		$('#sf-cfg-bing-site-url').val(prop.bing_site_url || '');
+
+		// Populate GA4 fields.
+		$('#sf-cfg-ga4-enabled').prop('checked', !!prop.ga4_enabled);
+		$('#sf-cfg-ga4-property-id').val(prop.ga4_property_id || '');
+
+		// Populate Adobe fields.
+		$('#sf-cfg-adobe-enabled').prop('checked', !!prop.adobe_enabled);
+		$('#sf-cfg-adobe-org-id').val(prop.adobe_org_id || '');
+		$('#sf-cfg-adobe-client-id').val(prop.adobe_client_id || '');
+		$('#sf-cfg-adobe-client-secret').val('');
+		if (prop.adobe_client_secret_set) {
+			$('#sf-cfg-adobe-secret-status').html('<span class="sf-status sf-status-connected" style="font-size:11px;">Set</span>');
+		} else {
+			$('#sf-cfg-adobe-secret-status').html('');
+		}
+		$('#sf-cfg-adobe-report-suite-id').val(prop.adobe_report_suite_id || '');
+
+		// Update tab indicators.
+		updateConfigTabDots(prop);
+
+		// Reset to GSC tab.
+		$('.sf-config-nav .nav-tab').removeClass('nav-tab-active').first().addClass('nav-tab-active');
+		$('.sf-cfg-panel').removeClass('sf-cfg-panel-active').first().addClass('sf-cfg-panel-active');
+
+		$('#sf-prop-config-status').text('');
+		$('#sf-property-config-modal').show();
+	});
+
+	function renderGscStatus(prop) {
+		var $cell = $('#sf-cfg-gsc-status-cell');
+		if (prop.gsc_connected) {
+			$cell.html(
+				'<span class="sf-status sf-status-connected">Connected</span>' +
+				(prop.gsc_property ? '<br><strong>Property:</strong> ' + prop.gsc_property : '') +
+				'<br><button type="button" class="button button-small sf-cfg-disconnect-gsc" style="margin-top:6px;">Disconnect</button>'
+			);
+		} else if (prop.gsc_auth_url) {
+			$cell.html('<a href="' + prop.gsc_auth_url + '" class="button button-primary">Connect to Google Search Console</a>');
+		} else {
+			$cell.html('<span class="sf-status sf-status-disconnected">Save Client ID &amp; Secret first, then connect.</span>');
+		}
+	}
+
+	function updateConfigTabDots(prop) {
+		$('#sf-cfg-tab-gsc-dot').attr('class', 'sf-cfg-tab-indicator ' + (prop.gsc_connected ? 'sf-cfg-dot-on' : ''));
+		$('#sf-cfg-tab-bing-dot').attr('class', 'sf-cfg-tab-indicator ' + (prop.bing_enabled && prop.bing_api_key_set ? 'sf-cfg-dot-on' : ''));
+		$('#sf-cfg-tab-ga4-dot').attr('class', 'sf-cfg-tab-indicator ' + (prop.ga4_enabled && prop.ga4_property_id ? 'sf-cfg-dot-on' : ''));
+		$('#sf-cfg-tab-adobe-dot').attr('class', 'sf-cfg-tab-indicator ' + (prop.adobe_enabled && prop.adobe_client_id ? 'sf-cfg-dot-on' : ''));
+	}
+
+	// Config tab switching.
+	$(document).on('click', '.sf-config-nav .nav-tab', function (e) {
+		e.preventDefault();
+		var tabId = $(this).data('config-tab');
+		$('.sf-config-nav .nav-tab').removeClass('nav-tab-active');
+		$(this).addClass('nav-tab-active');
+		$('.sf-cfg-panel').removeClass('sf-cfg-panel-active');
+		$('#' + tabId).addClass('sf-cfg-panel-active');
+	});
+
+	// Save property config.
+	$(document).on('click', '#sf-save-property-config', function () {
+		var $btn = $(this);
+		var $status = $('#sf-prop-config-status');
+		var propertyId = $('#sf-prop-config-id').val();
+
+		$btn.prop('disabled', true);
+		$status.text('Saving...').css('color', '');
+
+		$.post(searchforge.ajax_url, {
+			action: 'searchforge_update_property_config',
+			nonce: searchforge.nonce,
+			property_id: propertyId,
+			gsc_client_id: $('#sf-cfg-gsc-client-id').val(),
+			gsc_client_secret: $('#sf-cfg-gsc-client-secret').val(),
+			gsc_property: $('#sf-cfg-gsc-property').val(),
+			bing_enabled: $('#sf-cfg-bing-enabled').is(':checked') ? 1 : 0,
+			bing_api_key: $('#sf-cfg-bing-api-key').val(),
+			bing_site_url: $('#sf-cfg-bing-site-url').val(),
+			ga4_enabled: $('#sf-cfg-ga4-enabled').is(':checked') ? 1 : 0,
+			ga4_property_id: $('#sf-cfg-ga4-property-id').val(),
+			adobe_enabled: $('#sf-cfg-adobe-enabled').is(':checked') ? 1 : 0,
+			adobe_org_id: $('#sf-cfg-adobe-org-id').val(),
+			adobe_client_id: $('#sf-cfg-adobe-client-id').val(),
+			adobe_client_secret: $('#sf-cfg-adobe-client-secret').val(),
+			adobe_report_suite_id: $('#sf-cfg-adobe-report-suite-id').val()
+		}, function (response) {
+			$btn.prop('disabled', false);
+			if (response.success) {
+				$status.text(response.data.message).css('color', '#155724');
+				// Update local data and refresh UI.
+				var p = response.data.property;
+				var localProp = sfPropertyData[propertyId];
+				if (localProp) {
+					localProp.gsc_client_id = $('#sf-cfg-gsc-client-id').val();
+					localProp.gsc_connected = p.gsc_connected;
+					localProp.gsc_property = p.gsc_property;
+					localProp.gsc_auth_url = p.gsc_auth_url || '';
+					localProp.gsc_client_secret_set = localProp.gsc_client_secret_set || !!$('#sf-cfg-gsc-client-secret').val();
+					localProp.bing_enabled = $('#sf-cfg-bing-enabled').is(':checked');
+					localProp.bing_api_key_set = localProp.bing_api_key_set || !!$('#sf-cfg-bing-api-key').val();
+					localProp.bing_site_url = $('#sf-cfg-bing-site-url').val();
+					localProp.ga4_enabled = $('#sf-cfg-ga4-enabled').is(':checked');
+					localProp.ga4_property_id = $('#sf-cfg-ga4-property-id').val();
+					localProp.adobe_enabled = $('#sf-cfg-adobe-enabled').is(':checked');
+					localProp.adobe_org_id = $('#sf-cfg-adobe-org-id').val();
+					localProp.adobe_client_id = $('#sf-cfg-adobe-client-id').val();
+					localProp.adobe_client_secret_set = localProp.adobe_client_secret_set || !!$('#sf-cfg-adobe-client-secret').val();
+					localProp.adobe_report_suite_id = $('#sf-cfg-adobe-report-suite-id').val();
+					renderGscStatus(localProp);
+					updateConfigTabDots(localProp);
+				}
+				// Update table row status badges.
+				var $row = $('tr[data-property-id="' + propertyId + '"]');
+				var cols = $row.find('td');
+				cols.eq(2).html(p.gsc_connected ? '<span class="sf-status sf-status-connected">Connected</span>' : '<span class="sf-status sf-status-disconnected">&mdash;</span>');
+				cols.eq(3).html(p.bing_connected ? '<span class="sf-status sf-status-connected">Connected</span>' : '<span class="sf-status sf-status-disconnected">&mdash;</span>');
+				cols.eq(4).html(p.ga4_connected ? '<span class="sf-status sf-status-connected">Connected</span>' : '<span class="sf-status sf-status-disconnected">&mdash;</span>');
+				cols.eq(5).html(p.adobe_connected ? '<span class="sf-status sf-status-connected">Connected</span>' : '<span class="sf-status sf-status-disconnected">&mdash;</span>');
+				// Clear secret fields after save.
+				$('#sf-cfg-gsc-client-secret, #sf-cfg-bing-api-key, #sf-cfg-adobe-client-secret').val('');
+				if (localProp && localProp.gsc_client_secret_set) {
+					$('#sf-cfg-gsc-secret-status').html('<span class="sf-status sf-status-connected" style="font-size:11px;">Set</span>');
+				}
+				if (localProp && localProp.bing_api_key_set) {
+					$('#sf-cfg-bing-key-status').html('<span class="sf-status sf-status-connected" style="font-size:11px;">Set</span>');
+				}
+				if (localProp && localProp.adobe_client_secret_set) {
+					$('#sf-cfg-adobe-secret-status').html('<span class="sf-status sf-status-connected" style="font-size:11px;">Set</span>');
+				}
+			} else {
+				$status.text(response.data && response.data.message || 'Save failed.').css('color', '#d63638');
+			}
+		}).fail(function () {
+			$btn.prop('disabled', false);
+			$status.text('Network error.').css('color', '#d63638');
+		});
+	});
+
+	// Disconnect GSC from within the config modal.
+	$(document).on('click', '.sf-cfg-disconnect-gsc', function () {
+		if (!confirm('Disconnect Google Search Console for this property?')) return;
+		var propertyId = $('#sf-prop-config-id').val();
+
+		$.post(searchforge.ajax_url, {
+			action: 'searchforge_disconnect_gsc',
+			nonce: searchforge.nonce,
+			property_id: propertyId
+		}, function (response) {
+			if (response.success) {
+				var localProp = sfPropertyData[propertyId];
+				if (localProp) {
+					localProp.gsc_connected = false;
+					localProp.gsc_property = '';
+					localProp.gsc_auth_url = '';
+					renderGscStatus(localProp);
+					updateConfigTabDots(localProp);
+				}
+				$('tr[data-property-id="' + propertyId + '"] td').eq(2).html('<span class="sf-status sf-status-disconnected">&mdash;</span>');
+			} else {
+				alert(response.data && response.data.message || 'Disconnect failed.');
+			}
+		});
+	});
+
+	// Sync property from table row.
+	$(document).on('click', '.sf-sync-property-btn', function () {
+		var $btn = $(this);
+		var id = $btn.data('id');
+		$btn.prop('disabled', true).text('Syncing...');
+
+		$.post(searchforge.ajax_url, {
+			action: 'searchforge_sync_property',
+			nonce: searchforge.nonce,
+			property_id: id
+		}, function (response) {
+			if (response.success) {
+				var d = response.data;
+				alert('Sync complete: ' + d.pages_synced + ' pages, ' + d.keywords_synced + ' keywords.');
+			} else {
+				alert('Sync failed: ' + (response.data && response.data.message || 'Unknown error'));
+			}
+			$btn.prop('disabled', false).text('Sync');
+		}).fail(function () {
+			alert('Network error.');
+			$btn.prop('disabled', false).text('Sync');
+		});
+	});
+
+	// Close property config modal on outside click.
+	$(document).on('click', '#sf-property-config-modal', function (e) {
+		if (e.target === this) {
+			closeModal($(this));
+		}
+	});
+
 	// --- Merger Analysis ---
 
 	// Enable/disable generate button based on property selection.

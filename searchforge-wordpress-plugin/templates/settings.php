@@ -5,20 +5,35 @@ $settings    = SearchForge\Admin\Settings::get_all();
 $property_id = SearchForge\Models\Property::get_active_property_id();
 $property    = SearchForge\Models\Property::get( $property_id );
 $properties  = SearchForge\Models\Property::get_all();
-$connected   = $property && ! empty( $property['gsc_access_token'] );
-$has_creds   = $property && ! empty( $property['gsc_client_id'] ) && ! empty( $property['gsc_client_secret'] );
 
-// Handle property selection.
-$sites       = [];
-$sites_error = '';
-if ( $connected && isset( $_GET['select_property'] ) ) {
-	$client = new SearchForge\Integrations\GSC\Client();
-	$result = SearchForge\Integrations\GSC\Client::list_sites();
-	if ( is_wp_error( $result ) ) {
-		$sites_error = $result->get_error_message();
-	} else {
-		$sites = $result;
-	}
+$properties_js = [];
+foreach ( $properties as $prop ) {
+	$has_gsc_creds = ! empty( $prop['gsc_client_id'] ) && ! empty( $prop['gsc_client_secret'] );
+	$gsc_connected = ! empty( $prop['gsc_access_token'] );
+	$properties_js[ (int) $prop['id'] ] = [
+		'id'                    => (int) $prop['id'],
+		'label'                 => $prop['label'],
+		'domain'                => $prop['domain'],
+		'is_default'            => ! empty( $prop['is_default'] ),
+		'gsc_client_id'         => $prop['gsc_client_id'] ?? '',
+		'gsc_client_secret'     => ! empty( $prop['gsc_client_secret'] ) ? '••••••••' : '',
+		'gsc_client_secret_set' => ! empty( $prop['gsc_client_secret'] ),
+		'gsc_connected'         => $gsc_connected,
+		'gsc_property'          => $prop['gsc_property'] ?? '',
+		'gsc_auth_url'          => ( $has_gsc_creds && ! $gsc_connected ) ? SearchForge\Integrations\GSC\OAuth::get_auth_url( (int) $prop['id'] ) : '',
+		'bing_enabled'          => ! empty( $prop['bing_enabled'] ),
+		'bing_api_key'          => ! empty( $prop['bing_api_key'] ) ? '••••••••' : '',
+		'bing_api_key_set'      => ! empty( $prop['bing_api_key'] ),
+		'bing_site_url'         => $prop['bing_site_url'] ?? '',
+		'ga4_enabled'           => ! empty( $prop['ga4_enabled'] ),
+		'ga4_property_id'       => $prop['ga4_property_id'] ?? '',
+		'adobe_enabled'         => ! empty( $prop['adobe_enabled'] ),
+		'adobe_org_id'          => $prop['adobe_org_id'] ?? '',
+		'adobe_client_id'       => $prop['adobe_client_id'] ?? '',
+		'adobe_client_secret'   => ! empty( $prop['adobe_client_secret'] ) ? '••••••••' : '',
+		'adobe_client_secret_set' => ! empty( $prop['adobe_client_secret'] ),
+		'adobe_report_suite_id' => $prop['adobe_report_suite_id'] ?? '',
+	];
 }
 
 if ( isset( $_GET['gsc_connected'] ) ) : ?>
@@ -54,13 +69,17 @@ if ( isset( $_GET['gsc_connected'] ) ) : ?>
 			</tr>
 		</table>
 
-		<!-- Properties -->
-		<h2><?php esc_html_e( 'Properties', 'searchforge' ); ?>
+		<!-- Properties & Service Accounts -->
+		<h2><?php esc_html_e( 'Properties & Service Accounts', 'searchforge' ); ?>
 			<?php if ( ! SearchForge\Admin\Settings::is_pro() && count( $properties ) >= 1 ) : ?>
 				<span class="sf-pro-badge">Pro</span>
 			<?php endif; ?>
 		</h2>
-		<table class="widefat sf-table" id="sf-properties-table">
+		<p class="description">
+			<?php esc_html_e( 'Each property maintains its own GSC, Bing, GA4, and Adobe Analytics credentials. Click "Configure" to manage service connections per property.', 'searchforge' ); ?>
+		</p>
+
+		<table class="widefat sf-table sf-properties-table" id="sf-properties-table">
 			<thead>
 				<tr>
 					<th><?php esc_html_e( 'Label', 'searchforge' ); ?></th>
@@ -73,15 +92,42 @@ if ( isset( $_GET['gsc_connected'] ) ) : ?>
 				</tr>
 			</thead>
 			<tbody>
-				<?php foreach ( $properties as $prop ) : ?>
-					<tr>
-						<td><?php echo esc_html( $prop['label'] ); ?><?php if ( ! empty( $prop['is_default'] ) ) echo ' <em>(default)</em>'; ?></td>
-						<td><code><?php echo esc_html( $prop['domain'] ); ?></code></td>
-						<td><?php echo ! empty( $prop['gsc_access_token'] ) ? '<span class="sf-status sf-status-connected">Connected</span>' : '<span class="sf-status sf-status-disconnected">&mdash;</span>'; ?></td>
-						<td><?php echo ! empty( $prop['bing_enabled'] ) && ! empty( $prop['bing_api_key'] ) ? '<span class="sf-status sf-status-connected">Connected</span>' : '<span class="sf-status sf-status-disconnected">&mdash;</span>'; ?></td>
-						<td><?php echo ! empty( $prop['ga4_enabled'] ) && ! empty( $prop['ga4_property_id'] ) ? '<span class="sf-status sf-status-connected">Connected</span>' : '<span class="sf-status sf-status-disconnected">&mdash;</span>'; ?></td>
-						<td><?php echo ! empty( $prop['adobe_enabled'] ) && ! empty( $prop['adobe_client_id'] ) ? '<span class="sf-status sf-status-connected">Connected</span>' : '<span class="sf-status sf-status-disconnected">&mdash;</span>'; ?></td>
+				<?php foreach ( $properties as $prop ) :
+					$svc_count = 0;
+					if ( ! empty( $prop['gsc_access_token'] ) ) $svc_count++;
+					if ( ! empty( $prop['bing_enabled'] ) && ! empty( $prop['bing_api_key'] ) ) $svc_count++;
+					if ( ! empty( $prop['ga4_enabled'] ) && ! empty( $prop['ga4_property_id'] ) ) $svc_count++;
+					if ( ! empty( $prop['adobe_enabled'] ) && ! empty( $prop['adobe_client_id'] ) ) $svc_count++;
+				?>
+					<tr data-property-id="<?php echo esc_attr( $prop['id'] ); ?>">
 						<td>
+							<strong><?php echo esc_html( $prop['label'] ); ?></strong>
+							<?php if ( ! empty( $prop['is_default'] ) ) : ?>
+								<em>(<?php esc_html_e( 'default', 'searchforge' ); ?>)</em>
+							<?php endif; ?>
+						</td>
+						<td><code><?php echo esc_html( $prop['domain'] ); ?></code></td>
+						<td><?php echo ! empty( $prop['gsc_access_token'] )
+							? '<span class="sf-status sf-status-connected">' . esc_html__( 'Connected', 'searchforge' ) . '</span>'
+							: '<span class="sf-status sf-status-disconnected">&mdash;</span>'; ?></td>
+						<td><?php echo ( ! empty( $prop['bing_enabled'] ) && ! empty( $prop['bing_api_key'] ) )
+							? '<span class="sf-status sf-status-connected">' . esc_html__( 'Connected', 'searchforge' ) . '</span>'
+							: '<span class="sf-status sf-status-disconnected">&mdash;</span>'; ?></td>
+						<td><?php echo ( ! empty( $prop['ga4_enabled'] ) && ! empty( $prop['ga4_property_id'] ) )
+							? '<span class="sf-status sf-status-connected">' . esc_html__( 'Connected', 'searchforge' ) . '</span>'
+							: '<span class="sf-status sf-status-disconnected">&mdash;</span>'; ?></td>
+						<td><?php echo ( ! empty( $prop['adobe_enabled'] ) && ! empty( $prop['adobe_client_id'] ) )
+							? '<span class="sf-status sf-status-connected">' . esc_html__( 'Connected', 'searchforge' ) . '</span>'
+							: '<span class="sf-status sf-status-disconnected">&mdash;</span>'; ?></td>
+						<td class="sf-property-actions">
+							<button type="button" class="button button-small sf-configure-property" data-id="<?php echo esc_attr( $prop['id'] ); ?>">
+								<?php esc_html_e( 'Configure', 'searchforge' ); ?>
+							</button>
+							<?php if ( $svc_count > 0 ) : ?>
+								<button type="button" class="button button-small sf-sync-property-btn" data-id="<?php echo esc_attr( $prop['id'] ); ?>">
+									<?php esc_html_e( 'Sync', 'searchforge' ); ?>
+								</button>
+							<?php endif; ?>
 							<?php if ( empty( $prop['is_default'] ) ) : ?>
 								<button type="button" class="button button-small sf-remove-property" data-id="<?php echo esc_attr( $prop['id'] ); ?>">
 									<?php esc_html_e( 'Remove', 'searchforge' ); ?>
@@ -92,137 +138,16 @@ if ( isset( $_GET['gsc_connected'] ) ) : ?>
 				<?php endforeach; ?>
 			</tbody>
 		</table>
+
 		<?php if ( SearchForge\Admin\Settings::is_pro() ) : ?>
 			<div class="sf-add-property" style="margin-top: 12px;">
-				<input type="text" id="sf-new-property-label" placeholder="<?php esc_attr_e( 'Label', 'searchforge' ); ?>" class="regular-text" />
+				<input type="text" id="sf-new-property-label" placeholder="<?php esc_attr_e( 'Label (e.g. Blog, Shop DE)', 'searchforge' ); ?>" class="regular-text" />
 				<input type="text" id="sf-new-property-domain" placeholder="<?php esc_attr_e( 'domain.com', 'searchforge' ); ?>" class="regular-text" />
 				<button type="button" class="button button-primary" id="sf-add-property-btn">
 					<?php esc_html_e( 'Add Property', 'searchforge' ); ?>
 				</button>
 			</div>
 		<?php endif; ?>
-
-		<!-- Google Search Console -->
-		<h2><?php esc_html_e( 'Google Search Console', 'searchforge' ); ?></h2>
-		<table class="form-table">
-			<tr>
-				<th scope="row">
-					<label for="gsc_client_id"><?php esc_html_e( 'Client ID', 'searchforge' ); ?></label>
-				</th>
-				<td>
-					<input type="text" name="searchforge_settings[gsc_client_id]" id="gsc_client_id"
-						value="<?php echo esc_attr( $property['gsc_client_id'] ?? '' ); ?>" class="regular-text" />
-					<p class="description">
-						<?php esc_html_e( 'From Google Cloud Console > APIs & Services > Credentials', 'searchforge' ); ?>
-					</p>
-				</td>
-			</tr>
-			<tr>
-				<th scope="row">
-					<label for="gsc_client_secret"><?php esc_html_e( 'Client Secret', 'searchforge' ); ?></label>
-				</th>
-				<td>
-					<input type="password" name="searchforge_settings[gsc_client_secret]" id="gsc_client_secret"
-						value="<?php echo esc_attr( $property['gsc_client_secret'] ?? '' ); ?>" class="regular-text" />
-				</td>
-			</tr>
-			<tr>
-				<th scope="row"><?php esc_html_e( 'Connection Status', 'searchforge' ); ?></th>
-				<td>
-					<?php if ( $connected ) : ?>
-						<span class="sf-status sf-status-connected">
-							<?php esc_html_e( 'Connected', 'searchforge' ); ?>
-						</span>
-						<?php if ( ! empty( $property['gsc_property'] ) ) : ?>
-							<br />
-							<strong><?php esc_html_e( 'Property:', 'searchforge' ); ?></strong>
-							<?php echo esc_html( $property['gsc_property'] ); ?>
-						<?php endif; ?>
-						<br />
-						<button type="button" class="button" id="sf-disconnect-gsc">
-							<?php esc_html_e( 'Disconnect', 'searchforge' ); ?>
-						</button>
-					<?php elseif ( $has_creds ) : ?>
-						<a href="<?php echo esc_url( SearchForge\Integrations\GSC\OAuth::get_auth_url( $property_id ) ); ?>"
-							class="button button-primary">
-							<?php esc_html_e( 'Connect to Google Search Console', 'searchforge' ); ?>
-						</a>
-					<?php else : ?>
-						<span class="sf-status sf-status-disconnected">
-							<?php esc_html_e( 'Enter Client ID and Secret first, then save settings.', 'searchforge' ); ?>
-						</span>
-					<?php endif; ?>
-				</td>
-			</tr>
-			<?php if ( $connected && empty( $property['gsc_property'] ) ) : ?>
-				<tr>
-					<th scope="row"><?php esc_html_e( 'Select Property', 'searchforge' ); ?></th>
-					<td>
-						<?php if ( ! empty( $sites ) ) : ?>
-							<select name="searchforge_settings[gsc_property]" id="gsc_property">
-								<option value=""><?php esc_html_e( '— Select —', 'searchforge' ); ?></option>
-								<?php foreach ( $sites as $site ) : ?>
-									<option value="<?php echo esc_attr( $site['siteUrl'] ); ?>">
-										<?php echo esc_html( $site['siteUrl'] ); ?>
-									</option>
-								<?php endforeach; ?>
-							</select>
-						<?php elseif ( $sites_error ) : ?>
-							<p class="sf-error"><?php echo esc_html( $sites_error ); ?></p>
-						<?php else : ?>
-							<a href="<?php echo esc_url( admin_url( 'admin.php?page=searchforge-settings&select_property=1' ) ); ?>"
-								class="button">
-								<?php esc_html_e( 'Load Properties', 'searchforge' ); ?>
-							</a>
-						<?php endif; ?>
-					</td>
-				</tr>
-			<?php endif; ?>
-		</table>
-
-		<!-- Bing Webmaster Tools (Pro) -->
-		<h2><?php esc_html_e( 'Bing Webmaster Tools', 'searchforge' ); ?>
-			<?php if ( ! SearchForge\Admin\Settings::is_pro() ) : ?>
-				<span class="sf-pro-badge">Pro</span>
-			<?php endif; ?>
-		</h2>
-		<table class="form-table">
-			<tr>
-				<th scope="row"><?php esc_html_e( 'Enable', 'searchforge' ); ?></th>
-				<td>
-					<label>
-						<input type="checkbox" name="searchforge_settings[bing_enabled]" value="1"
-							<?php checked( ! empty( $property['bing_enabled'] ) ); ?>
-							<?php disabled( ! SearchForge\Admin\Settings::is_pro() ); ?> />
-						<?php esc_html_e( 'Enable Bing Webmaster Tools integration', 'searchforge' ); ?>
-					</label>
-				</td>
-			</tr>
-			<tr>
-				<th scope="row">
-					<label for="bing_api_key"><?php esc_html_e( 'API Key', 'searchforge' ); ?></label>
-				</th>
-				<td>
-					<input type="password" name="searchforge_settings[bing_api_key]" id="bing_api_key"
-						value="<?php echo esc_attr( $property['bing_api_key'] ?? '' ); ?>" class="regular-text"
-						<?php disabled( ! SearchForge\Admin\Settings::is_pro() ); ?> />
-					<p class="description">
-						<?php esc_html_e( 'From Bing Webmaster Tools > Settings > API Access', 'searchforge' ); ?>
-					</p>
-				</td>
-			</tr>
-			<tr>
-				<th scope="row">
-					<label for="bing_site_url"><?php esc_html_e( 'Site URL', 'searchforge' ); ?></label>
-				</th>
-				<td>
-					<input type="url" name="searchforge_settings[bing_site_url]" id="bing_site_url"
-						value="<?php echo esc_attr( $property['bing_site_url'] ?? '' ); ?>" class="regular-text"
-						placeholder="<?php echo esc_attr( home_url() ); ?>"
-						<?php disabled( ! SearchForge\Admin\Settings::is_pro() ); ?> />
-				</td>
-			</tr>
-		</table>
 
 		<!-- Google Keyword Planner (Pro) -->
 		<h2><?php esc_html_e( 'Google Keyword Planner', 'searchforge' ); ?>
@@ -299,106 +224,6 @@ if ( isset( $_GET['gsc_connected'] ) ) : ?>
 						<?php disabled( ! SearchForge\Admin\Settings::is_pro() ); ?> />
 					<p class="description">
 						<?php esc_html_e( 'From serpapi.com — used for Google Trends data', 'searchforge' ); ?>
-					</p>
-				</td>
-			</tr>
-		</table>
-
-		<!-- Google Analytics 4 (Pro) -->
-		<h2><?php esc_html_e( 'Google Analytics 4', 'searchforge' ); ?>
-			<?php if ( ! SearchForge\Admin\Settings::is_pro() ) : ?>
-				<span class="sf-pro-badge">Pro</span>
-			<?php endif; ?>
-		</h2>
-		<table class="form-table">
-			<tr>
-				<th scope="row"><?php esc_html_e( 'Enable', 'searchforge' ); ?></th>
-				<td>
-					<label>
-						<input type="checkbox" name="searchforge_settings[ga4_enabled]" value="1"
-							<?php checked( ! empty( $property['ga4_enabled'] ) ); ?>
-							<?php disabled( ! SearchForge\Admin\Settings::is_pro() ); ?> />
-						<?php esc_html_e( 'Enable GA4 integration (bounce rate, engagement, conversions)', 'searchforge' ); ?>
-					</label>
-				</td>
-			</tr>
-			<tr>
-				<th scope="row">
-					<label for="ga4_property_id"><?php esc_html_e( 'Property ID', 'searchforge' ); ?></label>
-				</th>
-				<td>
-					<input type="text" name="searchforge_settings[ga4_property_id]" id="ga4_property_id"
-						value="<?php echo esc_attr( $property['ga4_property_id'] ?? '' ); ?>" class="regular-text"
-						placeholder="123456789"
-						<?php disabled( ! SearchForge\Admin\Settings::is_pro() ); ?> />
-					<p class="description">
-						<?php esc_html_e( 'GA4 Property ID (numeric). Uses the same Google OAuth connection as GSC.', 'searchforge' ); ?>
-					</p>
-				</td>
-			</tr>
-		</table>
-
-		<!-- Adobe Analytics (Pro) -->
-		<h2><?php esc_html_e( 'Adobe Analytics', 'searchforge' ); ?>
-			<?php if ( ! SearchForge\Admin\Settings::is_pro() ) : ?>
-				<span class="sf-pro-badge">Pro</span>
-			<?php endif; ?>
-		</h2>
-		<p class="description"><?php esc_html_e( 'Connect Adobe Analytics for sites using non-WordPress backends (Drupal, custom CMS). Uses OAuth Server-to-Server authentication.', 'searchforge' ); ?></p>
-		<table class="form-table">
-			<tr>
-				<th scope="row"><?php esc_html_e( 'Enable', 'searchforge' ); ?></th>
-				<td>
-					<label>
-						<input type="checkbox" name="searchforge_settings[adobe_enabled]" value="1"
-							<?php checked( ! empty( $property['adobe_enabled'] ) ); ?>
-							<?php disabled( ! SearchForge\Admin\Settings::is_pro() ); ?> />
-						<?php esc_html_e( 'Enable Adobe Analytics integration (visits, pageviews, bounce rate, conversions, revenue)', 'searchforge' ); ?>
-					</label>
-				</td>
-			</tr>
-			<tr>
-				<th scope="row">
-					<label for="adobe_org_id"><?php esc_html_e( 'Organization ID', 'searchforge' ); ?></label>
-				</th>
-				<td>
-					<input type="text" name="searchforge_settings[adobe_org_id]" id="adobe_org_id"
-						value="<?php echo esc_attr( $property['adobe_org_id'] ?? '' ); ?>" class="regular-text"
-						placeholder="XXXXXXXXXXXXX@AdobeOrg"
-						<?php disabled( ! SearchForge\Admin\Settings::is_pro() ); ?> />
-				</td>
-			</tr>
-			<tr>
-				<th scope="row">
-					<label for="adobe_client_id"><?php esc_html_e( 'Client ID', 'searchforge' ); ?></label>
-				</th>
-				<td>
-					<input type="text" name="searchforge_settings[adobe_client_id]" id="adobe_client_id"
-						value="<?php echo esc_attr( $property['adobe_client_id'] ?? '' ); ?>" class="regular-text"
-						<?php disabled( ! SearchForge\Admin\Settings::is_pro() ); ?> />
-				</td>
-			</tr>
-			<tr>
-				<th scope="row">
-					<label for="adobe_client_secret"><?php esc_html_e( 'Client Secret', 'searchforge' ); ?></label>
-				</th>
-				<td>
-					<input type="password" name="searchforge_settings[adobe_client_secret]" id="adobe_client_secret"
-						value="<?php echo esc_attr( $property['adobe_client_secret'] ?? '' ); ?>" class="regular-text"
-						<?php disabled( ! SearchForge\Admin\Settings::is_pro() ); ?> />
-				</td>
-			</tr>
-			<tr>
-				<th scope="row">
-					<label for="adobe_report_suite_id"><?php esc_html_e( 'Report Suite ID', 'searchforge' ); ?></label>
-				</th>
-				<td>
-					<input type="text" name="searchforge_settings[adobe_report_suite_id]" id="adobe_report_suite_id"
-						value="<?php echo esc_attr( $property['adobe_report_suite_id'] ?? '' ); ?>" class="regular-text"
-						placeholder="myreportsuiteid"
-						<?php disabled( ! SearchForge\Admin\Settings::is_pro() ); ?> />
-					<p class="description">
-						<?php esc_html_e( 'Find this in Adobe Analytics under Admin > Report Suites.', 'searchforge' ); ?>
 					</p>
 				</td>
 			</tr>
@@ -672,4 +497,203 @@ if ( isset( $_GET['gsc_connected'] ) ) : ?>
 
 		<?php submit_button(); ?>
 	</form>
+
+	<!-- Property Configuration Modal -->
+	<div id="sf-property-config-modal" class="sf-modal" style="display:none;">
+		<div class="sf-modal-content sf-property-modal-content">
+			<span class="sf-modal-close">&times;</span>
+			<h2 id="sf-prop-config-title"></h2>
+			<input type="hidden" id="sf-prop-config-id" value="" />
+
+			<nav class="nav-tab-wrapper sf-config-nav">
+				<a href="#" class="nav-tab nav-tab-active" data-config-tab="sf-cfg-gsc">
+					<span class="sf-cfg-tab-indicator" id="sf-cfg-tab-gsc-dot"></span>
+					<?php esc_html_e( 'Google Search Console', 'searchforge' ); ?>
+				</a>
+				<a href="#" class="nav-tab" data-config-tab="sf-cfg-bing">
+					<span class="sf-cfg-tab-indicator" id="sf-cfg-tab-bing-dot"></span>
+					<?php esc_html_e( 'Bing Webmaster', 'searchforge' ); ?>
+				</a>
+				<a href="#" class="nav-tab" data-config-tab="sf-cfg-ga4">
+					<span class="sf-cfg-tab-indicator" id="sf-cfg-tab-ga4-dot"></span>
+					<?php esc_html_e( 'Google Analytics 4', 'searchforge' ); ?>
+				</a>
+				<a href="#" class="nav-tab" data-config-tab="sf-cfg-adobe">
+					<span class="sf-cfg-tab-indicator" id="sf-cfg-tab-adobe-dot"></span>
+					<?php esc_html_e( 'Adobe Analytics', 'searchforge' ); ?>
+				</a>
+			</nav>
+
+			<!-- GSC Panel -->
+			<div class="sf-cfg-panel sf-cfg-panel-active" id="sf-cfg-gsc">
+				<table class="form-table">
+					<tr>
+						<th scope="row">
+							<label for="sf-cfg-gsc-client-id"><?php esc_html_e( 'Client ID', 'searchforge' ); ?></label>
+						</th>
+						<td>
+							<input type="text" id="sf-cfg-gsc-client-id" class="regular-text" />
+							<p class="description">
+								<?php esc_html_e( 'From Google Cloud Console > APIs & Services > Credentials', 'searchforge' ); ?>
+							</p>
+						</td>
+					</tr>
+					<tr>
+						<th scope="row">
+							<label for="sf-cfg-gsc-client-secret"><?php esc_html_e( 'Client Secret', 'searchforge' ); ?></label>
+						</th>
+						<td>
+							<input type="password" id="sf-cfg-gsc-client-secret" class="regular-text" placeholder="<?php esc_attr_e( 'Enter new secret to update', 'searchforge' ); ?>" />
+							<span id="sf-cfg-gsc-secret-status"></span>
+						</td>
+					</tr>
+					<tr>
+						<th scope="row"><?php esc_html_e( 'Connection', 'searchforge' ); ?></th>
+						<td id="sf-cfg-gsc-status-cell"></td>
+					</tr>
+					<tr>
+						<th scope="row">
+							<label for="sf-cfg-gsc-property"><?php esc_html_e( 'GSC Property URL', 'searchforge' ); ?></label>
+						</th>
+						<td>
+							<input type="text" id="sf-cfg-gsc-property" class="regular-text" placeholder="https://example.com/" />
+							<p class="description">
+								<?php esc_html_e( 'The verified site URL in Google Search Console (e.g. https://example.com/ or sc-domain:example.com).', 'searchforge' ); ?>
+							</p>
+						</td>
+					</tr>
+				</table>
+			</div>
+
+			<!-- Bing Panel -->
+			<div class="sf-cfg-panel" id="sf-cfg-bing">
+				<table class="form-table">
+					<tr>
+						<th scope="row"><?php esc_html_e( 'Enable', 'searchforge' ); ?></th>
+						<td>
+							<label>
+								<input type="checkbox" id="sf-cfg-bing-enabled" />
+								<?php esc_html_e( 'Enable Bing Webmaster Tools integration', 'searchforge' ); ?>
+							</label>
+						</td>
+					</tr>
+					<tr>
+						<th scope="row">
+							<label for="sf-cfg-bing-api-key"><?php esc_html_e( 'API Key', 'searchforge' ); ?></label>
+						</th>
+						<td>
+							<input type="password" id="sf-cfg-bing-api-key" class="regular-text" placeholder="<?php esc_attr_e( 'Enter new key to update', 'searchforge' ); ?>" />
+							<span id="sf-cfg-bing-key-status"></span>
+							<p class="description">
+								<?php esc_html_e( 'From Bing Webmaster Tools > Settings > API Access', 'searchforge' ); ?>
+							</p>
+						</td>
+					</tr>
+					<tr>
+						<th scope="row">
+							<label for="sf-cfg-bing-site-url"><?php esc_html_e( 'Site URL', 'searchforge' ); ?></label>
+						</th>
+						<td>
+							<input type="url" id="sf-cfg-bing-site-url" class="regular-text" placeholder="https://example.com" />
+						</td>
+					</tr>
+				</table>
+			</div>
+
+			<!-- GA4 Panel -->
+			<div class="sf-cfg-panel" id="sf-cfg-ga4">
+				<table class="form-table">
+					<tr>
+						<th scope="row"><?php esc_html_e( 'Enable', 'searchforge' ); ?></th>
+						<td>
+							<label>
+								<input type="checkbox" id="sf-cfg-ga4-enabled" />
+								<?php esc_html_e( 'Enable GA4 integration (bounce rate, engagement, conversions)', 'searchforge' ); ?>
+							</label>
+						</td>
+					</tr>
+					<tr>
+						<th scope="row">
+							<label for="sf-cfg-ga4-property-id"><?php esc_html_e( 'Property ID', 'searchforge' ); ?></label>
+						</th>
+						<td>
+							<input type="text" id="sf-cfg-ga4-property-id" class="regular-text" placeholder="123456789" />
+							<p class="description">
+								<?php esc_html_e( 'GA4 Property ID (numeric). Uses the same Google OAuth connection as GSC.', 'searchforge' ); ?>
+							</p>
+						</td>
+					</tr>
+				</table>
+			</div>
+
+			<!-- Adobe Panel -->
+			<div class="sf-cfg-panel" id="sf-cfg-adobe">
+				<p class="description" style="margin: 12px 0;">
+					<?php esc_html_e( 'Connect Adobe Analytics for sites using non-WordPress backends (Drupal, custom CMS). Uses OAuth Server-to-Server authentication.', 'searchforge' ); ?>
+				</p>
+				<table class="form-table">
+					<tr>
+						<th scope="row"><?php esc_html_e( 'Enable', 'searchforge' ); ?></th>
+						<td>
+							<label>
+								<input type="checkbox" id="sf-cfg-adobe-enabled" />
+								<?php esc_html_e( 'Enable Adobe Analytics (visits, pageviews, bounce rate, conversions, revenue)', 'searchforge' ); ?>
+							</label>
+						</td>
+					</tr>
+					<tr>
+						<th scope="row">
+							<label for="sf-cfg-adobe-org-id"><?php esc_html_e( 'Organization ID', 'searchforge' ); ?></label>
+						</th>
+						<td>
+							<input type="text" id="sf-cfg-adobe-org-id" class="regular-text" placeholder="XXXXXXXXXXXXX@AdobeOrg" />
+						</td>
+					</tr>
+					<tr>
+						<th scope="row">
+							<label for="sf-cfg-adobe-client-id"><?php esc_html_e( 'Client ID', 'searchforge' ); ?></label>
+						</th>
+						<td>
+							<input type="text" id="sf-cfg-adobe-client-id" class="regular-text" />
+						</td>
+					</tr>
+					<tr>
+						<th scope="row">
+							<label for="sf-cfg-adobe-client-secret"><?php esc_html_e( 'Client Secret', 'searchforge' ); ?></label>
+						</th>
+						<td>
+							<input type="password" id="sf-cfg-adobe-client-secret" class="regular-text" placeholder="<?php esc_attr_e( 'Enter new secret to update', 'searchforge' ); ?>" />
+							<span id="sf-cfg-adobe-secret-status"></span>
+							<p class="description">
+								<?php esc_html_e( 'Encrypted at rest with AES-256-CBC.', 'searchforge' ); ?>
+							</p>
+						</td>
+					</tr>
+					<tr>
+						<th scope="row">
+							<label for="sf-cfg-adobe-report-suite-id"><?php esc_html_e( 'Report Suite ID', 'searchforge' ); ?></label>
+						</th>
+						<td>
+							<input type="text" id="sf-cfg-adobe-report-suite-id" class="regular-text" placeholder="myreportsuiteid" />
+							<p class="description">
+								<?php esc_html_e( 'Find this in Adobe Analytics under Admin > Report Suites.', 'searchforge' ); ?>
+							</p>
+						</td>
+					</tr>
+				</table>
+			</div>
+
+			<div class="sf-config-footer">
+				<button type="button" class="button button-primary" id="sf-save-property-config">
+					<?php esc_html_e( 'Save Configuration', 'searchforge' ); ?>
+				</button>
+				<button type="button" class="button sf-modal-close">
+					<?php esc_html_e( 'Cancel', 'searchforge' ); ?>
+				</button>
+				<span id="sf-prop-config-status"></span>
+			</div>
+		</div>
+	</div>
+
+	<script>var sfPropertyData = <?php echo wp_json_encode( $properties_js ); ?>;</script>
 </div>

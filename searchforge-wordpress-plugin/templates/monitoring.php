@@ -1,13 +1,14 @@
 <?php
 defined( 'ABSPATH' ) || exit;
 
-$is_pro     = SearchForge\Admin\Settings::is_pro();
-$ssl_info   = SearchForge\Monitoring\SslChecker::check();
-$quota      = SearchForge\Monitoring\QuotaTracker::get_summary();
-$comparison = SearchForge\Monitoring\PerformanceTrend::get_period_comparison( 7 );
-$daily      = SearchForge\Monitoring\PerformanceTrend::get_daily_trends( 30 );
-$broken     = $is_pro ? SearchForge\Monitoring\BrokenLinks::get_latest() : [];
-$tab        = sanitize_text_field( $_GET['tab'] ?? 'overview' );
+$is_pro      = SearchForge\Admin\Settings::is_pro();
+$property_id = SearchForge\Models\Property::get_active_property_id();
+$ssl_info    = SearchForge\Monitoring\SslChecker::check();
+$quota       = SearchForge\Monitoring\QuotaTracker::get_summary();
+$comparison  = SearchForge\Monitoring\PerformanceTrend::get_period_comparison( 7, $property_id );
+$daily       = SearchForge\Monitoring\PerformanceTrend::get_daily_trends( 30, $property_id );
+$broken      = $is_pro ? SearchForge\Monitoring\BrokenLinks::get_latest() : [];
+$tab         = sanitize_text_field( $_GET['tab'] ?? 'overview' );
 ?>
 
 <div class="wrap searchforge-wrap">
@@ -16,6 +17,8 @@ $tab        = sanitize_text_field( $_GET['tab'] ?? 'overview' );
 			<span class="sf-pro-badge">Pro</span>
 		<?php endif; ?>
 	</h1>
+
+	<?php include SEARCHFORGE_PATH . 'templates/partials/property-selector.php'; ?>
 
 	<nav class="nav-tab-wrapper" role="tablist">
 		<a href="<?php echo esc_url( admin_url( 'admin.php?page=searchforge-monitoring&tab=overview' ) ); ?>"

@@ -1,9 +1,12 @@
 <?php
 defined( 'ABSPATH' ) || exit;
 
-$settings  = SearchForge\Admin\Settings::get_all();
-$connected = ! empty( $settings['gsc_access_token'] );
-$has_creds = ! empty( $settings['gsc_client_id'] ) && ! empty( $settings['gsc_client_secret'] );
+$settings    = SearchForge\Admin\Settings::get_all();
+$property_id = SearchForge\Models\Property::get_active_property_id();
+$property    = SearchForge\Models\Property::get( $property_id );
+$properties  = SearchForge\Models\Property::get_all();
+$connected   = $property && ! empty( $property['gsc_access_token'] );
+$has_creds   = $property && ! empty( $property['gsc_client_id'] ) && ! empty( $property['gsc_client_secret'] );
 
 // Handle property selection.
 $sites       = [];
@@ -27,6 +30,8 @@ if ( isset( $_GET['gsc_connected'] ) ) : ?>
 <div class="wrap searchforge-wrap">
 	<h1><?php esc_html_e( 'SearchForge Settings', 'searchforge' ); ?></h1>
 
+	<?php include SEARCHFORGE_PATH . 'templates/partials/property-selector.php'; ?>
+
 	<form method="post" action="options.php">
 		<?php settings_fields( 'searchforge_settings' ); ?>
 
@@ -49,6 +54,52 @@ if ( isset( $_GET['gsc_connected'] ) ) : ?>
 			</tr>
 		</table>
 
+		<!-- Properties -->
+		<h2><?php esc_html_e( 'Properties', 'searchforge' ); ?>
+			<?php if ( ! SearchForge\Admin\Settings::is_pro() && count( $properties ) >= 1 ) : ?>
+				<span class="sf-pro-badge">Pro</span>
+			<?php endif; ?>
+		</h2>
+		<table class="widefat sf-table" id="sf-properties-table">
+			<thead>
+				<tr>
+					<th><?php esc_html_e( 'Label', 'searchforge' ); ?></th>
+					<th><?php esc_html_e( 'Domain', 'searchforge' ); ?></th>
+					<th><?php esc_html_e( 'GSC', 'searchforge' ); ?></th>
+					<th><?php esc_html_e( 'Bing', 'searchforge' ); ?></th>
+					<th><?php esc_html_e( 'GA4', 'searchforge' ); ?></th>
+					<th><?php esc_html_e( 'Actions', 'searchforge' ); ?></th>
+				</tr>
+			</thead>
+			<tbody>
+				<?php foreach ( $properties as $prop ) : ?>
+					<tr>
+						<td><?php echo esc_html( $prop['label'] ); ?><?php if ( ! empty( $prop['is_default'] ) ) echo ' <em>(default)</em>'; ?></td>
+						<td><code><?php echo esc_html( $prop['domain'] ); ?></code></td>
+						<td><?php echo ! empty( $prop['gsc_access_token'] ) ? '<span class="sf-status sf-status-connected">Connected</span>' : '<span class="sf-status sf-status-disconnected">&mdash;</span>'; ?></td>
+						<td><?php echo ! empty( $prop['bing_enabled'] ) && ! empty( $prop['bing_api_key'] ) ? '<span class="sf-status sf-status-connected">Connected</span>' : '<span class="sf-status sf-status-disconnected">&mdash;</span>'; ?></td>
+						<td><?php echo ! empty( $prop['ga4_enabled'] ) && ! empty( $prop['ga4_property_id'] ) ? '<span class="sf-status sf-status-connected">Connected</span>' : '<span class="sf-status sf-status-disconnected">&mdash;</span>'; ?></td>
+						<td>
+							<?php if ( empty( $prop['is_default'] ) ) : ?>
+								<button type="button" class="button button-small sf-remove-property" data-id="<?php echo esc_attr( $prop['id'] ); ?>">
+									<?php esc_html_e( 'Remove', 'searchforge' ); ?>
+								</button>
+							<?php endif; ?>
+						</td>
+					</tr>
+				<?php endforeach; ?>
+			</tbody>
+		</table>
+		<?php if ( SearchForge\Admin\Settings::is_pro() ) : ?>
+			<div class="sf-add-property" style="margin-top: 12px;">
+				<input type="text" id="sf-new-property-label" placeholder="<?php esc_attr_e( 'Label', 'searchforge' ); ?>" class="regular-text" />
+				<input type="text" id="sf-new-property-domain" placeholder="<?php esc_attr_e( 'domain.com', 'searchforge' ); ?>" class="regular-text" />
+				<button type="button" class="button button-primary" id="sf-add-property-btn">
+					<?php esc_html_e( 'Add Property', 'searchforge' ); ?>
+				</button>
+			</div>
+		<?php endif; ?>
+
 		<!-- Google Search Console -->
 		<h2><?php esc_html_e( 'Google Search Console', 'searchforge' ); ?></h2>
 		<table class="form-table">
@@ -58,7 +109,7 @@ if ( isset( $_GET['gsc_connected'] ) ) : ?>
 				</th>
 				<td>
 					<input type="text" name="searchforge_settings[gsc_client_id]" id="gsc_client_id"
-						value="<?php echo esc_attr( $settings['gsc_client_id'] ); ?>" class="regular-text" />
+						value="<?php echo esc_attr( $property['gsc_client_id'] ?? '' ); ?>" class="regular-text" />
 					<p class="description">
 						<?php esc_html_e( 'From Google Cloud Console > APIs & Services > Credentials', 'searchforge' ); ?>
 					</p>
@@ -70,7 +121,7 @@ if ( isset( $_GET['gsc_connected'] ) ) : ?>
 				</th>
 				<td>
 					<input type="password" name="searchforge_settings[gsc_client_secret]" id="gsc_client_secret"
-						value="<?php echo esc_attr( $settings['gsc_client_secret'] ); ?>" class="regular-text" />
+						value="<?php echo esc_attr( $property['gsc_client_secret'] ?? '' ); ?>" class="regular-text" />
 				</td>
 			</tr>
 			<tr>
@@ -80,17 +131,17 @@ if ( isset( $_GET['gsc_connected'] ) ) : ?>
 						<span class="sf-status sf-status-connected">
 							<?php esc_html_e( 'Connected', 'searchforge' ); ?>
 						</span>
-						<?php if ( $settings['gsc_property'] ) : ?>
+						<?php if ( ! empty( $property['gsc_property'] ) ) : ?>
 							<br />
 							<strong><?php esc_html_e( 'Property:', 'searchforge' ); ?></strong>
-							<?php echo esc_html( $settings['gsc_property'] ); ?>
+							<?php echo esc_html( $property['gsc_property'] ); ?>
 						<?php endif; ?>
 						<br />
 						<button type="button" class="button" id="sf-disconnect-gsc">
 							<?php esc_html_e( 'Disconnect', 'searchforge' ); ?>
 						</button>
 					<?php elseif ( $has_creds ) : ?>
-						<a href="<?php echo esc_url( SearchForge\Integrations\GSC\OAuth::get_auth_url() ); ?>"
+						<a href="<?php echo esc_url( SearchForge\Integrations\GSC\OAuth::get_auth_url( $property_id ) ); ?>"
 							class="button button-primary">
 							<?php esc_html_e( 'Connect to Google Search Console', 'searchforge' ); ?>
 						</a>
@@ -101,7 +152,7 @@ if ( isset( $_GET['gsc_connected'] ) ) : ?>
 					<?php endif; ?>
 				</td>
 			</tr>
-			<?php if ( $connected && ! $settings['gsc_property'] ) : ?>
+			<?php if ( $connected && empty( $property['gsc_property'] ) ) : ?>
 				<tr>
 					<th scope="row"><?php esc_html_e( 'Select Property', 'searchforge' ); ?></th>
 					<td>
@@ -139,7 +190,7 @@ if ( isset( $_GET['gsc_connected'] ) ) : ?>
 				<td>
 					<label>
 						<input type="checkbox" name="searchforge_settings[bing_enabled]" value="1"
-							<?php checked( $settings['bing_enabled'] ); ?>
+							<?php checked( ! empty( $property['bing_enabled'] ) ); ?>
 							<?php disabled( ! SearchForge\Admin\Settings::is_pro() ); ?> />
 						<?php esc_html_e( 'Enable Bing Webmaster Tools integration', 'searchforge' ); ?>
 					</label>
@@ -151,7 +202,7 @@ if ( isset( $_GET['gsc_connected'] ) ) : ?>
 				</th>
 				<td>
 					<input type="password" name="searchforge_settings[bing_api_key]" id="bing_api_key"
-						value="<?php echo esc_attr( $settings['bing_api_key'] ); ?>" class="regular-text"
+						value="<?php echo esc_attr( $property['bing_api_key'] ?? '' ); ?>" class="regular-text"
 						<?php disabled( ! SearchForge\Admin\Settings::is_pro() ); ?> />
 					<p class="description">
 						<?php esc_html_e( 'From Bing Webmaster Tools > Settings > API Access', 'searchforge' ); ?>
@@ -164,7 +215,7 @@ if ( isset( $_GET['gsc_connected'] ) ) : ?>
 				</th>
 				<td>
 					<input type="url" name="searchforge_settings[bing_site_url]" id="bing_site_url"
-						value="<?php echo esc_attr( $settings['bing_site_url'] ); ?>" class="regular-text"
+						value="<?php echo esc_attr( $property['bing_site_url'] ?? '' ); ?>" class="regular-text"
 						placeholder="<?php echo esc_attr( home_url() ); ?>"
 						<?php disabled( ! SearchForge\Admin\Settings::is_pro() ); ?> />
 				</td>
@@ -263,7 +314,7 @@ if ( isset( $_GET['gsc_connected'] ) ) : ?>
 				<td>
 					<label>
 						<input type="checkbox" name="searchforge_settings[ga4_enabled]" value="1"
-							<?php checked( $settings['ga4_enabled'] ); ?>
+							<?php checked( ! empty( $property['ga4_enabled'] ) ); ?>
 							<?php disabled( ! SearchForge\Admin\Settings::is_pro() ); ?> />
 						<?php esc_html_e( 'Enable GA4 integration (bounce rate, engagement, conversions)', 'searchforge' ); ?>
 					</label>
@@ -275,7 +326,7 @@ if ( isset( $_GET['gsc_connected'] ) ) : ?>
 				</th>
 				<td>
 					<input type="text" name="searchforge_settings[ga4_property_id]" id="ga4_property_id"
-						value="<?php echo esc_attr( $settings['ga4_property_id'] ); ?>" class="regular-text"
+						value="<?php echo esc_attr( $property['ga4_property_id'] ?? '' ); ?>" class="regular-text"
 						placeholder="123456789"
 						<?php disabled( ! SearchForge\Admin\Settings::is_pro() ); ?> />
 					<p class="description">

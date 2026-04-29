@@ -1,13 +1,14 @@
 <?php
 defined( 'ABSPATH' ) || exit;
 
-$per_page = 50;
-$paged    = max( 1, absint( $_GET['paged'] ?? 1 ) );
-$search   = sanitize_text_field( $_GET['s'] ?? '' );
-$offset   = ( $paged - 1 ) * $per_page;
+$per_page    = 50;
+$paged       = max( 1, absint( $_GET['paged'] ?? 1 ) );
+$search      = sanitize_text_field( $_GET['s'] ?? '' );
+$offset      = ( $paged - 1 ) * $per_page;
+$property_id = SearchForge\Models\Property::get_active_property_id();
 
-$keywords = SearchForge\Admin\Dashboard::get_top_keywords( $per_page, '', $offset, $search );
-$total    = SearchForge\Admin\Dashboard::count_keywords( $search );
+$keywords = SearchForge\Admin\Dashboard::get_top_keywords( $per_page, '', $offset, $search, $property_id );
+$total    = SearchForge\Admin\Dashboard::count_keywords( $search, $property_id );
 $is_pro   = SearchForge\Admin\Settings::is_pro();
 
 $total_pages = ceil( $total / $per_page );
@@ -18,6 +19,8 @@ $base_url    = admin_url( 'admin.php?page=searchforge-keywords' );
 	<h1><?php esc_html_e( 'SearchForge — Keywords', 'searchforge' ); ?>
 		<span class="title-count">(<?php echo esc_html( number_format( $total ) ); ?>)</span>
 	</h1>
+
+	<?php include SEARCHFORGE_PATH . 'templates/partials/property-selector.php'; ?>
 
 	<?php if ( ! $is_pro && $total >= 100 ) : ?>
 		<div class="notice notice-info">

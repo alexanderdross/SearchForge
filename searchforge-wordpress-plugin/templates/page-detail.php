@@ -7,23 +7,25 @@ if ( empty( $page_path ) ) {
 	return;
 }
 
-$page_data   = SearchForge\Admin\PageDetail::get_page_data( $page_path );
+$property_id = SearchForge\Models\Property::get_active_property_id();
+
+$page_data   = SearchForge\Admin\PageDetail::get_page_data( $page_path, $property_id );
 if ( ! $page_data ) {
 	echo '<div class="wrap"><div class="notice notice-warning"><p>' . esc_html__( 'No data found for this page. Run a GSC sync first.', 'searchforge' ) . '</p></div></div>';
 	return;
 }
 
-$keywords     = SearchForge\Admin\PageDetail::get_page_keywords( $page_path );
-$devices      = SearchForge\Admin\PageDetail::get_device_breakdown( $page_path );
-$daily_trend  = SearchForge\Admin\PageDetail::get_daily_trend( $page_path, 30 );
-$bing_data    = SearchForge\Admin\PageDetail::get_bing_data( $page_path );
-$ga4_data     = SearchForge\Admin\PageDetail::get_ga4_data( $page_path );
-$pos_dist     = SearchForge\Admin\PageDetail::get_position_distribution( $page_path );
+$keywords     = SearchForge\Admin\PageDetail::get_page_keywords( $page_path, 0, $property_id );
+$devices      = SearchForge\Admin\PageDetail::get_device_breakdown( $page_path, $property_id );
+$daily_trend  = SearchForge\Admin\PageDetail::get_daily_trend( $page_path, 30, $property_id );
+$bing_data    = SearchForge\Admin\PageDetail::get_bing_data( $page_path, $property_id );
+$ga4_data     = SearchForge\Admin\PageDetail::get_ga4_data( $page_path, $property_id );
+$pos_dist     = SearchForge\Admin\PageDetail::get_position_distribution( $page_path, $property_id );
 $is_pro       = SearchForge\Admin\Settings::is_pro();
-$score        = SearchForge\Scoring\Score::calculate_page_score( $page_path );
-$trend        = $is_pro ? SearchForge\Trends\Engine::get_page_trend( $page_path ) : null;
-$yoy          = $is_pro ? SearchForge\Trends\Engine::get_yoy_comparison( $page_path ) : null;
-$cannibal     = $is_pro ? SearchForge\Admin\PageDetail::get_page_cannibalization( $page_path ) : [];
+$score        = SearchForge\Scoring\Score::calculate_page_score( $page_path, $property_id );
+$trend        = $is_pro ? SearchForge\Trends\Engine::get_page_trend( $page_path, $property_id ) : null;
+$yoy          = $is_pro ? SearchForge\Trends\Engine::get_yoy_comparison( $page_path, $property_id ) : null;
+$cannibal     = $is_pro ? SearchForge\Admin\PageDetail::get_page_cannibalization( $page_path, $property_id ) : [];
 ?>
 
 <div class="wrap searchforge-wrap sf-page-detail">
@@ -34,6 +36,8 @@ $cannibal     = $is_pro ? SearchForge\Admin\PageDetail::get_page_cannibalization
 		<?php echo esc_html( $page_path ); ?>
 		<a href="<?php echo esc_url( home_url( $page_path ) ); ?>" target="_blank" class="sf-external-link" aria-label="<?php esc_attr_e( 'View page in new tab', 'searchforge' ); ?>">&#8599;</a>
 	</h1>
+
+	<?php include SEARCHFORGE_PATH . 'templates/partials/property-selector.php'; ?>
 
 	<p class="sf-page-meta">
 		<?php echo esc_html( sprintf(

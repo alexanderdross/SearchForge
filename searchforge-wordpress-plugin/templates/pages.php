@@ -1,13 +1,14 @@
 <?php
 defined( 'ABSPATH' ) || exit;
 
-$per_page = 50;
-$paged    = max( 1, absint( $_GET['paged'] ?? 1 ) );
-$search   = sanitize_text_field( $_GET['s'] ?? '' );
-$offset   = ( $paged - 1 ) * $per_page;
+$per_page    = 50;
+$paged       = max( 1, absint( $_GET['paged'] ?? 1 ) );
+$search      = sanitize_text_field( $_GET['s'] ?? '' );
+$offset      = ( $paged - 1 ) * $per_page;
+$property_id = SearchForge\Models\Property::get_active_property_id();
 
-$pages    = SearchForge\Admin\Dashboard::get_top_pages( $per_page, '', $offset, $search );
-$total    = SearchForge\Admin\Dashboard::count_pages( $search );
+$pages    = SearchForge\Admin\Dashboard::get_top_pages( $per_page, '', $offset, $search, $property_id );
+$total    = SearchForge\Admin\Dashboard::count_pages( $search, $property_id );
 $settings = SearchForge\Admin\Settings::get_all();
 $is_pro   = SearchForge\Admin\Settings::is_pro();
 $limit    = SearchForge\Admin\Settings::get_page_limit();
@@ -20,6 +21,8 @@ $base_url    = admin_url( 'admin.php?page=searchforge-pages' );
 	<h1><?php esc_html_e( 'SearchForge — Pages', 'searchforge' ); ?>
 		<span class="title-count">(<?php echo esc_html( number_format( $total ) ); ?>)</span>
 	</h1>
+
+	<?php include SEARCHFORGE_PATH . 'templates/partials/property-selector.php'; ?>
 
 	<?php if ( $limit > 0 && $total >= $limit ) : ?>
 		<div class="notice notice-info">

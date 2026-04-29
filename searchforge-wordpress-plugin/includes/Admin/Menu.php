@@ -86,6 +86,24 @@ class Menu {
 
 		add_submenu_page(
 			'searchforge',
+			__( 'Comparison', 'searchforge' ),
+			__( 'Comparison', 'searchforge' ),
+			'manage_options',
+			'searchforge-comparison',
+			[ $this, 'render_comparison' ]
+		);
+
+		add_submenu_page(
+			'searchforge',
+			__( 'Merger Analysis', 'searchforge' ),
+			__( 'Merger Analysis', 'searchforge' ),
+			'manage_options',
+			'searchforge-merger',
+			[ $this, 'render_merger' ]
+		);
+
+		add_submenu_page(
+			'searchforge',
 			__( 'Settings', 'searchforge' ),
 			__( 'Settings', 'searchforge' ),
 			'manage_options',
@@ -138,5 +156,13 @@ class Menu {
 
 	public function render_page_detail(): void {
 		include SEARCHFORGE_PATH . 'templates/page-detail.php';
+	}
+
+	public function render_comparison(): void {
+		include SEARCHFORGE_PATH . 'templates/comparison.php';
+	}
+
+	public function render_merger(): void {
+		include SEARCHFORGE_PATH . 'templates/merger-analysis.php';
 	}
 }

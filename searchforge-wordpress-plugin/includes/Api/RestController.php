@@ -5,6 +5,7 @@ namespace SearchForge\Api;
 use SearchForge\Admin\Dashboard;
 use SearchForge\Admin\Settings;
 use SearchForge\Export\MarkdownExporter;
+use SearchForge\Models\Property;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -172,6 +173,46 @@ class RestController {
 			'callback'            => [ $this, 'get_competitor_visibility' ],
 			'permission_callback' => [ $this, 'check_permissions' ],
 		] );
+
+		register_rest_route( self::NAMESPACE, '/properties', [
+			'methods'             => 'GET',
+			'callback'            => [ $this, 'get_properties' ],
+			'permission_callback' => [ $this, 'check_permissions' ],
+		] );
+
+		register_rest_route( self::NAMESPACE, '/properties', [
+			'methods'             => 'POST',
+			'callback'            => [ $this, 'create_property' ],
+			'permission_callback' => [ $this, 'check_admin_permissions' ],
+			'args'                => [
+				'label'  => [ 'required' => true, 'sanitize_callback' => 'sanitize_text_field' ],
+				'domain' => [ 'required' => true, 'sanitize_callback' => 'sanitize_text_field' ],
+			],
+		] );
+
+		register_rest_route( self::NAMESPACE, '/properties/(?P<id>\d+)', [
+			'methods'             => 'GET',
+			'callback'            => [ $this, 'get_property' ],
+			'permission_callback' => [ $this, 'check_permissions' ],
+		] );
+
+		register_rest_route( self::NAMESPACE, '/properties/(?P<id>\d+)', [
+			'methods'             => 'DELETE',
+			'callback'            => [ $this, 'delete_property' ],
+			'permission_callback' => [ $this, 'check_admin_permissions' ],
+		] );
+
+		register_rest_route( self::NAMESPACE, '/comparison', [
+			'methods'             => 'GET',
+			'callback'            => [ $this, 'get_comparison' ],
+			'permission_callback' => [ $this, 'check_permissions' ],
+		] );
+
+		register_rest_route( self::NAMESPACE, '/merger-analysis', [
+			'methods'             => 'GET',
+			'callback'            => [ $this, 'get_merger_analysis' ],
+			'permission_callback' => [ $this, 'check_permissions' ],
+		] );
 	}
 
 	public function check_permissions( \WP_REST_Request $request = null ) {
@@ -198,18 +239,24 @@ class RestController {
 		return current_user_can( 'manage_options' );
 	}
 
-	public function get_status(): \WP_REST_Response {
-		$summary = Dashboard::get_summary();
-		$summary['version']      = SEARCHFORGE_VERSION;
-		$summary['tier']         = Settings::get( 'license_tier' );
-		$summary['gsc_connected'] = ! empty( Settings::get( 'gsc_access_token' ) );
+	public function get_status( \WP_REST_Request $request ): \WP_REST_Response {
+		$pid     = $this->get_property_id( $request );
+		$summary = Dashboard::get_summary( $pid );
+		$summary['version']       = SEARCHFORGE_VERSION;
+		$summary['tier']          = Settings::get( 'license_tier' );
+		$summary['property_id']   = $pid;
+		$summary['properties']    = Property::count();
+
+		$prop = Property::get( $pid );
+		$summary['gsc_connected'] = $prop && ! empty( $prop['gsc_access_token'] );
 
 		return new \WP_REST_Response( $summary );
 	}
 
 	public function get_pages( \WP_REST_Request $request ): \WP_REST_Response {
 		$limit = min( absint( $request->get_param( 'limit' ) ?: 50 ), 500 );
-		$pages = Dashboard::get_top_pages( $limit );
+		$pid   = $this->get_property_id( $request );
+		$pages = Dashboard::get_top_pages( $limit, 0, 'clicks', 'DESC', $pid );
 
 		return new \WP_REST_Response( [
 			'pages' => $pages,
@@ -219,7 +266,8 @@ class RestController {
 
 	public function get_keywords( \WP_REST_Request $request ): \WP_REST_Response {
 		$limit    = min( absint( $request->get_param( 'limit' ) ?: 50 ), 500 );
-		$keywords = Dashboard::get_top_keywords( $limit );
+		$pid      = $this->get_property_id( $request );
+		$keywords = Dashboard::get_top_keywords( $limit, 0, 'clicks', 'DESC', $pid );
 
 		return new \WP_REST_Response( [
 			'keywords' => $keywords,
@@ -229,8 +277,9 @@ class RestController {
 
 	public function export_page( \WP_REST_Request $request ): \WP_REST_Response {
 		$path     = $request->get_param( 'path' );
+		$pid      = $this->get_property_id( $request );
 		$exporter = new MarkdownExporter();
-		$markdown = $exporter->generate_page_brief( $path );
+		$markdown = $exporter->generate_page_brief( $path, $pid );
 
 		if ( is_wp_error( $markdown ) ) {
 			return new \WP_REST_Response( [
@@ -244,9 +293,10 @@ class RestController {
 		] );
 	}
 
-	public function export_site(): \WP_REST_Response {
+	public function export_site( \WP_REST_Request $request ): \WP_REST_Response {
+		$pid      = $this->get_property_id( $request );
 		$exporter = new MarkdownExporter();
-		$markdown = $exporter->generate_site_brief();
+		$markdown = $exporter->generate_site_brief( $pid );
 
 		if ( is_wp_error( $markdown ) ) {
 			return new \WP_REST_Response( [
@@ -257,8 +307,9 @@ class RestController {
 		return new \WP_REST_Response( [ 'markdown' => $markdown ] );
 	}
 
-	public function trigger_sync(): \WP_REST_Response {
-		$syncer = new \SearchForge\Integrations\GSC\Syncer();
+	public function trigger_sync( \WP_REST_Request $request ): \WP_REST_Response {
+		$pid    = $this->get_property_id( $request );
+		$syncer = new \SearchForge\Integrations\GSC\Syncer( $pid );
 		$result = $syncer->sync_all();
 
 		if ( is_wp_error( $result ) ) {
@@ -272,7 +323,8 @@ class RestController {
 
 	public function get_cannibalization( \WP_REST_Request $request ): \WP_REST_Response {
 		$limit  = min( absint( $request->get_param( 'limit' ) ?: 50 ), 200 );
-		$result = \SearchForge\Analysis\Cannibalization::detect( $limit );
+		$pid    = $this->get_property_id( $request );
+		$result = \SearchForge\Analysis\Cannibalization::detect( $limit, $pid );
 
 		return new \WP_REST_Response( [
 			'cannibalization' => $result,
@@ -282,7 +334,8 @@ class RestController {
 
 	public function get_clusters( \WP_REST_Request $request ): \WP_REST_Response {
 		$limit  = min( absint( $request->get_param( 'limit' ) ?: 500 ), 1000 );
-		$result = \SearchForge\Analysis\Clustering::cluster_keywords( 0.3, $limit );
+		$pid    = $this->get_property_id( $request );
+		$result = \SearchForge\Analysis\Clustering::cluster_keywords( 0.3, $limit, $pid );
 
 		return new \WP_REST_Response( [
 			'clusters' => $result,
@@ -292,7 +345,8 @@ class RestController {
 
 	public function get_content_brief( \WP_REST_Request $request ): \WP_REST_Response {
 		$path   = $request->get_param( 'path' );
-		$result = \SearchForge\Analysis\ContentBrief::generate( $path );
+		$pid    = $this->get_property_id( $request );
+		$result = \SearchForge\Analysis\ContentBrief::generate( $path, $pid );
 
 		if ( is_wp_error( $result ) ) {
 			return new \WP_REST_Response( [
@@ -316,10 +370,11 @@ class RestController {
 
 	public function get_performance( \WP_REST_Request $request ): \WP_REST_Response {
 		$days = min( absint( $request->get_param( 'days' ) ?: 30 ), 365 );
+		$pid  = $this->get_property_id( $request );
 
 		return new \WP_REST_Response( [
-			'daily'      => \SearchForge\Monitoring\PerformanceTrend::get_daily_trends( $days ),
-			'comparison' => \SearchForge\Monitoring\PerformanceTrend::get_period_comparison( min( $days, 30 ) ),
+			'daily'      => \SearchForge\Monitoring\PerformanceTrend::get_daily_trends( $days, $pid ),
+			'comparison' => \SearchForge\Monitoring\PerformanceTrend::get_period_comparison( min( $days, 30 ), $pid ),
 		] );
 	}
 
@@ -361,8 +416,9 @@ class RestController {
 		] );
 	}
 
-	public function get_competitors(): \WP_REST_Response {
-		$competitors = \SearchForge\Analysis\Competitors::get_all();
+	public function get_competitors( \WP_REST_Request $request ): \WP_REST_Response {
+		$pid         = $this->get_property_id( $request );
+		$competitors = \SearchForge\Analysis\Competitors::get_all( $pid );
 
 		return new \WP_REST_Response( [
 			'competitors' => $competitors,
@@ -372,57 +428,130 @@ class RestController {
 
 	public function get_competitor_overlap( \WP_REST_Request $request ): \WP_REST_Response {
 		$limit = min( absint( $request->get_param( 'limit' ) ?: 50 ), 200 );
+		$pid   = $this->get_property_id( $request );
 
 		return new \WP_REST_Response( [
-			'overlap' => \SearchForge\Analysis\Competitors::get_keyword_overlap( $limit ),
+			'overlap' => \SearchForge\Analysis\Competitors::get_keyword_overlap( $limit, $pid ),
 		] );
 	}
 
 	public function get_competitor_gaps( \WP_REST_Request $request ): \WP_REST_Response {
 		$limit = min( absint( $request->get_param( 'limit' ) ?: 50 ), 200 );
+		$pid   = $this->get_property_id( $request );
 
 		return new \WP_REST_Response( [
-			'gaps' => \SearchForge\Analysis\Competitors::get_competitor_only_keywords( $limit ),
+			'gaps' => \SearchForge\Analysis\Competitors::get_competitor_only_keywords( $limit, $pid ),
 		] );
 	}
 
-	public function get_competitor_visibility(): \WP_REST_Response {
+	public function get_competitor_visibility( \WP_REST_Request $request ): \WP_REST_Response {
+		$pid = $this->get_property_id( $request );
 		return new \WP_REST_Response(
-			\SearchForge\Analysis\Competitors::get_visibility_comparison()
+			\SearchForge\Analysis\Competitors::get_visibility_comparison( $pid )
 		);
 	}
 
 	public function get_page_detail( \WP_REST_Request $request ): \WP_REST_Response {
 		$path = $request->get_param( 'path' );
+		$pid  = $this->get_property_id( $request );
 
-		$page_data = \SearchForge\Admin\PageDetail::get_page_data( $path );
+		$page_data = \SearchForge\Admin\PageDetail::get_page_data( $path, $pid );
 		if ( ! $page_data ) {
 			return new \WP_REST_Response( [ 'error' => 'No data for this page.' ], 404 );
 		}
 
 		$response = [
 			'page'         => $page_data,
-			'keywords'     => \SearchForge\Admin\PageDetail::get_page_keywords( $path ),
-			'devices'      => \SearchForge\Admin\PageDetail::get_device_breakdown( $path ),
-			'daily_trend'  => \SearchForge\Admin\PageDetail::get_daily_trend( $path ),
-			'position_distribution' => \SearchForge\Admin\PageDetail::get_position_distribution( $path ),
+			'keywords'     => \SearchForge\Admin\PageDetail::get_page_keywords( $path, $pid ),
+			'devices'      => \SearchForge\Admin\PageDetail::get_device_breakdown( $path, $pid ),
+			'daily_trend'  => \SearchForge\Admin\PageDetail::get_daily_trend( $path, $pid ),
+			'position_distribution' => \SearchForge\Admin\PageDetail::get_position_distribution( $path, $pid ),
 		];
 
-		$bing = \SearchForge\Admin\PageDetail::get_bing_data( $path );
+		$bing = \SearchForge\Admin\PageDetail::get_bing_data( $path, $pid );
 		if ( $bing ) {
 			$response['bing'] = $bing;
 		}
 
-		$ga4 = \SearchForge\Admin\PageDetail::get_ga4_data( $path );
+		$ga4 = \SearchForge\Admin\PageDetail::get_ga4_data( $path, $pid );
 		if ( $ga4 ) {
 			$response['ga4'] = $ga4;
 		}
 
-		$score = \SearchForge\Scoring\Score::calculate_page_score( $path );
+		$score = \SearchForge\Scoring\Score::calculate_page_score( $path, $pid );
 		if ( $score ) {
 			$response['score'] = $score;
 		}
 
 		return new \WP_REST_Response( $response );
+	}
+
+	private function get_property_id( \WP_REST_Request $request ): int {
+		$id = absint( $request->get_param( 'property_id' ) );
+		if ( $id ) {
+			return $id;
+		}
+		return Property::get_active_property_id();
+	}
+
+	public function get_properties(): \WP_REST_Response {
+		$properties = Property::get_all();
+		$safe = array_map( function( $p ) {
+			unset( $p['gsc_client_secret'], $p['gsc_access_token'], $p['gsc_refresh_token'], $p['bing_api_key'] );
+			return $p;
+		}, $properties );
+		return new \WP_REST_Response( [ 'properties' => $safe, 'total' => count( $safe ) ] );
+	}
+
+	public function create_property( \WP_REST_Request $request ): \WP_REST_Response {
+		$id = Property::create( [
+			'label'  => $request->get_param( 'label' ),
+			'domain' => $request->get_param( 'domain' ),
+		] );
+		if ( ! $id ) {
+			return new \WP_REST_Response( [ 'error' => 'Could not create property.' ], 400 );
+		}
+		return new \WP_REST_Response( [ 'id' => $id ], 201 );
+	}
+
+	public function get_property( \WP_REST_Request $request ): \WP_REST_Response {
+		$property = Property::get( (int) $request['id'] );
+		if ( ! $property ) {
+			return new \WP_REST_Response( [ 'error' => 'Property not found.' ], 404 );
+		}
+		unset( $property['gsc_client_secret'], $property['gsc_access_token'], $property['gsc_refresh_token'], $property['bing_api_key'] );
+		return new \WP_REST_Response( $property );
+	}
+
+	public function delete_property( \WP_REST_Request $request ): \WP_REST_Response {
+		$result = Property::delete( (int) $request['id'] );
+		if ( ! $result ) {
+			return new \WP_REST_Response( [ 'error' => 'Cannot delete default property or property not found.' ], 400 );
+		}
+		return new \WP_REST_Response( [ 'deleted' => true ] );
+	}
+
+	public function get_comparison( \WP_REST_Request $request ): \WP_REST_Response {
+		$ids = array_map( 'absint', (array) $request->get_param( 'property_ids' ) );
+		$ids = array_filter( $ids );
+		if ( empty( $ids ) ) {
+			$all = Property::get_all();
+			$ids = array_column( $all, 'id' );
+		}
+		return new \WP_REST_Response( [
+			'summaries' => \SearchForge\Analysis\PropertyComparison::compare_summaries( $ids ),
+			'pages'     => \SearchForge\Analysis\PropertyComparison::compare_pages( $ids, 20 ),
+			'keywords'  => \SearchForge\Analysis\PropertyComparison::compare_keywords( $ids, 20 ),
+		] );
+	}
+
+	public function get_merger_analysis( \WP_REST_Request $request ): \WP_REST_Response {
+		$ids = array_map( 'absint', (array) $request->get_param( 'property_ids' ) );
+		$ids = array_filter( $ids );
+		if ( count( $ids ) < 2 ) {
+			return new \WP_REST_Response( [ 'error' => 'At least 2 property IDs required.' ], 400 );
+		}
+		$analyzer = new \SearchForge\Analysis\MergerAnalysis( $ids );
+		return new \WP_REST_Response( [ 'markdown' => $analyzer->generate_markdown() ] );
 	}
 }

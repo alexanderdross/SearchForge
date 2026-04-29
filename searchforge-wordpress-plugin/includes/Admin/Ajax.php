@@ -21,6 +21,11 @@ class Ajax {
 		add_action( 'wp_ajax_searchforge_add_competitor', [ $this, 'add_competitor' ] );
 		add_action( 'wp_ajax_searchforge_remove_competitor', [ $this, 'remove_competitor' ] );
 		add_action( 'wp_ajax_searchforge_sync_competitor', [ $this, 'sync_competitor' ] );
+		add_action( 'wp_ajax_searchforge_switch_property', [ $this, 'switch_property' ] );
+		add_action( 'wp_ajax_searchforge_add_property', [ $this, 'add_property' ] );
+		add_action( 'wp_ajax_searchforge_remove_property', [ $this, 'remove_property' ] );
+		add_action( 'wp_ajax_searchforge_sync_property', [ $this, 'sync_property' ] );
+		add_action( 'wp_ajax_searchforge_generate_merger_brief', [ $this, 'generate_merger_brief' ] );
 	}
 
 	public function sync_gsc(): void {
@@ -30,12 +35,14 @@ class Ajax {
 			wp_send_json_error( [ 'message' => __( 'Unauthorized.', 'searchforge' ) ], 403 );
 		}
 
-		$settings = Settings::get_all();
-		if ( empty( $settings['gsc_access_token'] ) ) {
+		$property_id = absint( $_POST['property_id'] ?? 0 ) ?: \SearchForge\Models\Property::get_active_property_id();
+		$property    = \SearchForge\Models\Property::get( $property_id );
+
+		if ( ! $property || empty( $property['gsc_access_token'] ) ) {
 			wp_send_json_error( [ 'message' => __( 'GSC not connected. Please authenticate first.', 'searchforge' ) ] );
 		}
 
-		$syncer = new \SearchForge\Integrations\GSC\Syncer();
+		$syncer = new \SearchForge\Integrations\GSC\Syncer( $property_id );
 		$result = $syncer->sync_all();
 
 		if ( is_wp_error( $result ) ) {
@@ -52,7 +59,9 @@ class Ajax {
 			wp_send_json_error( [ 'message' => __( 'Unauthorized.', 'searchforge' ) ], 403 );
 		}
 
-		Settings::update_many( [
+		$property_id = absint( $_POST['property_id'] ?? 0 ) ?: \SearchForge\Models\Property::get_active_property_id();
+
+		\SearchForge\Models\Property::update( $property_id, [
 			'gsc_access_token'  => '',
 			'gsc_refresh_token' => '',
 			'gsc_token_expires' => 0,
@@ -73,7 +82,9 @@ class Ajax {
 			wp_send_json_error( [ 'message' => __( 'Bing integration requires a Pro license.', 'searchforge' ) ] );
 		}
 
-		$syncer = new \SearchForge\Integrations\Bing\Syncer();
+		$property_id = absint( $_POST['property_id'] ?? 0 ) ?: \SearchForge\Models\Property::get_active_property_id();
+
+		$syncer = new \SearchForge\Integrations\Bing\Syncer( $property_id );
 		$result = $syncer->sync_all();
 
 		if ( is_wp_error( $result ) ) {
@@ -108,14 +119,15 @@ class Ajax {
 			wp_send_json_error( [ 'message' => __( 'Unauthorized.', 'searchforge' ) ], 403 );
 		}
 
-		$page_path  = sanitize_text_field( $_POST['page_path'] ?? '' );
-		$brief_type = sanitize_text_field( $_POST['brief_type'] ?? 'page' );
+		$page_path   = sanitize_text_field( $_POST['page_path'] ?? '' );
+		$brief_type  = sanitize_text_field( $_POST['brief_type'] ?? 'page' );
+		$property_id = absint( $_POST['property_id'] ?? 0 ) ?: \SearchForge\Models\Property::get_active_property_id();
 
 		if ( empty( $page_path ) ) {
 			wp_send_json_error( [ 'message' => __( 'Page path is required.', 'searchforge' ) ] );
 		}
 
-		$exporter = new \SearchForge\Export\MarkdownExporter();
+		$exporter = new \SearchForge\Export\MarkdownExporter( $property_id );
 		$markdown = $exporter->generate_page_brief( $page_path );
 
 		if ( is_wp_error( $markdown ) ) {
@@ -139,12 +151,14 @@ class Ajax {
 			wp_send_json_error( [ 'message' => __( 'Content briefs require a Pro license.', 'searchforge' ) ] );
 		}
 
-		$page_path = sanitize_text_field( $_POST['page_path'] ?? '' );
+		$page_path   = sanitize_text_field( $_POST['page_path'] ?? '' );
+		$property_id = absint( $_POST['property_id'] ?? 0 ) ?: \SearchForge\Models\Property::get_active_property_id();
+
 		if ( empty( $page_path ) ) {
 			wp_send_json_error( [ 'message' => __( 'Page path is required.', 'searchforge' ) ] );
 		}
 
-		$result = \SearchForge\Analysis\ContentBrief::generate( $page_path );
+		$result = \SearchForge\Analysis\ContentBrief::generate( $page_path, $property_id );
 		if ( is_wp_error( $result ) ) {
 			wp_send_json_error( [ 'message' => $result->get_error_message() ] );
 		}
@@ -207,21 +221,22 @@ class Ajax {
 			wp_send_json_error( [ 'message' => __( 'Data export requires a Pro license.', 'searchforge' ) ] );
 		}
 
-		$type   = sanitize_text_field( $_POST['export_type'] ?? 'pages' );
-		$format = sanitize_text_field( $_POST['export_format'] ?? 'csv' );
+		$type        = sanitize_text_field( $_POST['export_type'] ?? 'pages' );
+		$format      = sanitize_text_field( $_POST['export_format'] ?? 'csv' );
+		$property_id = absint( $_POST['property_id'] ?? 0 ) ?: \SearchForge\Models\Property::get_active_property_id();
 
 		switch ( $type ) {
 			case 'keywords':
-				$data     = $format === 'json' ? \SearchForge\Export\CsvExporter::export_keywords_json() : \SearchForge\Export\CsvExporter::export_keywords_csv();
+				$data     = $format === 'json' ? \SearchForge\Export\CsvExporter::export_keywords_json( $property_id ) : \SearchForge\Export\CsvExporter::export_keywords_csv( $property_id );
 				$filename = 'searchforge-keywords.' . $format;
 				break;
 			case 'alerts':
-				$data     = \SearchForge\Export\CsvExporter::export_alerts_csv();
+				$data     = \SearchForge\Export\CsvExporter::export_alerts_csv( $property_id );
 				$filename = 'searchforge-alerts.csv';
 				$format   = 'csv';
 				break;
 			default:
-				$data     = $format === 'json' ? \SearchForge\Export\CsvExporter::export_pages_json() : \SearchForge\Export\CsvExporter::export_pages_csv();
+				$data     = $format === 'json' ? \SearchForge\Export\CsvExporter::export_pages_json( $property_id ) : \SearchForge\Export\CsvExporter::export_pages_csv( $property_id );
 				$filename = 'searchforge-pages.' . $format;
 				break;
 		}
@@ -278,14 +293,15 @@ class Ajax {
 			wp_send_json_error( [ 'message' => __( 'Competitor tracking requires a Pro license.', 'searchforge' ) ] );
 		}
 
-		$domain = sanitize_text_field( $_POST['domain'] ?? '' );
-		$label  = sanitize_text_field( $_POST['label'] ?? '' );
+		$domain      = sanitize_text_field( $_POST['domain'] ?? '' );
+		$label       = sanitize_text_field( $_POST['label'] ?? '' );
+		$property_id = absint( $_POST['property_id'] ?? 0 ) ?: \SearchForge\Models\Property::get_active_property_id();
 
 		if ( empty( $domain ) ) {
 			wp_send_json_error( [ 'message' => __( 'Domain is required.', 'searchforge' ) ] );
 		}
 
-		$result = \SearchForge\Analysis\Competitors::add( $domain, $label );
+		$result = \SearchForge\Analysis\Competitors::add( $domain, $label, $property_id );
 
 		if ( ! $result ) {
 			wp_send_json_error( [ 'message' => __( 'Could not add competitor. Limit reached or domain already exists.', 'searchforge' ) ] );
@@ -332,6 +348,128 @@ class Ajax {
 		wp_send_json_success( [
 			'message'  => sprintf( __( 'Synced %d keywords.', 'searchforge' ), $count ),
 			'keywords' => $count,
+		] );
+	}
+
+	public function switch_property(): void {
+		check_ajax_referer( 'searchforge_nonce', 'nonce' );
+
+		if ( ! current_user_can( 'manage_options' ) ) {
+			wp_send_json_error( [ 'message' => __( 'Unauthorized.', 'searchforge' ) ], 403 );
+		}
+
+		$property_id = absint( $_POST['property_id'] ?? 0 );
+		if ( ! $property_id || ! \SearchForge\Models\Property::get( $property_id ) ) {
+			wp_send_json_error( [ 'message' => __( 'Invalid property.', 'searchforge' ) ] );
+		}
+
+		\SearchForge\Models\Property::set_active_property_id( $property_id );
+
+		wp_send_json_success( [ 'message' => __( 'Property switched.', 'searchforge' ) ] );
+	}
+
+	public function add_property(): void {
+		check_ajax_referer( 'searchforge_nonce', 'nonce' );
+
+		if ( ! current_user_can( 'manage_options' ) ) {
+			wp_send_json_error( [ 'message' => __( 'Unauthorized.', 'searchforge' ) ], 403 );
+		}
+
+		if ( ! Settings::is_pro() ) {
+			wp_send_json_error( [ 'message' => __( 'Multiple properties require a Pro license.', 'searchforge' ) ] );
+		}
+
+		$label  = sanitize_text_field( $_POST['label'] ?? '' );
+		$domain = sanitize_text_field( $_POST['domain'] ?? '' );
+
+		if ( empty( $label ) || empty( $domain ) ) {
+			wp_send_json_error( [ 'message' => __( 'Label and domain are required.', 'searchforge' ) ] );
+		}
+
+		$id = \SearchForge\Models\Property::create( [
+			'label'  => $label,
+			'domain' => $domain,
+		] );
+
+		if ( ! $id ) {
+			wp_send_json_error( [ 'message' => __( 'Could not create property.', 'searchforge' ) ] );
+		}
+
+		wp_send_json_success( [ 'id' => $id, 'message' => __( 'Property added.', 'searchforge' ) ] );
+	}
+
+	public function remove_property(): void {
+		check_ajax_referer( 'searchforge_nonce', 'nonce' );
+
+		if ( ! current_user_can( 'manage_options' ) ) {
+			wp_send_json_error( [ 'message' => __( 'Unauthorized.', 'searchforge' ) ], 403 );
+		}
+
+		$id = absint( $_POST['property_id'] ?? 0 );
+		if ( ! $id ) {
+			wp_send_json_error( [ 'message' => __( 'Invalid property ID.', 'searchforge' ) ] );
+		}
+
+		$result = \SearchForge\Models\Property::delete( $id );
+		if ( ! $result ) {
+			wp_send_json_error( [ 'message' => __( 'Cannot delete default property or property not found.', 'searchforge' ) ] );
+		}
+
+		wp_send_json_success( [ 'message' => __( 'Property removed.', 'searchforge' ) ] );
+	}
+
+	public function sync_property(): void {
+		check_ajax_referer( 'searchforge_nonce', 'nonce' );
+
+		if ( ! current_user_can( 'manage_options' ) ) {
+			wp_send_json_error( [ 'message' => __( 'Unauthorized.', 'searchforge' ) ], 403 );
+		}
+
+		$property_id = absint( $_POST['property_id'] ?? 0 );
+		$property    = $property_id ? \SearchForge\Models\Property::get( $property_id ) : null;
+
+		if ( ! $property ) {
+			wp_send_json_error( [ 'message' => __( 'Invalid property.', 'searchforge' ) ] );
+		}
+
+		if ( ! empty( $property['gsc_access_token'] ) ) {
+			$syncer = new \SearchForge\Integrations\GSC\Syncer( $property_id );
+			$result = $syncer->sync_all();
+
+			if ( is_wp_error( $result ) ) {
+				wp_send_json_error( [ 'message' => $result->get_error_message() ] );
+			}
+
+			wp_send_json_success( $result );
+		} else {
+			wp_send_json_error( [ 'message' => __( 'Property not connected to GSC.', 'searchforge' ) ] );
+		}
+	}
+
+	public function generate_merger_brief(): void {
+		check_ajax_referer( 'searchforge_nonce', 'nonce' );
+
+		if ( ! current_user_can( 'manage_options' ) ) {
+			wp_send_json_error( [ 'message' => __( 'Unauthorized.', 'searchforge' ) ], 403 );
+		}
+
+		if ( ! Settings::is_pro() ) {
+			wp_send_json_error( [ 'message' => __( 'Merger analysis requires a Pro license.', 'searchforge' ) ] );
+		}
+
+		$ids = array_map( 'absint', (array) ( $_POST['property_ids'] ?? [] ) );
+		$ids = array_filter( $ids );
+
+		if ( count( $ids ) < 2 ) {
+			wp_send_json_error( [ 'message' => __( 'Select at least 2 properties.', 'searchforge' ) ] );
+		}
+
+		$analyzer = new \SearchForge\Analysis\MergerAnalysis( $ids );
+		$markdown = $analyzer->generate_markdown();
+
+		wp_send_json_success( [
+			'markdown' => $markdown,
+			'filename' => 'searchforge-merger-analysis-' . implode( '-', $ids ) . '.md',
 		] );
 	}
 }

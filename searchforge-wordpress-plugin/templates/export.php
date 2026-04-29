@@ -1,12 +1,15 @@
 <?php
 defined( 'ABSPATH' ) || exit;
 
-$pages  = SearchForge\Admin\Dashboard::get_top_pages( 50 );
-$is_pro = SearchForge\Admin\Settings::is_pro();
+$property_id = SearchForge\Models\Property::get_active_property_id();
+$pages       = SearchForge\Admin\Dashboard::get_top_pages( 50, '', 0, '', $property_id );
+$is_pro      = SearchForge\Admin\Settings::is_pro();
 ?>
 
 <div class="wrap searchforge-wrap">
 	<h1><?php esc_html_e( 'SearchForge — Export', 'searchforge' ); ?></h1>
+
+	<?php include SEARCHFORGE_PATH . 'templates/partials/property-selector.php'; ?>
 
 	<?php if ( ! $is_pro ) : ?>
 		<div class="notice notice-info">

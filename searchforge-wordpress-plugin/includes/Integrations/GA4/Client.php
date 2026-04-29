@@ -19,10 +19,13 @@ class Client {
 	/**
 	 * Get page-level engagement metrics.
 	 *
-	 * @return array|WP_Error  [ '/path' => [ 'sessions' => ..., 'bounce_rate' => ..., ... ], ... ]
+	 * @param int        $days     Number of days to look back.
+	 * @param int        $limit    Max rows.
+	 * @param array|null $property Optional property config with ga4_property_id and OAuth tokens.
+	 * @return array|\WP_Error  [ '/path' => [ 'sessions' => ..., 'bounce_rate' => ..., ... ], ... ]
 	 */
-	public static function get_page_metrics( int $days = 28, int $limit = 100 ): array|\WP_Error {
-		$property_id = Settings::get( 'ga4_property_id', '' );
+	public static function get_page_metrics( int $days = 28, int $limit = 100, ?array $property = null ): array|\WP_Error {
+		$property_id = self::resolve_ga4_property_id( $property );
 		if ( empty( $property_id ) ) {
 			return new \WP_Error( 'no_ga4', __( 'GA4 property ID not configured.', 'searchforge' ) );
 		}
@@ -48,7 +51,7 @@ class Client {
 			'limit'           => $limit,
 		];
 
-		$result = self::api_request( "properties/{$property_id}:runReport", $body );
+		$result = self::api_request( "properties/{$property_id}:runReport", $body, $property );
 		if ( is_wp_error( $result ) ) {
 			return $result;
 		}
@@ -72,10 +75,13 @@ class Client {
 	/**
 	 * Get landing page performance (search-attributed sessions).
 	 *
-	 * @return array|WP_Error
+	 * @param int        $days     Number of days to look back.
+	 * @param int        $limit    Max rows.
+	 * @param array|null $property Optional property config with ga4_property_id and OAuth tokens.
+	 * @return array|\WP_Error
 	 */
-	public static function get_landing_pages( int $days = 28, int $limit = 50 ): array|\WP_Error {
-		$property_id = Settings::get( 'ga4_property_id', '' );
+	public static function get_landing_pages( int $days = 28, int $limit = 50, ?array $property = null ): array|\WP_Error {
+		$property_id = self::resolve_ga4_property_id( $property );
 		if ( empty( $property_id ) ) {
 			return new \WP_Error( 'no_ga4', __( 'GA4 property ID not configured.', 'searchforge' ) );
 		}
@@ -109,7 +115,7 @@ class Client {
 			'limit'            => $limit,
 		];
 
-		$result = self::api_request( "properties/{$property_id}:runReport", $body );
+		$result = self::api_request( "properties/{$property_id}:runReport", $body, $property );
 		if ( is_wp_error( $result ) ) {
 			return $result;
 		}
@@ -129,10 +135,26 @@ class Client {
 	}
 
 	/**
-	 * Make a request to the GA4 Data API.
+	 * Resolve GA4 property ID from property config or global settings.
+	 *
+	 * @param array|null $property Optional property config array.
 	 */
-	private static function api_request( string $endpoint, array $body ): array|\WP_Error {
-		$token = self::get_access_token();
+	private static function resolve_ga4_property_id( ?array $property = null ): string {
+		if ( $property && ! empty( $property['ga4_property_id'] ) ) {
+			return (string) $property['ga4_property_id'];
+		}
+		return Settings::get( 'ga4_property_id', '' );
+	}
+
+	/**
+	 * Make a request to the GA4 Data API.
+	 *
+	 * @param string     $endpoint API endpoint.
+	 * @param array      $body     Request body.
+	 * @param array|null $property Optional property config for per-property tokens.
+	 */
+	private static function api_request( string $endpoint, array $body, ?array $property = null ): array|\WP_Error {
+		$token = self::get_access_token( $property );
 		if ( is_wp_error( $token ) ) {
 			return $token;
 		}
@@ -165,11 +187,12 @@ class Client {
 
 	/**
 	 * Get a valid OAuth access token (reuses GSC OAuth tokens).
+	 *
+	 * @param array|null $property Optional property config for per-property tokens.
 	 */
-	private static function get_access_token(): string|\WP_Error {
+	private static function get_access_token( ?array $property = null ): string|\WP_Error {
 		// GA4 uses the same Google OAuth tokens as GSC.
-		$oauth = new \SearchForge\Integrations\GSC\OAuth();
-		$token = \SearchForge\Integrations\GSC\OAuth::get_access_token();
+		$token = \SearchForge\Integrations\GSC\OAuth::get_access_token( $property );
 
 		if ( is_wp_error( $token ) ) {
 			return new \WP_Error( 'ga4_auth', __( 'GA4 requires a connected Google account. Connect via GSC settings.', 'searchforge' ) );

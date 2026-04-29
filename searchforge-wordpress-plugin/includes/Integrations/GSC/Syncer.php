@@ -3,10 +3,23 @@
 namespace SearchForge\Integrations\GSC;
 
 use SearchForge\Admin\Settings;
+use SearchForge\Models\Property;
 
 defined( 'ABSPATH' ) || exit;
 
 class Syncer {
+
+	/**
+	 * @var int Property ID to sync.
+	 */
+	private int $property_id;
+
+	/**
+	 * @param int $property_id Property ID. 0 = use active property.
+	 */
+	public function __construct( int $property_id = 0 ) {
+		$this->property_id = $property_id ?: Property::get_active_property_id();
+	}
 
 	/**
 	 * Run a full sync: pages + keywords from GSC.
@@ -16,17 +29,21 @@ class Syncer {
 	public function sync_all(): array|\WP_Error {
 		global $wpdb;
 
-		$settings = Settings::get_all();
-		$property = $settings['gsc_property'];
+		$prop = Property::get( $this->property_id );
+		if ( ! $prop ) {
+			return new \WP_Error( 'no_property', __( 'Property not found.', 'searchforge' ) );
+		}
 
-		if ( empty( $property ) ) {
+		$gsc_property = $prop['gsc_property'] ?? '';
+		if ( empty( $gsc_property ) ) {
 			return new \WP_Error( 'no_property', __( 'No GSC property selected.', 'searchforge' ) );
 		}
 
 		// Log sync start.
 		$wpdb->insert( "{$wpdb->prefix}sf_sync_log", [
-			'source' => 'gsc',
-			'status' => 'running',
+			'source'      => 'gsc',
+			'status'      => 'running',
+			'property_id' => $this->property_id,
 		] );
 		$log_id = $wpdb->insert_id;
 
@@ -39,7 +56,7 @@ class Syncer {
 			$page_limit = Settings::get_page_limit();
 			$limit      = $page_limit > 0 ? $page_limit : 25000;
 
-			$pages = Client::get_page_data( $property, $start_date, $end_date, $limit );
+			$pages = Client::get_page_data( $gsc_property, $start_date, $end_date, $limit, $prop );
 			if ( is_wp_error( $pages ) ) {
 				$this->log_failure( $log_id, $pages->get_error_message() );
 				return $pages;
@@ -48,7 +65,7 @@ class Syncer {
 			$pages_synced = $this->store_page_data( $pages, $today );
 
 			// Sync keyword data.
-			$keywords = Client::get_keyword_data( $property, $start_date, $end_date, '', $limit * 5 );
+			$keywords = Client::get_keyword_data( $gsc_property, $start_date, $end_date, '', $limit * 5, $prop );
 			if ( is_wp_error( $keywords ) ) {
 				$this->log_failure( $log_id, $keywords->get_error_message() );
 				return $keywords;
@@ -91,11 +108,12 @@ class Syncer {
 				$page_url  = $page['page'];
 				$page_path = wp_parse_url( $page_url, PHP_URL_PATH ) ?: '/';
 
-				// Upsert: delete existing for this page+date+source, then insert.
+				// Upsert: delete existing for this page+date+source+property, then insert.
 				$wpdb->query( $wpdb->prepare(
-					"DELETE FROM {$table} WHERE page_path = %s AND snapshot_date = %s AND source = 'gsc' AND device = 'all'",
+					"DELETE FROM {$table} WHERE page_path = %s AND snapshot_date = %s AND source = 'gsc' AND device = 'all' AND property_id = %d",
 					$page_path,
-					$snapshot_date
+					$snapshot_date,
+					$this->property_id
 				) );
 
 				$result = $wpdb->insert( $table, [
@@ -108,6 +126,7 @@ class Syncer {
 					'position'      => $page['position'],
 					'device'        => 'all',
 					'source'        => 'gsc',
+					'property_id'   => $this->property_id,
 				] );
 
 				if ( false === $result ) {
@@ -134,10 +153,11 @@ class Syncer {
 		$wpdb->query( 'START TRANSACTION' );
 
 		try {
-			// Delete existing keywords for this snapshot date.
+			// Delete existing keywords for this snapshot date and property.
 			$wpdb->query( $wpdb->prepare(
-				"DELETE FROM {$table} WHERE snapshot_date = %s AND source = 'gsc'",
-				$snapshot_date
+				"DELETE FROM {$table} WHERE snapshot_date = %s AND source = 'gsc' AND property_id = %d",
+				$snapshot_date,
+				$this->property_id
 			) );
 
 			foreach ( $keywords as $kw ) {
@@ -153,6 +173,7 @@ class Syncer {
 					'position'      => $kw['position'],
 					'device'        => 'all',
 					'source'        => 'gsc',
+					'property_id'   => $this->property_id,
 				] );
 
 				if ( false === $result ) {
@@ -178,13 +199,15 @@ class Syncer {
 		$cutoff         = gmdate( 'Y-m-d', strtotime( "-{$retention_days} days" ) );
 
 		$wpdb->query( $wpdb->prepare(
-			"DELETE FROM {$wpdb->prefix}sf_snapshots WHERE snapshot_date < %s",
-			$cutoff
+			"DELETE FROM {$wpdb->prefix}sf_snapshots WHERE snapshot_date < %s AND property_id = %d",
+			$cutoff,
+			$this->property_id
 		) );
 
 		$wpdb->query( $wpdb->prepare(
-			"DELETE FROM {$wpdb->prefix}sf_keywords WHERE snapshot_date < %s",
-			$cutoff
+			"DELETE FROM {$wpdb->prefix}sf_keywords WHERE snapshot_date < %s AND property_id = %d",
+			$cutoff,
+			$this->property_id
 		) );
 	}
 

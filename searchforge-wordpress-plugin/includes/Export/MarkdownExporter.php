@@ -3,6 +3,7 @@
 namespace SearchForge\Export;
 
 use SearchForge\Admin\Settings;
+use SearchForge\Models\Property;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -13,13 +14,16 @@ class MarkdownExporter {
 	 *
 	 * @return string|\WP_Error
 	 */
-	public function generate_page_brief( string $page_path ): string|\WP_Error {
+	public function generate_page_brief( string $page_path, int $property_id = 0 ): string|\WP_Error {
+		$property_id = $property_id ?: Property::get_active_property_id();
+
 		global $wpdb;
 
 		$latest_date = $wpdb->get_var( $wpdb->prepare(
 			"SELECT MAX(snapshot_date) FROM {$wpdb->prefix}sf_snapshots
-			WHERE page_path = %s AND source = 'gsc'",
-			$page_path
+			WHERE page_path = %s AND source = 'gsc' AND property_id = %d",
+			$page_path,
+			$property_id
 		) );
 
 		if ( ! $latest_date ) {
@@ -43,37 +47,37 @@ class MarkdownExporter {
 
 		// Cross-engine page performance comparison.
 		if ( count( $sources ) > 1 ) {
-			$md .= $this->render_cross_engine_page( $page_path, $latest_date, $sources );
+			$md .= $this->render_cross_engine_page( $page_path, $latest_date, $sources, $property_id );
 		} else {
-			$md .= $this->render_single_source_page( $page_path, $latest_date, 'gsc' );
+			$md .= $this->render_single_source_page( $page_path, $latest_date, 'gsc', $property_id );
 		}
 
 		// Keywords per source.
 		foreach ( $sources as $source ) {
-			$md .= $this->render_keywords( $page_path, $latest_date, $source );
+			$md .= $this->render_keywords( $page_path, $latest_date, $source, $property_id );
 		}
 
 		// Cross-engine keyword comparison (if multiple sources).
 		if ( count( $sources ) > 1 ) {
-			$md .= $this->render_keyword_comparison( $page_path, $latest_date );
+			$md .= $this->render_keyword_comparison( $page_path, $latest_date, $property_id );
 		}
 
 		// Historical trend (if data exists).
-		$md .= $this->render_trend_section( $page_path );
+		$md .= $this->render_trend_section( $page_path, $property_id );
 
 		// GA4 behavior data (if available).
 		$md .= $this->render_ga4_section( $page_path );
 
 		// Insights.
-		$all_keywords = $this->get_keywords( $page_path, $latest_date, 'gsc' );
-		$page_data    = $this->get_page_data( $page_path, $latest_date, 'gsc' );
+		$all_keywords = $this->get_keywords( $page_path, $latest_date, 'gsc', 50, $property_id );
+		$page_data    = $this->get_page_data( $page_path, $latest_date, 'gsc', $property_id );
 		if ( $page_data && ! empty( $all_keywords ) ) {
 			$md .= "## Quick Insights\n";
 			$md .= $this->generate_insights( $page_data, $all_keywords );
 		}
 
 		// SearchForge Score.
-		$score = \SearchForge\Scoring\Score::calculate_page_score( $page_path );
+		$score = \SearchForge\Scoring\Score::calculate_page_score( $page_path, $property_id );
 		if ( $score ) {
 			$md .= $this->render_score_section( $score );
 		}
@@ -86,12 +90,15 @@ class MarkdownExporter {
 	 *
 	 * @return string|\WP_Error
 	 */
-	public function generate_site_brief(): string|\WP_Error {
+	public function generate_site_brief( int $property_id = 0 ): string|\WP_Error {
+		$property_id = $property_id ?: Property::get_active_property_id();
+
 		global $wpdb;
 
-		$latest_date = $wpdb->get_var(
-			"SELECT MAX(snapshot_date) FROM {$wpdb->prefix}sf_snapshots WHERE source = 'gsc'"
-		);
+		$latest_date = $wpdb->get_var( $wpdb->prepare(
+			"SELECT MAX(snapshot_date) FROM {$wpdb->prefix}sf_snapshots WHERE source = 'gsc' AND property_id = %d",
+			$property_id
+		) );
 
 		if ( ! $latest_date ) {
 			return new \WP_Error( 'no_data', __( 'No GSC data available. Run a sync first.', 'searchforge' ) );
@@ -118,9 +125,10 @@ class MarkdownExporter {
 				"SELECT COUNT(DISTINCT page_path) as pages, SUM(clicks) as clicks,
 					SUM(impressions) as impressions, AVG(ctr) as ctr, AVG(position) as position
 				FROM {$wpdb->prefix}sf_snapshots
-				WHERE source = %s AND snapshot_date = %s AND device = 'all'",
+				WHERE source = %s AND snapshot_date = %s AND device = 'all' AND property_id = %d",
 				$source,
-				$latest_date
+				$latest_date,
+				$property_id
 			), ARRAY_A );
 
 			$label = strtoupper( $source );
@@ -138,10 +146,11 @@ class MarkdownExporter {
 		$pages = $wpdb->get_results( $wpdb->prepare(
 			"SELECT page_path, clicks, impressions, ctr, position
 			FROM {$wpdb->prefix}sf_snapshots
-			WHERE source = 'gsc' AND snapshot_date = %s AND device = 'all'
+			WHERE source = 'gsc' AND snapshot_date = %s AND device = 'all' AND property_id = %d
 			ORDER BY clicks DESC
 			{$limit_clause}",
-			$latest_date
+			$latest_date,
+			$property_id
 		), ARRAY_A );
 
 		$md .= "## Top Pages\n";
@@ -162,7 +171,7 @@ class MarkdownExporter {
 		$md .= "\n";
 
 		// Site-level SearchForge Score.
-		$score = \SearchForge\Scoring\Score::calculate_site_score();
+		$score = \SearchForge\Scoring\Score::calculate_site_score( $property_id );
 		if ( $score ) {
 			$md .= $this->render_score_section( $score );
 		}
@@ -173,14 +182,14 @@ class MarkdownExporter {
 	/**
 	 * Render cross-engine page performance comparison.
 	 */
-	private function render_cross_engine_page( string $page_path, string $date, array $sources ): string {
+	private function render_cross_engine_page( string $page_path, string $date, array $sources, int $property_id = 0 ): string {
 		$md  = "## Page Performance (Cross-Engine)\n";
 		$md .= "| Metric | " . implode( ' | ', array_map( 'strtoupper', $sources ) ) . " |\n";
 		$md .= "|--------" . str_repeat( '|-------', count( $sources ) ) . "|\n";
 
 		$data = [];
 		foreach ( $sources as $source ) {
-			$data[ $source ] = $this->get_page_data( $page_path, $date, $source );
+			$data[ $source ] = $this->get_page_data( $page_path, $date, $source, $property_id );
 		}
 
 		$metrics = [
@@ -212,8 +221,8 @@ class MarkdownExporter {
 	/**
 	 * Render single-source page metrics.
 	 */
-	private function render_single_source_page( string $page_path, string $date, string $source ): string {
-		$data = $this->get_page_data( $page_path, $date, $source );
+	private function render_single_source_page( string $page_path, string $date, string $source, int $property_id = 0 ): string {
+		$data = $this->get_page_data( $page_path, $date, $source, $property_id );
 		if ( ! $data ) {
 			return '';
 		}
@@ -232,8 +241,8 @@ class MarkdownExporter {
 	/**
 	 * Render keyword table for a specific source.
 	 */
-	private function render_keywords( string $page_path, string $date, string $source ): string {
-		$keywords = $this->get_keywords( $page_path, $date, $source );
+	private function render_keywords( string $page_path, string $date, string $source, int $property_id = 0 ): string {
+		$keywords = $this->get_keywords( $page_path, $date, $source, 50, $property_id );
 		if ( empty( $keywords ) ) {
 			return '';
 		}
@@ -261,7 +270,9 @@ class MarkdownExporter {
 	/**
 	 * Render side-by-side keyword comparison (Google vs Bing).
 	 */
-	private function render_keyword_comparison( string $page_path, string $date ): string {
+	private function render_keyword_comparison( string $page_path, string $date, int $property_id = 0 ): string {
+		$property_id = $property_id ?: Property::get_active_property_id();
+
 		global $wpdb;
 
 		// Keywords that appear in both engines.
@@ -272,14 +283,16 @@ class MarkdownExporter {
 				b.clicks AS bing_clicks, b.impressions AS bing_impressions, b.position AS bing_position
 			FROM {$wpdb->prefix}sf_keywords g
 			INNER JOIN {$wpdb->prefix}sf_keywords b
-				ON g.query = b.query AND b.source = 'bing' AND b.snapshot_date = %s AND b.page_path = %s
-			WHERE g.source = 'gsc' AND g.snapshot_date = %s AND g.page_path = %s
+				ON g.query = b.query AND b.source = 'bing' AND b.snapshot_date = %s AND b.page_path = %s AND b.property_id = %d
+			WHERE g.source = 'gsc' AND g.snapshot_date = %s AND g.page_path = %s AND g.property_id = %d
 			ORDER BY (g.clicks + b.clicks) DESC
 			LIMIT 20",
 			$date,
 			$page_path,
+			$property_id,
 			$date,
-			$page_path
+			$page_path,
+			$property_id
 		), ARRAY_A );
 
 		if ( empty( $shared ) ) {
@@ -310,15 +323,17 @@ class MarkdownExporter {
 			"SELECT b.query, b.clicks, b.impressions, b.position
 			FROM {$wpdb->prefix}sf_keywords b
 			LEFT JOIN {$wpdb->prefix}sf_keywords g
-				ON b.query = g.query AND g.source = 'gsc' AND g.snapshot_date = %s AND g.page_path = %s
-			WHERE b.source = 'bing' AND b.snapshot_date = %s AND b.page_path = %s
+				ON b.query = g.query AND g.source = 'gsc' AND g.snapshot_date = %s AND g.page_path = %s AND g.property_id = %d
+			WHERE b.source = 'bing' AND b.snapshot_date = %s AND b.page_path = %s AND b.property_id = %d
 				AND g.id IS NULL
 			ORDER BY b.clicks DESC
 			LIMIT 10",
 			$date,
 			$page_path,
+			$property_id,
 			$date,
-			$page_path
+			$page_path,
+			$property_id
 		), ARRAY_A );
 
 		if ( ! empty( $bing_only ) ) {
@@ -341,8 +356,8 @@ class MarkdownExporter {
 	/**
 	 * Render historical trend section for a page.
 	 */
-	private function render_trend_section( string $page_path ): string {
-		$trend = \SearchForge\Trends\Engine::get_page_trend( $page_path );
+	private function render_trend_section( string $page_path, int $property_id = 0 ): string {
+		$trend = \SearchForge\Trends\Engine::get_page_trend( $page_path, 'gsc', $property_id );
 		if ( ! $trend || empty( $trend['snapshots'] ) ) {
 			return '';
 		}
@@ -502,34 +517,40 @@ class MarkdownExporter {
 	/**
 	 * Get page snapshot data for a source.
 	 */
-	private function get_page_data( string $page_path, string $date, string $source ): ?array {
+	private function get_page_data( string $page_path, string $date, string $source, int $property_id = 0 ): ?array {
+		$property_id = $property_id ?: Property::get_active_property_id();
+
 		global $wpdb;
 
 		return $wpdb->get_row( $wpdb->prepare(
 			"SELECT clicks, impressions, ctr, position
 			FROM {$wpdb->prefix}sf_snapshots
-			WHERE page_path = %s AND snapshot_date = %s AND source = %s AND device = 'all'",
+			WHERE page_path = %s AND snapshot_date = %s AND source = %s AND device = 'all' AND property_id = %d",
 			$page_path,
 			$date,
-			$source
+			$source,
+			$property_id
 		), ARRAY_A );
 	}
 
 	/**
 	 * Get keywords for a page/source.
 	 */
-	private function get_keywords( string $page_path, string $date, string $source, int $limit = 50 ): array {
+	private function get_keywords( string $page_path, string $date, string $source, int $limit = 50, int $property_id = 0 ): array {
+		$property_id = $property_id ?: Property::get_active_property_id();
+
 		global $wpdb;
 
 		return $wpdb->get_results( $wpdb->prepare(
 			"SELECT query, clicks, impressions, ctr, position
 			FROM {$wpdb->prefix}sf_keywords
-			WHERE page_path = %s AND snapshot_date = %s AND source = %s
+			WHERE page_path = %s AND snapshot_date = %s AND source = %s AND property_id = %d
 			ORDER BY clicks DESC
 			LIMIT %d",
 			$page_path,
 			$date,
 			$source,
+			$property_id,
 			$limit
 		), ARRAY_A );
 	}

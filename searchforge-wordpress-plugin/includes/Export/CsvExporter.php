@@ -3,6 +3,7 @@
 namespace SearchForge\Export;
 
 use SearchForge\Admin\Settings;
+use SearchForge\Models\Property;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -14,12 +15,15 @@ class CsvExporter {
 	/**
 	 * Export pages data as CSV string.
 	 */
-	public static function export_pages_csv(): string {
+	public static function export_pages_csv( int $property_id = 0 ): string {
+		$property_id = $property_id ?: Property::get_active_property_id();
+
 		global $wpdb;
 
-		$latest_date = $wpdb->get_var(
-			"SELECT MAX(snapshot_date) FROM {$wpdb->prefix}sf_snapshots WHERE source = 'gsc'"
-		);
+		$latest_date = $wpdb->get_var( $wpdb->prepare(
+			"SELECT MAX(snapshot_date) FROM {$wpdb->prefix}sf_snapshots WHERE source = 'gsc' AND property_id = %d",
+			$property_id
+		) );
 
 		if ( ! $latest_date ) {
 			return '';
@@ -28,9 +32,10 @@ class CsvExporter {
 		$rows = $wpdb->get_results( $wpdb->prepare(
 			"SELECT page_path, source, device, clicks, impressions, ctr, position, snapshot_date
 			FROM {$wpdb->prefix}sf_snapshots
-			WHERE snapshot_date = %s
+			WHERE snapshot_date = %s AND property_id = %d
 			ORDER BY clicks DESC",
-			$latest_date
+			$latest_date,
+			$property_id
 		), ARRAY_A );
 
 		return self::array_to_csv( $rows, [
@@ -41,12 +46,15 @@ class CsvExporter {
 	/**
 	 * Export keywords data as CSV string.
 	 */
-	public static function export_keywords_csv(): string {
+	public static function export_keywords_csv( int $property_id = 0 ): string {
+		$property_id = $property_id ?: Property::get_active_property_id();
+
 		global $wpdb;
 
-		$latest_date = $wpdb->get_var(
-			"SELECT MAX(snapshot_date) FROM {$wpdb->prefix}sf_keywords WHERE source = 'gsc'"
-		);
+		$latest_date = $wpdb->get_var( $wpdb->prepare(
+			"SELECT MAX(snapshot_date) FROM {$wpdb->prefix}sf_keywords WHERE source = 'gsc' AND property_id = %d",
+			$property_id
+		) );
 
 		if ( ! $latest_date ) {
 			return '';
@@ -55,9 +63,10 @@ class CsvExporter {
 		$rows = $wpdb->get_results( $wpdb->prepare(
 			"SELECT query, page_path, source, clicks, impressions, ctr, position, search_volume, competition, snapshot_date
 			FROM {$wpdb->prefix}sf_keywords
-			WHERE snapshot_date = %s
+			WHERE snapshot_date = %s AND property_id = %d
 			ORDER BY clicks DESC",
-			$latest_date
+			$latest_date,
+			$property_id
 		), ARRAY_A );
 
 		return self::array_to_csv( $rows, [
@@ -69,12 +78,15 @@ class CsvExporter {
 	/**
 	 * Export pages data as JSON.
 	 */
-	public static function export_pages_json(): string {
+	public static function export_pages_json( int $property_id = 0 ): string {
+		$property_id = $property_id ?: Property::get_active_property_id();
+
 		global $wpdb;
 
-		$latest_date = $wpdb->get_var(
-			"SELECT MAX(snapshot_date) FROM {$wpdb->prefix}sf_snapshots WHERE source = 'gsc'"
-		);
+		$latest_date = $wpdb->get_var( $wpdb->prepare(
+			"SELECT MAX(snapshot_date) FROM {$wpdb->prefix}sf_snapshots WHERE source = 'gsc' AND property_id = %d",
+			$property_id
+		) );
 
 		if ( ! $latest_date ) {
 			return '[]';
@@ -83,9 +95,10 @@ class CsvExporter {
 		$rows = $wpdb->get_results( $wpdb->prepare(
 			"SELECT page_path, source, device, clicks, impressions, ctr, position, snapshot_date
 			FROM {$wpdb->prefix}sf_snapshots
-			WHERE snapshot_date = %s
+			WHERE snapshot_date = %s AND property_id = %d
 			ORDER BY clicks DESC",
-			$latest_date
+			$latest_date,
+			$property_id
 		), ARRAY_A );
 
 		return wp_json_encode( $rows, JSON_PRETTY_PRINT );
@@ -94,12 +107,15 @@ class CsvExporter {
 	/**
 	 * Export keywords data as JSON.
 	 */
-	public static function export_keywords_json(): string {
+	public static function export_keywords_json( int $property_id = 0 ): string {
+		$property_id = $property_id ?: Property::get_active_property_id();
+
 		global $wpdb;
 
-		$latest_date = $wpdb->get_var(
-			"SELECT MAX(snapshot_date) FROM {$wpdb->prefix}sf_keywords WHERE source = 'gsc'"
-		);
+		$latest_date = $wpdb->get_var( $wpdb->prepare(
+			"SELECT MAX(snapshot_date) FROM {$wpdb->prefix}sf_keywords WHERE source = 'gsc' AND property_id = %d",
+			$property_id
+		) );
 
 		if ( ! $latest_date ) {
 			return '[]';
@@ -108,9 +124,10 @@ class CsvExporter {
 		$rows = $wpdb->get_results( $wpdb->prepare(
 			"SELECT query, page_path, source, clicks, impressions, ctr, position, search_volume, competition, snapshot_date
 			FROM {$wpdb->prefix}sf_keywords
-			WHERE snapshot_date = %s
+			WHERE snapshot_date = %s AND property_id = %d
 			ORDER BY clicks DESC",
-			$latest_date
+			$latest_date,
+			$property_id
 		), ARRAY_A );
 
 		return wp_json_encode( $rows, JSON_PRETTY_PRINT );
@@ -119,16 +136,19 @@ class CsvExporter {
 	/**
 	 * Export alerts as CSV.
 	 */
-	public static function export_alerts_csv(): string {
+	public static function export_alerts_csv( int $property_id = 0 ): string {
+		$property_id = $property_id ?: Property::get_active_property_id();
+
 		global $wpdb;
 
-		$rows = $wpdb->get_results(
+		$rows = $wpdb->get_results( $wpdb->prepare(
 			"SELECT alert_type, title, severity, is_read, created_at
 			FROM {$wpdb->prefix}sf_alerts
+			WHERE property_id = %d
 			ORDER BY created_at DESC
 			LIMIT 500",
-			ARRAY_A
-		);
+			$property_id
+		), ARRAY_A );
 
 		return self::array_to_csv( $rows, [
 			'Type', 'Title', 'Severity', 'Read', 'Created At',

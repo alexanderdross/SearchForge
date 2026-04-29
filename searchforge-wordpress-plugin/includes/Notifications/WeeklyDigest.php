@@ -4,6 +4,7 @@ namespace SearchForge\Notifications;
 
 use SearchForge\Admin\Dashboard;
 use SearchForge\Admin\Settings;
+use SearchForge\Models\Property;
 use SearchForge\Monitoring\PerformanceTrend;
 use SearchForge\Scoring\Score;
 use SearchForge\Trends\Engine;
@@ -15,7 +16,9 @@ class WeeklyDigest {
 	/**
 	 * Send the weekly digest email.
 	 */
-	public static function send(): bool {
+	public static function send( int $property_id = 0 ): bool {
+		$property_id = $property_id ?: Property::get_active_property_id();
+
 		if ( ! Settings::is_pro() ) {
 			return false;
 		}
@@ -34,18 +37,19 @@ class WeeklyDigest {
 			return false;
 		}
 
-		$summary    = Dashboard::get_summary();
-		$comparison = PerformanceTrend::get_period_comparison( 7 );
-		$site_score = Score::calculate_site_score();
-		$decaying   = Engine::get_decaying_pages( 'gsc', 5 );
-		$top_pages  = Dashboard::get_top_pages( 10 );
+		$summary    = Dashboard::get_summary( $property_id );
+		$comparison = PerformanceTrend::get_period_comparison( 7, $property_id );
+		$site_score = Score::calculate_site_score( $property_id );
+		$decaying   = Engine::get_decaying_pages( 'gsc', 5, $property_id );
+		$top_pages  = Dashboard::get_top_pages( 10, '', 0, '', $property_id );
 
 		// Alert count from last 7 days.
 		global $wpdb;
-		$alert_count = (int) $wpdb->get_var(
+		$alert_count = (int) $wpdb->get_var( $wpdb->prepare(
 			"SELECT COUNT(*) FROM {$wpdb->prefix}sf_alerts
-			WHERE created_at >= DATE_SUB(NOW(), INTERVAL 7 DAY)"
-		);
+			WHERE created_at >= DATE_SUB(NOW(), INTERVAL 7 DAY) AND property_id = %d",
+			$property_id
+		) );
 
 		$site_name = get_bloginfo( 'name' );
 		$site_url  = home_url();

@@ -3,6 +3,7 @@
 namespace SearchForge\Alerts;
 
 use SearchForge\Admin\Settings;
+use SearchForge\Models\Property;
 use SearchForge\Trends\Engine;
 
 defined( 'ABSPATH' ) || exit;
@@ -22,38 +23,42 @@ class Monitor {
 			return;
 		}
 
+		$property_id = Property::get_active_property_id();
+
 		$alerts = [];
 
-		$ranking_drops = $this->check_ranking_drops();
+		$ranking_drops = $this->check_ranking_drops( $property_id );
 		if ( ! empty( $ranking_drops ) ) {
 			$alerts[] = $ranking_drops;
 		}
 
-		$traffic_anomalies = $this->check_traffic_anomalies();
+		$traffic_anomalies = $this->check_traffic_anomalies( $property_id );
 		if ( ! empty( $traffic_anomalies ) ) {
 			$alerts[] = $traffic_anomalies;
 		}
 
-		$new_keywords = $this->check_new_keywords();
+		$new_keywords = $this->check_new_keywords( $property_id );
 		if ( ! empty( $new_keywords ) ) {
 			$alerts[] = $new_keywords;
 		}
 
-		$decay = $this->check_content_decay();
+		$decay = $this->check_content_decay( $property_id );
 		if ( ! empty( $decay ) ) {
 			$alerts[] = $decay;
 		}
 
 		if ( ! empty( $alerts ) ) {
 			$this->send_alert_email( $alerts );
-			$this->store_alerts( $alerts );
+			$this->store_alerts( $alerts, $property_id );
 		}
 	}
 
 	/**
 	 * Check for significant ranking drops.
 	 */
-	private function check_ranking_drops(): ?array {
+	private function check_ranking_drops( int $property_id = 0 ): ?array {
+		$property_id = $property_id ?: Property::get_active_property_id();
+
 		global $wpdb;
 
 		$threshold = (int) Settings::get( 'alert_ranking_drop_threshold', 3 );
@@ -70,14 +75,16 @@ class Monitor {
 			FROM {$wpdb->prefix}sf_keywords r
 			INNER JOIN {$wpdb->prefix}sf_keywords p
 				ON r.query = p.query AND r.page_path = p.page_path
-				AND p.source = 'gsc' AND p.snapshot_date = %s
-			WHERE r.source = 'gsc' AND r.snapshot_date = %s
+				AND p.source = 'gsc' AND p.snapshot_date = %s AND p.property_id = %d
+			WHERE r.source = 'gsc' AND r.snapshot_date = %s AND r.property_id = %d
 				AND (r.position - p.position) >= %d
 				AND p.clicks >= 3
 			ORDER BY position_drop DESC
 			LIMIT 10",
 			$previous,
+			$property_id,
 			$recent,
+			$property_id,
 			$threshold
 		), ARRAY_A );
 
@@ -100,23 +107,25 @@ class Monitor {
 	/**
 	 * Check for traffic anomalies (unusual spikes or drops).
 	 */
-	private function check_traffic_anomalies(): ?array {
+	private function check_traffic_anomalies( int $property_id = 0 ): ?array {
 		if ( ! Settings::get( 'alert_traffic_anomaly' ) ) {
 			return null;
 		}
 
+		$property_id = $property_id ?: Property::get_active_property_id();
+
 		global $wpdb;
 
 		// Get last 4 weeks of daily click totals.
-		$daily_clicks = $wpdb->get_results(
+		$daily_clicks = $wpdb->get_results( $wpdb->prepare(
 			"SELECT snapshot_date, SUM(clicks) as total_clicks
 			FROM {$wpdb->prefix}sf_snapshots
 			WHERE source = 'gsc' AND device = 'all'
-				AND snapshot_date >= DATE_SUB(CURDATE(), INTERVAL 28 DAY)
+				AND snapshot_date >= DATE_SUB(CURDATE(), INTERVAL 28 DAY) AND property_id = %d
 			GROUP BY snapshot_date
 			ORDER BY snapshot_date ASC",
-			ARRAY_A
-		);
+			$property_id
+		), ARRAY_A );
 
 		if ( count( $daily_clicks ) < 7 ) {
 			return null;
@@ -169,8 +178,10 @@ class Monitor {
 	/**
 	 * Check for new keyword acquisitions.
 	 */
-	private function check_new_keywords(): ?array {
-		$new_pages = Engine::get_new_keyword_pages( 'gsc', 7 );
+	private function check_new_keywords( int $property_id = 0 ): ?array {
+		$property_id = $property_id ?: Property::get_active_property_id();
+
+		$new_pages = Engine::get_new_keyword_pages( 'gsc', 7, $property_id );
 
 		if ( empty( $new_pages ) ) {
 			return null;
@@ -193,8 +204,10 @@ class Monitor {
 	/**
 	 * Check for content decay.
 	 */
-	private function check_content_decay(): ?array {
-		$decaying = Engine::get_decaying_pages( 'gsc', 10 );
+	private function check_content_decay( int $property_id = 0 ): ?array {
+		$property_id = $property_id ?: Property::get_active_property_id();
+
+		$decaying = Engine::get_decaying_pages( 'gsc', 10, $property_id );
 
 		if ( empty( $decaying ) ) {
 			return null;
@@ -262,17 +275,20 @@ class Monitor {
 	/**
 	 * Store alerts in the database for dashboard display.
 	 */
-	private function store_alerts( array $alerts ): void {
+	private function store_alerts( array $alerts, int $property_id = 0 ): void {
+		$property_id = $property_id ?: Property::get_active_property_id();
+
 		global $wpdb;
 
 		foreach ( $alerts as $alert ) {
 			$wpdb->insert( "{$wpdb->prefix}sf_alerts", [
-				'alert_type' => $alert['type'],
-				'title'      => $alert['title'],
-				'severity'   => $alert['severity'] ?? 'info',
-				'data'       => wp_json_encode( $alert['items'] ),
-				'created_at' => current_time( 'mysql', true ),
-				'is_read'    => 0,
+				'alert_type'  => $alert['type'],
+				'title'       => $alert['title'],
+				'severity'    => $alert['severity'] ?? 'info',
+				'data'        => wp_json_encode( $alert['items'] ),
+				'created_at'  => current_time( 'mysql', true ),
+				'is_read'     => 0,
+				'property_id' => $property_id,
 			] );
 		}
 	}

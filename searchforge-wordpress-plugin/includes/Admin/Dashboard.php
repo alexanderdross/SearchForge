@@ -2,6 +2,8 @@
 
 namespace SearchForge\Admin;
 
+use SearchForge\Models\Property;
+
 defined( 'ABSPATH' ) || exit;
 
 class Dashboard {
@@ -14,17 +16,20 @@ class Dashboard {
 	/**
 	 * Get summary stats for the dashboard (cached for 5 minutes).
 	 */
-	public static function get_summary(): array {
-		$cached = get_transient( 'searchforge_dashboard_summary' );
+	public static function get_summary( int $property_id = 0 ): array {
+		$property_id = $property_id ?: Property::get_active_property_id();
+
+		$cached = get_transient( "searchforge_dashboard_summary_{$property_id}" );
 		if ( is_array( $cached ) ) {
 			return $cached;
 		}
 
 		global $wpdb;
 
-		$latest_date = $wpdb->get_var(
-			"SELECT MAX(snapshot_date) FROM {$wpdb->prefix}sf_snapshots WHERE source = 'gsc'"
-		);
+		$latest_date = $wpdb->get_var( $wpdb->prepare(
+			"SELECT MAX(snapshot_date) FROM {$wpdb->prefix}sf_snapshots WHERE source = 'gsc' AND property_id = %d",
+			$property_id
+		) );
 
 		if ( ! $latest_date ) {
 			return [
@@ -47,20 +52,23 @@ class Dashboard {
 				AVG(position) as avg_position,
 				AVG(ctr) as avg_ctr
 			FROM {$wpdb->prefix}sf_snapshots
-			WHERE source = 'gsc' AND snapshot_date = %s AND device = 'all'",
-			$latest_date
+			WHERE source = 'gsc' AND snapshot_date = %s AND device = 'all' AND property_id = %d",
+			$latest_date,
+			$property_id
 		) );
 
 		$keyword_count = (int) $wpdb->get_var( $wpdb->prepare(
 			"SELECT COUNT(DISTINCT query) FROM {$wpdb->prefix}sf_keywords
-			WHERE source = 'gsc' AND snapshot_date = %s",
-			$latest_date
+			WHERE source = 'gsc' AND snapshot_date = %s AND property_id = %d",
+			$latest_date,
+			$property_id
 		) );
 
-		$last_sync = $wpdb->get_row(
+		$last_sync = $wpdb->get_row( $wpdb->prepare(
 			"SELECT started_at, status FROM {$wpdb->prefix}sf_sync_log
-			WHERE source = 'gsc' ORDER BY id DESC LIMIT 1"
-		);
+			WHERE source = 'gsc' AND property_id = %d ORDER BY id DESC LIMIT 1",
+			$property_id
+		) );
 
 		$summary = [
 			'total_pages'       => (int) ( $page_stats->total_pages ?? 0 ),
@@ -74,7 +82,7 @@ class Dashboard {
 			'date_range'        => $latest_date,
 		];
 
-		set_transient( 'searchforge_dashboard_summary', $summary, 5 * MINUTE_IN_SECONDS );
+		set_transient( "searchforge_dashboard_summary_{$property_id}", $summary, 5 * MINUTE_IN_SECONDS );
 
 		return $summary;
 	}
@@ -82,20 +90,24 @@ class Dashboard {
 	/**
 	 * Invalidate dashboard cache.
 	 */
-	public static function invalidate_cache(): void {
-		delete_transient( 'searchforge_dashboard_summary' );
+	public static function invalidate_cache( int $property_id = 0 ): void {
+		$property_id = $property_id ?: Property::get_active_property_id();
+		delete_transient( "searchforge_dashboard_summary_{$property_id}" );
 	}
 
 	/**
 	 * Get top pages by clicks with pagination and search.
 	 */
-	public static function get_top_pages( int $limit = 10, string $date = '', int $offset = 0, string $search = '' ): array {
+	public static function get_top_pages( int $limit = 10, string $date = '', int $offset = 0, string $search = '', int $property_id = 0 ): array {
+		$property_id = $property_id ?: Property::get_active_property_id();
+
 		global $wpdb;
 
 		if ( ! $date ) {
-			$date = $wpdb->get_var(
-				"SELECT MAX(snapshot_date) FROM {$wpdb->prefix}sf_snapshots WHERE source = 'gsc'"
-			);
+			$date = $wpdb->get_var( $wpdb->prepare(
+				"SELECT MAX(snapshot_date) FROM {$wpdb->prefix}sf_snapshots WHERE source = 'gsc' AND property_id = %d",
+				$property_id
+			) );
 		}
 
 		if ( ! $date ) {
@@ -106,8 +118,9 @@ class Dashboard {
 		$query_limit = $page_limit > 0 ? min( $limit, $page_limit ) : $limit;
 
 		$where = $wpdb->prepare(
-			"source = 'gsc' AND snapshot_date = %s AND device = 'all'",
-			$date
+			"source = 'gsc' AND snapshot_date = %s AND device = 'all' AND property_id = %d",
+			$date,
+			$property_id
 		);
 
 		if ( $search ) {
@@ -127,20 +140,24 @@ class Dashboard {
 	/**
 	 * Count total pages for pagination.
 	 */
-	public static function count_pages( string $search = '' ): int {
+	public static function count_pages( string $search = '', int $property_id = 0 ): int {
+		$property_id = $property_id ?: Property::get_active_property_id();
+
 		global $wpdb;
 
-		$date = $wpdb->get_var(
-			"SELECT MAX(snapshot_date) FROM {$wpdb->prefix}sf_snapshots WHERE source = 'gsc'"
-		);
+		$date = $wpdb->get_var( $wpdb->prepare(
+			"SELECT MAX(snapshot_date) FROM {$wpdb->prefix}sf_snapshots WHERE source = 'gsc' AND property_id = %d",
+			$property_id
+		) );
 
 		if ( ! $date ) {
 			return 0;
 		}
 
 		$where = $wpdb->prepare(
-			"source = 'gsc' AND snapshot_date = %s AND device = 'all'",
-			$date
+			"source = 'gsc' AND snapshot_date = %s AND device = 'all' AND property_id = %d",
+			$date,
+			$property_id
 		);
 
 		if ( $search ) {
@@ -155,13 +172,16 @@ class Dashboard {
 	/**
 	 * Get top keywords by clicks with pagination and search.
 	 */
-	public static function get_top_keywords( int $limit = 20, string $date = '', int $offset = 0, string $search = '' ): array {
+	public static function get_top_keywords( int $limit = 20, string $date = '', int $offset = 0, string $search = '', int $property_id = 0 ): array {
+		$property_id = $property_id ?: Property::get_active_property_id();
+
 		global $wpdb;
 
 		if ( ! $date ) {
-			$date = $wpdb->get_var(
-				"SELECT MAX(snapshot_date) FROM {$wpdb->prefix}sf_keywords WHERE source = 'gsc'"
-			);
+			$date = $wpdb->get_var( $wpdb->prepare(
+				"SELECT MAX(snapshot_date) FROM {$wpdb->prefix}sf_keywords WHERE source = 'gsc' AND property_id = %d",
+				$property_id
+			) );
 		}
 
 		if ( ! $date ) {
@@ -169,8 +189,9 @@ class Dashboard {
 		}
 
 		$where = $wpdb->prepare(
-			"source = 'gsc' AND snapshot_date = %s",
-			$date
+			"source = 'gsc' AND snapshot_date = %s AND property_id = %d",
+			$date,
+			$property_id
 		);
 
 		if ( $search ) {
@@ -191,20 +212,24 @@ class Dashboard {
 	/**
 	 * Count total keywords for pagination.
 	 */
-	public static function count_keywords( string $search = '' ): int {
+	public static function count_keywords( string $search = '', int $property_id = 0 ): int {
+		$property_id = $property_id ?: Property::get_active_property_id();
+
 		global $wpdb;
 
-		$date = $wpdb->get_var(
-			"SELECT MAX(snapshot_date) FROM {$wpdb->prefix}sf_keywords WHERE source = 'gsc'"
-		);
+		$date = $wpdb->get_var( $wpdb->prepare(
+			"SELECT MAX(snapshot_date) FROM {$wpdb->prefix}sf_keywords WHERE source = 'gsc' AND property_id = %d",
+			$property_id
+		) );
 
 		if ( ! $date ) {
 			return 0;
 		}
 
 		$where = $wpdb->prepare(
-			"source = 'gsc' AND snapshot_date = %s",
-			$date
+			"source = 'gsc' AND snapshot_date = %s AND property_id = %d",
+			$date,
+			$property_id
 		);
 
 		if ( $search ) {

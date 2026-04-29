@@ -3,6 +3,7 @@
 namespace SearchForge\Analysis;
 
 use SearchForge\Admin\Settings;
+use SearchForge\Models\Property;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -20,12 +21,14 @@ class ContentBrief {
 	 *
 	 * @return array|\WP_Error  [ 'brief' => string, 'method' => 'heuristic'|'ai' ]
 	 */
-	public static function generate( string $page_path ): array|\WP_Error {
+	public static function generate( string $page_path, int $property_id = 0 ): array|\WP_Error {
+		$property_id = $property_id ?: Property::get_active_property_id();
+
 		if ( ! Settings::is_pro() ) {
 			return new \WP_Error( 'not_pro', __( 'Content briefs require a Pro license.', 'searchforge' ) );
 		}
 
-		$context = self::gather_context( $page_path );
+		$context = self::gather_context( $page_path, $property_id );
 		if ( is_wp_error( $context ) ) {
 			return $context;
 		}
@@ -51,13 +54,16 @@ class ContentBrief {
 	/**
 	 * Gather all available data for a page to build context.
 	 */
-	private static function gather_context( string $page_path ): array|\WP_Error {
+	private static function gather_context( string $page_path, int $property_id = 0 ): array|\WP_Error {
+		$property_id = $property_id ?: Property::get_active_property_id();
+
 		global $wpdb;
 
 		$latest_date = $wpdb->get_var( $wpdb->prepare(
 			"SELECT MAX(snapshot_date) FROM {$wpdb->prefix}sf_snapshots
-			WHERE page_path = %s AND source = 'gsc'",
-			$page_path
+			WHERE page_path = %s AND source = 'gsc' AND property_id = %d",
+			$page_path,
+			$property_id
 		) );
 
 		if ( ! $latest_date ) {
@@ -67,23 +73,25 @@ class ContentBrief {
 		$page_data = $wpdb->get_row( $wpdb->prepare(
 			"SELECT clicks, impressions, ctr, position
 			FROM {$wpdb->prefix}sf_snapshots
-			WHERE page_path = %s AND snapshot_date = %s AND source = 'gsc' AND device = 'all'",
+			WHERE page_path = %s AND snapshot_date = %s AND source = 'gsc' AND device = 'all' AND property_id = %d",
 			$page_path,
-			$latest_date
+			$latest_date,
+			$property_id
 		), ARRAY_A );
 
 		$keywords = $wpdb->get_results( $wpdb->prepare(
 			"SELECT query, clicks, impressions, ctr, position, search_volume, competition
 			FROM {$wpdb->prefix}sf_keywords
-			WHERE page_path = %s AND snapshot_date = %s AND source = 'gsc'
+			WHERE page_path = %s AND snapshot_date = %s AND source = 'gsc' AND property_id = %d
 			ORDER BY clicks DESC
 			LIMIT 30",
 			$page_path,
-			$latest_date
+			$latest_date,
+			$property_id
 		), ARRAY_A );
 
-		$trend = \SearchForge\Trends\Engine::get_page_trend( $page_path );
-		$score = \SearchForge\Scoring\Score::calculate_page_score( $page_path );
+		$trend = \SearchForge\Trends\Engine::get_page_trend( $page_path, 'gsc', $property_id );
+		$score = \SearchForge\Scoring\Score::calculate_page_score( $page_path, $property_id );
 
 		// GA4 data if available.
 		$ga4 = null;
@@ -96,12 +104,12 @@ class ContentBrief {
 		if ( ! empty( $keywords ) ) {
 			$query_list    = array_column( $keywords, 'query' );
 			$placeholders  = implode( ',', array_fill( 0, count( $query_list ), '%s' ) );
-			$prepare_args  = array_merge( $query_list, [ $latest_date ] );
+			$prepare_args  = array_merge( $query_list, [ $latest_date, $property_id ] );
 
 			$cannibalizing = $wpdb->get_col( $wpdb->prepare(
 				"SELECT query
 				FROM {$wpdb->prefix}sf_keywords
-				WHERE query IN ({$placeholders}) AND source = 'gsc' AND snapshot_date = %s
+				WHERE query IN ({$placeholders}) AND source = 'gsc' AND snapshot_date = %s AND property_id = %d
 				GROUP BY query
 				HAVING COUNT(DISTINCT page_path) > 1",
 				$prepare_args

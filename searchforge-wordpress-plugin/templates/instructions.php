@@ -266,7 +266,9 @@ $is_pro = SearchForge\Admin\Settings::is_pro();
 					<span class="sf-pro-badge">Pro</span>
 				<?php endif; ?>
 			</h2>
-			<p><?php printf( esc_html__( 'All endpoints are under %s. Authenticate with an API key via the %s header.', 'searchforge-wordpress-plugin' ), '<code>/wp-json/searchforge/v1/</code>', '<code>X-SearchForge-Key</code>' ); ?></p>
+			<p><?php
+				/* translators: %1$s: REST API base path, %2$s: authentication header name */
+				printf( esc_html__( 'All endpoints are under %1$s. Authenticate with an API key via the %2$s header.', 'searchforge-wordpress-plugin' ), '<code>/wp-json/searchforge/v1/</code>', '<code>X-SearchForge-Key</code>' ); ?></p>
 			<table class="widefat" style="max-width: 720px;">
 				<thead>
 					<tr>

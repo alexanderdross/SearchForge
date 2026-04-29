@@ -18,3 +18,4 @@ $active_id = SearchForge\Models\Property::get_active_property_id();
 		<?php endforeach; ?>
 	</select>
 </div>
+<?php // phpcs:enable WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound ?>

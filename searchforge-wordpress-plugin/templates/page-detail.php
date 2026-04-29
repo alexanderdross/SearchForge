@@ -23,8 +23,8 @@ $ga4_data     = SearchForge\Admin\PageDetail::get_ga4_data( $page_path, $propert
 $pos_dist     = SearchForge\Admin\PageDetail::get_position_distribution( $page_path, $property_id );
 $is_pro       = SearchForge\Admin\Settings::is_pro();
 $score        = SearchForge\Scoring\Score::calculate_page_score( $page_path, $property_id );
-$trend        = $is_pro ? SearchForge\Trends\Engine::get_page_trend( $page_path, $property_id ) : null;
-$yoy          = $is_pro ? SearchForge\Trends\Engine::get_yoy_comparison( $page_path, $property_id ) : null;
+$trend        = $is_pro ? SearchForge\Trends\Engine::get_page_trend( $page_path, 'gsc', $property_id ) : null;
+$yoy          = $is_pro ? SearchForge\Trends\Engine::get_yoy_comparison( $page_path, 'gsc', $property_id ) : null;
 $cannibal     = $is_pro ? SearchForge\Admin\PageDetail::get_page_cannibalization( $page_path, $property_id ) : [];
 ?>
 

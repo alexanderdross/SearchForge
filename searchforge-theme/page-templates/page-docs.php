@@ -105,6 +105,22 @@ get_header();
 				</ul>
 			</div>
 
+			<!-- Multi-Property & Merger -->
+			<div class="sf-card sf-card--bordered">
+				<div class="sf-card__icon" aria-hidden="true">
+					<img src="<?php echo esc_url( SF_THEME_URI ); ?>/assets/images/icons/sync.svg" alt="" width="24" height="24">
+				</div>
+				<h2 class="sf-card__title"><a href="<?php echo esc_url( home_url( '/docs/multi-property/' ) ); ?>" title="SearchForge Multi-Property Management & Merger Analysis">Multi-Property &amp; Merger</a></h2>
+				<p class="sf-card__desc">Manage multiple domains, compare metrics across properties, and generate data-driven merger briefs for domain consolidation.</p>
+				<ul style="list-style: none; margin-top: var(--space-md);">
+					<li style="padding: var(--space-xs) 0;"><a href="<?php echo esc_url( home_url( '/docs/multi-property/#adding-properties' ) ); ?>" title="How to add and configure multiple properties">Adding Properties</a></li>
+					<li style="padding: var(--space-xs) 0;"><a href="<?php echo esc_url( home_url( '/docs/multi-property/#property-comparison' ) ); ?>" title="Compare SEO metrics across properties">Property Comparison</a></li>
+					<li style="padding: var(--space-xs) 0;"><a href="<?php echo esc_url( home_url( '/docs/multi-property/#merger-analysis' ) ); ?>" title="Generate CMS backend merger intelligence briefs">Merger Analysis</a></li>
+					<li style="padding: var(--space-xs) 0;"><a href="<?php echo esc_url( home_url( '/docs/multi-property/#merger-brief-contents' ) ); ?>" title="What the merger analysis brief includes">Brief Contents</a></li>
+					<li style="padding: var(--space-xs) 0;"><a href="<?php echo esc_url( home_url( '/docs/multi-property/#api-cli-access' ) ); ?>" title="Multi-property REST API and WP-CLI access">API &amp; CLI Access</a></li>
+				</ul>
+			</div>
+
 			<!-- Integrations -->
 			<div class="sf-card sf-card--bordered">
 				<div class="sf-card__icon" aria-hidden="true">

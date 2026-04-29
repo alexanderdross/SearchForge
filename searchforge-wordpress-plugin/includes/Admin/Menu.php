@@ -104,6 +104,15 @@ class Menu {
 
 		add_submenu_page(
 			'searchforge',
+			__( 'Instructions', 'searchforge' ),
+			__( 'Instructions', 'searchforge' ),
+			'manage_options',
+			'searchforge-instructions',
+			[ $this, 'render_instructions' ]
+		);
+
+		add_submenu_page(
+			'searchforge',
 			__( 'Settings', 'searchforge' ),
 			__( 'Settings', 'searchforge' ),
 			'manage_options',
@@ -156,6 +165,10 @@ class Menu {
 
 	public function render_page_detail(): void {
 		include SEARCHFORGE_PATH . 'templates/page-detail.php';
+	}
+
+	public function render_instructions(): void {
+		include SEARCHFORGE_PATH . 'templates/instructions.php';
 	}
 
 	public function render_comparison(): void {

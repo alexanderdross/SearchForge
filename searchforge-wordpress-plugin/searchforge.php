@@ -3,7 +3,7 @@
  * Plugin Name: SearchForge
  * Plugin URI:  https://forge.drossmedia.de
  * Description: Unifies search data sources (GSC, Bing, Keyword Planner, Trends, GA4) into LLM-ready markdown briefs with AI content analysis.
- * Version:     2.1.0
+ * Version:     3.0.0
  * Author:      Dross Media
  * Author URI:  https://drossmedia.de
  * License:     GPL-2.0-or-later
@@ -15,12 +15,12 @@
 
 defined( 'ABSPATH' ) || exit;
 
-define( 'SEARCHFORGE_VERSION', '2.1.0' );
+define( 'SEARCHFORGE_VERSION', '3.0.0' );
 define( 'SEARCHFORGE_FILE', __FILE__ );
 define( 'SEARCHFORGE_PATH', plugin_dir_path( __FILE__ ) );
 define( 'SEARCHFORGE_URL', plugin_dir_url( __FILE__ ) );
 define( 'SEARCHFORGE_SLUG', 'searchforge' );
-define( 'SEARCHFORGE_DB_VERSION', '1.5.0' );
+define( 'SEARCHFORGE_DB_VERSION', '2.0.0' );
 
 require_once SEARCHFORGE_PATH . 'includes/Autoloader.php';
 
@@ -132,48 +132,54 @@ final class SearchForge {
 	}
 
 	public function run_daily_sync(): void {
-		$settings = SearchForge\Admin\Settings::get_all();
+		$settings   = SearchForge\Admin\Settings::get_all();
+		$properties = SearchForge\Models\Property::get_all();
 
-		// GSC sync.
-		if ( ! empty( $settings['gsc_access_token'] ) ) {
-			$gsc_syncer = new SearchForge\Integrations\GSC\Syncer();
-			$result = $gsc_syncer->sync_all();
-			if ( is_wp_error( $result ) ) {
-				do_action( 'searchforge_sync_failed', 'gsc', $result->get_error_message() );
-			} else {
-				do_action( 'searchforge_sync_completed', 'gsc', $result );
+		// Loop over all registered properties for per-property syncs.
+		foreach ( $properties as $property ) {
+			$pid = (int) $property['id'];
+
+			// GSC sync.
+			if ( ! empty( $property['gsc_access_token'] ) ) {
+				$gsc_syncer = new SearchForge\Integrations\GSC\Syncer( $pid );
+				$result = $gsc_syncer->sync_all();
+				if ( is_wp_error( $result ) ) {
+					do_action( 'searchforge_sync_failed', 'gsc', $result->get_error_message(), $pid );
+				} else {
+					do_action( 'searchforge_sync_completed', 'gsc', $result, $pid );
+				}
+			}
+
+			// Bing sync (Pro only).
+			if ( SearchForge\Admin\Settings::is_pro()
+				&& ! empty( $property['bing_enabled'] )
+				&& ! empty( $property['bing_api_key'] )
+			) {
+				$bing_syncer = new SearchForge\Integrations\Bing\Syncer( $pid );
+				$result = $bing_syncer->sync_all();
+				if ( is_wp_error( $result ) ) {
+					do_action( 'searchforge_sync_failed', 'bing', $result->get_error_message(), $pid );
+				} else {
+					do_action( 'searchforge_sync_completed', 'bing', $result, $pid );
+				}
+			}
+
+			// GA4 sync (Pro only).
+			if ( SearchForge\Admin\Settings::is_pro()
+				&& ! empty( $property['ga4_enabled'] )
+				&& ! empty( $property['ga4_property_id'] )
+			) {
+				$ga4_syncer = new SearchForge\Integrations\GA4\Syncer( $pid );
+				$result = $ga4_syncer->sync();
+				if ( is_wp_error( $result ) ) {
+					do_action( 'searchforge_sync_failed', 'ga4', $result->get_error_message(), $pid );
+				} else {
+					do_action( 'searchforge_sync_completed', 'ga4', $result, $pid );
+				}
 			}
 		}
 
-		// Bing sync (Pro only).
-		if ( SearchForge\Admin\Settings::is_pro()
-			&& ! empty( $settings['bing_enabled'] )
-			&& ! empty( $settings['bing_api_key'] )
-		) {
-			$bing_syncer = new SearchForge\Integrations\Bing\Syncer();
-			$result = $bing_syncer->sync_all();
-			if ( is_wp_error( $result ) ) {
-				do_action( 'searchforge_sync_failed', 'bing', $result->get_error_message() );
-			} else {
-				do_action( 'searchforge_sync_completed', 'bing', $result );
-			}
-		}
-
-		// GA4 sync (Pro only).
-		if ( SearchForge\Admin\Settings::is_pro()
-			&& ! empty( $settings['ga4_enabled'] )
-			&& ! empty( $settings['ga4_property_id'] )
-		) {
-			$ga4_syncer = new SearchForge\Integrations\GA4\Syncer();
-			$result = $ga4_syncer->sync();
-			if ( is_wp_error( $result ) ) {
-				do_action( 'searchforge_sync_failed', 'ga4', $result->get_error_message() );
-			} else {
-				do_action( 'searchforge_sync_completed', 'ga4', $result );
-			}
-		}
-
-		// Keyword Planner enrichment (Pro only).
+		// Keyword Planner enrichment — global, not per-property.
 		if ( SearchForge\Admin\Settings::is_pro()
 			&& ! empty( $settings['kwp_enabled'] )
 			&& ! empty( $settings['kwp_customer_id'] )
@@ -182,7 +188,7 @@ final class SearchForge {
 			$enricher->enrich_keywords();
 		}
 
-		// Monitoring checks (Pro).
+		// Monitoring checks (Pro) — global.
 		if ( SearchForge\Admin\Settings::is_pro() ) {
 			SearchForge\Monitoring\SslChecker::check_and_alert();
 			SearchForge\Monitoring\QuotaTracker::check_and_alert();

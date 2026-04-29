@@ -3,6 +3,7 @@
 namespace SearchForge\Scoring;
 
 use SearchForge\Admin\Settings;
+use SearchForge\Models\Property;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -20,13 +21,16 @@ class Score {
 	 *
 	 * @return array|null  [ 'total' => int, 'components' => [...], 'recommendations' => [...] ]
 	 */
-	public static function calculate_page_score( string $page_path ): ?array {
+	public static function calculate_page_score( string $page_path, int $property_id = 0 ): ?array {
+		$property_id = $property_id ?: Property::get_active_property_id();
+
 		global $wpdb;
 
 		$latest_date = $wpdb->get_var( $wpdb->prepare(
 			"SELECT MAX(snapshot_date) FROM {$wpdb->prefix}sf_snapshots
-			WHERE page_path = %s AND source = 'gsc'",
-			$page_path
+			WHERE page_path = %s AND source = 'gsc' AND property_id = %d",
+			$page_path,
+			$property_id
 		) );
 
 		if ( ! $latest_date ) {
@@ -36,9 +40,10 @@ class Score {
 		$page_data = $wpdb->get_row( $wpdb->prepare(
 			"SELECT clicks, impressions, ctr, position
 			FROM {$wpdb->prefix}sf_snapshots
-			WHERE page_path = %s AND snapshot_date = %s AND source = 'gsc' AND device = 'all'",
+			WHERE page_path = %s AND snapshot_date = %s AND source = 'gsc' AND device = 'all' AND property_id = %d",
 			$page_path,
-			$latest_date
+			$latest_date,
+			$property_id
 		), ARRAY_A );
 
 		if ( ! $page_data ) {
@@ -48,16 +53,17 @@ class Score {
 		$keywords = $wpdb->get_results( $wpdb->prepare(
 			"SELECT query, clicks, impressions, ctr, position
 			FROM {$wpdb->prefix}sf_keywords
-			WHERE page_path = %s AND snapshot_date = %s AND source = 'gsc'
+			WHERE page_path = %s AND snapshot_date = %s AND source = 'gsc' AND property_id = %d
 			ORDER BY clicks DESC",
 			$page_path,
-			$latest_date
+			$latest_date,
+			$property_id
 		), ARRAY_A );
 
 		$technical  = self::score_technical( $page_data, $keywords );
 		$content    = self::score_content( $page_data, $keywords );
 		$authority  = self::score_authority( $page_data, $keywords );
-		$momentum   = self::score_momentum( $page_path, $page_data );
+		$momentum   = self::score_momentum( $page_path, $page_data, $property_id );
 
 		$total = (int) round(
 			$technical['score'] * self::WEIGHTS['technical'] / 100 +
@@ -83,12 +89,15 @@ class Score {
 	/**
 	 * Calculate site-level SearchForge Score.
 	 */
-	public static function calculate_site_score(): ?array {
+	public static function calculate_site_score( int $property_id = 0 ): ?array {
+		$property_id = $property_id ?: Property::get_active_property_id();
+
 		global $wpdb;
 
-		$latest_date = $wpdb->get_var(
-			"SELECT MAX(snapshot_date) FROM {$wpdb->prefix}sf_snapshots WHERE source = 'gsc'"
-		);
+		$latest_date = $wpdb->get_var( $wpdb->prepare(
+			"SELECT MAX(snapshot_date) FROM {$wpdb->prefix}sf_snapshots WHERE source = 'gsc' AND property_id = %d",
+			$property_id
+		) );
 
 		if ( ! $latest_date ) {
 			return null;
@@ -98,14 +107,16 @@ class Score {
 			"SELECT COUNT(DISTINCT page_path) as pages, SUM(clicks) as clicks,
 				SUM(impressions) as impressions, AVG(ctr) as ctr, AVG(position) as position
 			FROM {$wpdb->prefix}sf_snapshots
-			WHERE source = 'gsc' AND snapshot_date = %s AND device = 'all'",
-			$latest_date
+			WHERE source = 'gsc' AND snapshot_date = %s AND device = 'all' AND property_id = %d",
+			$latest_date,
+			$property_id
 		), ARRAY_A );
 
 		$total_keywords = (int) $wpdb->get_var( $wpdb->prepare(
 			"SELECT COUNT(DISTINCT query) FROM {$wpdb->prefix}sf_keywords
-			WHERE source = 'gsc' AND snapshot_date = %s",
-			$latest_date
+			WHERE source = 'gsc' AND snapshot_date = %s AND property_id = %d",
+			$latest_date,
+			$property_id
 		) );
 
 		// Site-level scoring heuristics.
@@ -129,7 +140,7 @@ class Score {
 		$authority_score = min( 100, (int) ( log10( max( $total_clicks, 1 ) ) / 5 * 100 ) );
 
 		// Momentum: based on recent trend.
-		$momentum_score = self::calculate_site_momentum();
+		$momentum_score = self::calculate_site_momentum( $property_id );
 
 		$total = (int) round(
 			$tech_score      * 25 / 100 +
@@ -246,7 +257,9 @@ class Score {
 	 * Momentum score (25%).
 	 * Based on: 7-day and 30-day click trends, new keyword acquisition, position changes.
 	 */
-	private static function score_momentum( string $page_path, array $current_data ): array {
+	private static function score_momentum( string $page_path, array $current_data, int $property_id = 0 ): array {
+		$property_id = $property_id ?: Property::get_active_property_id();
+
 		global $wpdb;
 
 		// Compare current snapshot to 14 days ago.
@@ -256,10 +269,11 @@ class Score {
 			"SELECT clicks, impressions, position
 			FROM {$wpdb->prefix}sf_snapshots
 			WHERE page_path = %s AND source = 'gsc' AND device = 'all'
-				AND snapshot_date <= %s
+				AND snapshot_date <= %s AND property_id = %d
 			ORDER BY snapshot_date DESC LIMIT 1",
 			$page_path,
-			$prev_date
+			$prev_date,
+			$property_id
 		), ARRAY_A );
 
 		if ( ! $prev ) {
@@ -285,21 +299,25 @@ class Score {
 	/**
 	 * Calculate site-level momentum from aggregate trends.
 	 */
-	private static function calculate_site_momentum(): int {
+	private static function calculate_site_momentum( int $property_id = 0 ): int {
+		$property_id = $property_id ?: Property::get_active_property_id();
+
 		global $wpdb;
 
-		$recent = $wpdb->get_var(
+		$recent = $wpdb->get_var( $wpdb->prepare(
 			"SELECT SUM(clicks) FROM {$wpdb->prefix}sf_snapshots
 			WHERE source = 'gsc' AND device = 'all'
-				AND snapshot_date >= DATE_SUB(CURDATE(), INTERVAL 14 DAY)"
-		);
+				AND snapshot_date >= DATE_SUB(CURDATE(), INTERVAL 14 DAY) AND property_id = %d",
+			$property_id
+		) );
 
-		$previous = $wpdb->get_var(
+		$previous = $wpdb->get_var( $wpdb->prepare(
 			"SELECT SUM(clicks) FROM {$wpdb->prefix}sf_snapshots
 			WHERE source = 'gsc' AND device = 'all'
 				AND snapshot_date >= DATE_SUB(CURDATE(), INTERVAL 28 DAY)
-				AND snapshot_date < DATE_SUB(CURDATE(), INTERVAL 14 DAY)"
-		);
+				AND snapshot_date < DATE_SUB(CURDATE(), INTERVAL 14 DAY) AND property_id = %d",
+			$property_id
+		) );
 
 		if ( ! $previous ) {
 			return 50;

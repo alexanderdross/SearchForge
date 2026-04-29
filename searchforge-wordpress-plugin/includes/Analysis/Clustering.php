@@ -2,6 +2,8 @@
 
 namespace SearchForge\Analysis;
 
+use SearchForge\Models\Property;
+
 defined( 'ABSPATH' ) || exit;
 
 /**
@@ -17,12 +19,15 @@ class Clustering {
 	 *
 	 * @return array  [ [ 'name' => ..., 'keywords' => [...], 'total_clicks' => ... ], ... ]
 	 */
-	public static function cluster_keywords( float $threshold = 0.3, int $limit = 500 ): array {
+	public static function cluster_keywords( float $threshold = 0.3, int $limit = 500, int $property_id = 0 ): array {
+		$property_id = $property_id ?: Property::get_active_property_id();
+
 		global $wpdb;
 
-		$latest_date = $wpdb->get_var(
-			"SELECT MAX(snapshot_date) FROM {$wpdb->prefix}sf_keywords WHERE source = 'gsc'"
-		);
+		$latest_date = $wpdb->get_var( $wpdb->prepare(
+			"SELECT MAX(snapshot_date) FROM {$wpdb->prefix}sf_keywords WHERE source = 'gsc' AND property_id = %d",
+			$property_id
+		) );
 
 		if ( ! $latest_date ) {
 			return [];
@@ -32,11 +37,12 @@ class Clustering {
 			"SELECT query, SUM(clicks) as total_clicks, SUM(impressions) as total_impressions,
 				AVG(position) as avg_position
 			FROM {$wpdb->prefix}sf_keywords
-			WHERE source = 'gsc' AND snapshot_date = %s
+			WHERE source = 'gsc' AND snapshot_date = %s AND property_id = %d
 			GROUP BY query
 			ORDER BY total_clicks DESC
 			LIMIT %d",
 			$latest_date,
+			$property_id,
 			$limit
 		), ARRAY_A );
 

@@ -26,7 +26,7 @@
 
 		<nav class="sf-header__nav" role="navigation" aria-label="<?php esc_attr_e( 'Primary Navigation', 'searchforge-theme' ); ?>">
 			<ul class="sf-nav-list">
-				<li><a href="<?php echo esc_url( home_url( '/#features' ) ); ?>" title="SearchForge Features - SEO Score, AI Briefs, Competitor Analysis &amp; More">Features</a></li>
+				<li><a href="<?php echo esc_url( home_url( '/features/' ) ); ?>" title="SearchForge Features - SEO Score, AI Briefs, Competitor Analysis &amp; More">Features</a></li>
 				<li><a href="<?php echo esc_url( home_url( '/pricing/' ) ); ?>" title="SearchForge Pricing - Compare Free, Pro &amp; Agency Plans">Pricing</a></li>
 				<li><a href="<?php echo esc_url( home_url( '/docs/' ) ); ?>" title="SearchForge Documentation - Setup, Configuration &amp; API Reference">Docs</a></li>
 				<li><a href="<?php echo esc_url( home_url( '/changelog/' ) ); ?>" title="SearchForge Changelog - Version History &amp; Release Notes">Changelog</a></li>
@@ -45,7 +45,7 @@
 
 	<nav id="sf-mobile-menu" class="sf-mobile-menu" hidden aria-label="<?php esc_attr_e( 'Mobile Navigation', 'searchforge-theme' ); ?>">
 		<ul class="sf-mobile-nav-list">
-			<li><a href="<?php echo esc_url( home_url( '/#features' ) ); ?>" title="SearchForge Features - SEO Score, AI Briefs, Competitor Analysis &amp; More">Features</a></li>
+			<li><a href="<?php echo esc_url( home_url( '/features/' ) ); ?>" title="SearchForge Features - SEO Score, AI Briefs, Competitor Analysis &amp; More">Features</a></li>
 			<li><a href="<?php echo esc_url( home_url( '/pricing/' ) ); ?>" title="SearchForge Pricing - Compare Free, Pro &amp; Agency Plans">Pricing</a></li>
 			<li><a href="<?php echo esc_url( home_url( '/docs/' ) ); ?>" title="SearchForge Documentation - Setup, Configuration &amp; API Reference">Docs</a></li>
 			<li><a href="<?php echo esc_url( home_url( '/changelog/' ) ); ?>" title="SearchForge Changelog - Version History &amp; Release Notes">Changelog</a></li>

@@ -2,6 +2,8 @@
 
 namespace SearchForge\Monitoring;
 
+use SearchForge\Models\Property;
+
 defined( 'ABSPATH' ) || exit;
 
 class PerformanceTrend {
@@ -11,9 +13,12 @@ class PerformanceTrend {
 	 *
 	 * @param int    $days   Number of days.
 	 * @param string $source Data source ('gsc', 'bing').
+	 * @param int    $property_id Property ID (0 = active).
 	 * @return array Daily data points.
 	 */
-	public static function get_daily_trends( int $days = 30, string $source = 'gsc' ): array {
+	public static function get_daily_trends( int $days = 30, string $source = 'gsc', int $property_id = 0 ): array {
+		$property_id = $property_id ?: Property::get_active_property_id();
+
 		global $wpdb;
 
 		return $wpdb->get_results( $wpdb->prepare(
@@ -25,11 +30,12 @@ class PerformanceTrend {
 				ROUND(AVG(ctr), 4) AS avg_ctr
 			FROM {$wpdb->prefix}sf_snapshots
 			WHERE source = %s AND device = 'all'
-				AND snapshot_date >= DATE_SUB(CURDATE(), INTERVAL %d DAY)
+				AND snapshot_date >= DATE_SUB(CURDATE(), INTERVAL %d DAY) AND property_id = %d
 			GROUP BY snapshot_date
 			ORDER BY snapshot_date ASC",
 			$source,
-			$days
+			$days,
+			$property_id
 		), ARRAY_A ) ?: [];
 	}
 
@@ -38,9 +44,12 @@ class PerformanceTrend {
 	 *
 	 * @param int    $weeks  Number of weeks.
 	 * @param string $source Data source.
+	 * @param int    $property_id Property ID (0 = active).
 	 * @return array Weekly data points.
 	 */
-	public static function get_weekly_trends( int $weeks = 12, string $source = 'gsc' ): array {
+	public static function get_weekly_trends( int $weeks = 12, string $source = 'gsc', int $property_id = 0 ): array {
+		$property_id = $property_id ?: Property::get_active_property_id();
+
 		global $wpdb;
 
 		return $wpdb->get_results( $wpdb->prepare(
@@ -54,11 +63,12 @@ class PerformanceTrend {
 				COUNT(DISTINCT page_path) AS pages_tracked
 			FROM {$wpdb->prefix}sf_snapshots
 			WHERE source = %s AND device = 'all'
-				AND snapshot_date >= DATE_SUB(CURDATE(), INTERVAL %d WEEK)
+				AND snapshot_date >= DATE_SUB(CURDATE(), INTERVAL %d WEEK) AND property_id = %d
 			GROUP BY YEARWEEK(snapshot_date, 1)
 			ORDER BY year_week ASC",
 			$source,
-			$weeks
+			$weeks,
+			$property_id
 		), ARRAY_A ) ?: [];
 	}
 
@@ -67,9 +77,12 @@ class PerformanceTrend {
 	 *
 	 * @param string $page_path Page path.
 	 * @param int    $days      Number of days.
+	 * @param int    $property_id Property ID (0 = active).
 	 * @return array Daily data for the page.
 	 */
-	public static function get_page_trends( string $page_path, int $days = 30 ): array {
+	public static function get_page_trends( string $page_path, int $days = 30, int $property_id = 0 ): array {
+		$property_id = $property_id ?: Property::get_active_property_id();
+
 		global $wpdb;
 
 		return $wpdb->get_results( $wpdb->prepare(
@@ -82,10 +95,11 @@ class PerformanceTrend {
 				source
 			FROM {$wpdb->prefix}sf_snapshots
 			WHERE page_path = %s AND device = 'all'
-				AND snapshot_date >= DATE_SUB(CURDATE(), INTERVAL %d DAY)
+				AND snapshot_date >= DATE_SUB(CURDATE(), INTERVAL %d DAY) AND property_id = %d
 			ORDER BY snapshot_date ASC",
 			$page_path,
-			$days
+			$days,
+			$property_id
 		), ARRAY_A ) ?: [];
 	}
 
@@ -93,9 +107,12 @@ class PerformanceTrend {
 	 * Get period-over-period comparison.
 	 *
 	 * @param int $days Compare last N days vs previous N days.
+	 * @param int $property_id Property ID (0 = active).
 	 * @return array Comparison data with changes.
 	 */
-	public static function get_period_comparison( int $days = 7 ): array {
+	public static function get_period_comparison( int $days = 7, int $property_id = 0 ): array {
+		$property_id = $property_id ?: Property::get_active_property_id();
+
 		global $wpdb;
 
 		$current = $wpdb->get_row( $wpdb->prepare(
@@ -107,8 +124,9 @@ class PerformanceTrend {
 				COUNT(DISTINCT page_path) AS pages
 			FROM {$wpdb->prefix}sf_snapshots
 			WHERE source = 'gsc' AND device = 'all'
-				AND snapshot_date >= DATE_SUB(CURDATE(), INTERVAL %d DAY)",
-			$days
+				AND snapshot_date >= DATE_SUB(CURDATE(), INTERVAL %d DAY) AND property_id = %d",
+			$days,
+			$property_id
 		), ARRAY_A );
 
 		$previous = $wpdb->get_row( $wpdb->prepare(
@@ -121,9 +139,10 @@ class PerformanceTrend {
 			FROM {$wpdb->prefix}sf_snapshots
 			WHERE source = 'gsc' AND device = 'all'
 				AND snapshot_date >= DATE_SUB(CURDATE(), INTERVAL %d DAY)
-				AND snapshot_date < DATE_SUB(CURDATE(), INTERVAL %d DAY)",
+				AND snapshot_date < DATE_SUB(CURDATE(), INTERVAL %d DAY) AND property_id = %d",
 			$days * 2,
-			$days
+			$days,
+			$property_id
 		), ARRAY_A );
 
 		$calc_change = function ( $curr, $prev ) {

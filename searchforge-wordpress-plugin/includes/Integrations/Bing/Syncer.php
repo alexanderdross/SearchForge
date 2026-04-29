@@ -3,10 +3,23 @@
 namespace SearchForge\Integrations\Bing;
 
 use SearchForge\Admin\Settings;
+use SearchForge\Models\Property;
 
 defined( 'ABSPATH' ) || exit;
 
 class Syncer {
+
+	/**
+	 * @var int Property ID to sync.
+	 */
+	private int $property_id;
+
+	/**
+	 * @param int $property_id Property ID. 0 = use active property.
+	 */
+	public function __construct( int $property_id = 0 ) {
+		$this->property_id = $property_id ?: Property::get_active_property_id();
+	}
 
 	/**
 	 * Run a full sync of Bing Webmaster data.
@@ -20,22 +33,33 @@ class Syncer {
 			return new \WP_Error( 'not_pro', __( 'Bing integration requires a Pro license.', 'searchforge' ) );
 		}
 
-		$site_url = Settings::get( 'bing_site_url' );
+		$prop = Property::get( $this->property_id );
+		if ( ! $prop ) {
+			return new \WP_Error( 'no_property', __( 'Property not found.', 'searchforge' ) );
+		}
+
+		$site_url = $prop['bing_site_url'] ?? '';
 		if ( empty( $site_url ) ) {
 			return new \WP_Error( 'no_site', __( 'No Bing site URL configured.', 'searchforge' ) );
 		}
 
+		$api_key = $prop['bing_api_key'] ?? '';
+		if ( empty( $api_key ) ) {
+			return new \WP_Error( 'no_api_key', __( 'Bing API key not configured.', 'searchforge' ) );
+		}
+
 		// Log sync start.
 		$wpdb->insert( "{$wpdb->prefix}sf_sync_log", [
-			'source' => 'bing',
-			'status' => 'running',
+			'source'      => 'bing',
+			'status'      => 'running',
+			'property_id' => $this->property_id,
 		] );
 		$log_id = $wpdb->insert_id;
 		$today  = gmdate( 'Y-m-d' );
 
 		try {
 			// Sync page stats.
-			$page_stats = Client::get_page_stats( $site_url );
+			$page_stats = Client::get_page_stats( $site_url, $prop );
 			if ( is_wp_error( $page_stats ) ) {
 				$this->log_failure( $log_id, $page_stats->get_error_message() );
 				return $page_stats;
@@ -44,7 +68,7 @@ class Syncer {
 			$pages_synced = $this->store_page_data( $page_stats, $today );
 
 			// Sync query stats.
-			$query_stats = Client::get_query_stats( $site_url );
+			$query_stats = Client::get_query_stats( $site_url, $prop );
 			if ( is_wp_error( $query_stats ) ) {
 				$this->log_failure( $log_id, $query_stats->get_error_message() );
 				return $query_stats;
@@ -98,9 +122,10 @@ class Syncer {
 
 				// Upsert.
 				$wpdb->query( $wpdb->prepare(
-					"DELETE FROM {$table} WHERE page_path = %s AND snapshot_date = %s AND source = 'bing' AND device = 'all'",
+					"DELETE FROM {$table} WHERE page_path = %s AND snapshot_date = %s AND source = 'bing' AND device = 'all' AND property_id = %d",
 					$page_path,
-					$snapshot_date
+					$snapshot_date,
+					$this->property_id
 				) );
 
 				$result = $wpdb->insert( $table, [
@@ -113,6 +138,7 @@ class Syncer {
 					'position'      => $position,
 					'device'        => 'all',
 					'source'        => 'bing',
+					'property_id'   => $this->property_id,
 				] );
 
 				if ( false === $result ) {
@@ -141,10 +167,11 @@ class Syncer {
 		$wpdb->query( 'START TRANSACTION' );
 
 		try {
-			// Delete existing Bing keywords for this date.
+			// Delete existing Bing keywords for this date and property.
 			$wpdb->query( $wpdb->prepare(
-				"DELETE FROM {$table} WHERE snapshot_date = %s AND source = 'bing'",
-				$snapshot_date
+				"DELETE FROM {$table} WHERE snapshot_date = %s AND source = 'bing' AND property_id = %d",
+				$snapshot_date,
+				$this->property_id
 			) );
 
 			foreach ( $queries as $entry ) {
@@ -174,6 +201,7 @@ class Syncer {
 					'position'      => $position,
 					'device'        => 'all',
 					'source'        => 'bing',
+					'property_id'   => $this->property_id,
 				] );
 
 				if ( false === $result ) {

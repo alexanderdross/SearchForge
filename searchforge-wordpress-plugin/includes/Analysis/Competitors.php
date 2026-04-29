@@ -3,6 +3,7 @@
 namespace SearchForge\Analysis;
 
 use SearchForge\Admin\Settings;
+use SearchForge\Models\Property;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -11,19 +12,23 @@ class Competitors {
 	/**
 	 * Get all registered competitor domains.
 	 */
-	public static function get_all(): array {
+	public static function get_all( int $property_id = 0 ): array {
+		$property_id = $property_id ?: Property::get_active_property_id();
+
 		global $wpdb;
 
-		return $wpdb->get_results(
-			"SELECT * FROM {$wpdb->prefix}sf_competitors ORDER BY added_at ASC",
-			ARRAY_A
-		) ?: [];
+		return $wpdb->get_results( $wpdb->prepare(
+			"SELECT * FROM {$wpdb->prefix}sf_competitors WHERE property_id = %d ORDER BY added_at ASC",
+			$property_id
+		), ARRAY_A ) ?: [];
 	}
 
 	/**
 	 * Add a competitor domain.
 	 */
-	public static function add( string $domain, string $label = '' ): bool {
+	public static function add( string $domain, string $label = '', int $property_id = 0 ): bool {
+		$property_id = $property_id ?: Property::get_active_property_id();
+
 		global $wpdb;
 
 		$domain = self::normalize_domain( $domain );
@@ -44,9 +49,10 @@ class Competitors {
 			default                => 0,
 		};
 
-		$current = (int) $wpdb->get_var(
-			"SELECT COUNT(*) FROM {$wpdb->prefix}sf_competitors"
-		);
+		$current = (int) $wpdb->get_var( $wpdb->prepare(
+			"SELECT COUNT(*) FROM {$wpdb->prefix}sf_competitors WHERE property_id = %d",
+			$property_id
+		) );
 
 		if ( $current >= $limit ) {
 			return false;
@@ -55,23 +61,26 @@ class Competitors {
 		return (bool) $wpdb->insert(
 			$wpdb->prefix . 'sf_competitors',
 			[
-				'domain' => $domain,
-				'label'  => $label ?: $domain,
+				'domain'      => $domain,
+				'label'       => $label ?: $domain,
+				'property_id' => $property_id,
 			],
-			[ '%s', '%s' ]
+			[ '%s', '%s', '%d' ]
 		);
 	}
 
 	/**
 	 * Remove a competitor by ID.
 	 */
-	public static function remove( int $id ): bool {
+	public static function remove( int $id, int $property_id = 0 ): bool {
+		$property_id = $property_id ?: Property::get_active_property_id();
+
 		global $wpdb;
 
 		// Delete keywords first.
 		$wpdb->delete( $wpdb->prefix . 'sf_competitor_keywords', [ 'competitor_id' => $id ], [ '%d' ] );
 
-		return (bool) $wpdb->delete( $wpdb->prefix . 'sf_competitors', [ 'id' => $id ], [ '%d' ] );
+		return (bool) $wpdb->delete( $wpdb->prefix . 'sf_competitors', [ 'id' => $id, 'property_id' => $property_id ], [ '%d', '%d' ] );
 	}
 
 	/**
@@ -79,19 +88,22 @@ class Competitors {
 	 *
 	 * Returns keywords that you and at least one competitor both rank for.
 	 */
-	public static function get_keyword_overlap( int $limit = 50 ): array {
+	public static function get_keyword_overlap( int $limit = 50, int $property_id = 0 ): array {
+		$property_id = $property_id ?: Property::get_active_property_id();
+
 		global $wpdb;
 
-		$latest_date = $wpdb->get_var(
+		$latest_date = $wpdb->get_var( $wpdb->prepare(
 			"SELECT MAX(snapshot_date) FROM {$wpdb->prefix}sf_keywords
-			WHERE source = 'gsc'"
-		);
+			WHERE source = 'gsc' AND property_id = %d",
+			$property_id
+		) );
 
 		if ( ! $latest_date ) {
 			return [];
 		}
 
-		$competitors = self::get_all();
+		$competitors = self::get_all( $property_id );
 		if ( empty( $competitors ) ) {
 			return [];
 		}
@@ -126,11 +138,12 @@ class Competitors {
 				ON k.query = ck.query
 			INNER JOIN {$wpdb->prefix}sf_competitors c
 				ON ck.competitor_id = c.id
-			WHERE k.source = 'gsc' AND k.snapshot_date = %s
+			WHERE k.source = 'gsc' AND k.snapshot_date = %s AND k.property_id = %d
 				AND ck.snapshot_date = %s
 			ORDER BY k.clicks DESC
 			LIMIT %d",
 			$latest_date,
+			$property_id,
 			$comp_latest,
 			$limit
 		), ARRAY_A );
@@ -141,15 +154,18 @@ class Competitors {
 	/**
 	 * Get keywords where competitors rank but you don't (content gaps).
 	 */
-	public static function get_competitor_only_keywords( int $limit = 50 ): array {
+	public static function get_competitor_only_keywords( int $limit = 50, int $property_id = 0 ): array {
+		$property_id = $property_id ?: Property::get_active_property_id();
+
 		global $wpdb;
 
-		$latest_date = $wpdb->get_var(
+		$latest_date = $wpdb->get_var( $wpdb->prepare(
 			"SELECT MAX(snapshot_date) FROM {$wpdb->prefix}sf_keywords
-			WHERE source = 'gsc'"
-		);
+			WHERE source = 'gsc' AND property_id = %d",
+			$property_id
+		) );
 
-		$competitors = self::get_all();
+		$competitors = self::get_all( $property_id );
 		if ( empty( $competitors ) ) {
 			return [];
 		}
@@ -177,7 +193,7 @@ class Competitors {
 			INNER JOIN {$wpdb->prefix}sf_competitors c
 				ON ck.competitor_id = c.id
 			LEFT JOIN {$wpdb->prefix}sf_keywords k
-				ON ck.query = k.query AND k.source = 'gsc' AND k.snapshot_date = %s
+				ON ck.query = k.query AND k.source = 'gsc' AND k.snapshot_date = %s AND k.property_id = %d
 			WHERE ck.snapshot_date = %s
 				AND ck.competitor_id IN ({$placeholders})
 				AND k.id IS NULL
@@ -185,6 +201,7 @@ class Competitors {
 			ORDER BY ck.position ASC
 			LIMIT %d",
 			$latest_date ?: '1970-01-01',
+			$property_id,
 			$comp_latest,
 			...$comp_ids,
 			$limit
@@ -198,13 +215,16 @@ class Competitors {
 	 *
 	 * Visibility = sum of (1/position) for all keywords in top 100.
 	 */
-	public static function get_visibility_comparison(): array {
+	public static function get_visibility_comparison( int $property_id = 0 ): array {
+		$property_id = $property_id ?: Property::get_active_property_id();
+
 		global $wpdb;
 
-		$latest_date = $wpdb->get_var(
+		$latest_date = $wpdb->get_var( $wpdb->prepare(
 			"SELECT MAX(snapshot_date) FROM {$wpdb->prefix}sf_keywords
-			WHERE source = 'gsc'"
-		);
+			WHERE source = 'gsc' AND property_id = %d",
+			$property_id
+		) );
 
 		// Your visibility.
 		$your_visibility = 0.0;
@@ -212,15 +232,17 @@ class Competitors {
 			$your_visibility = (float) $wpdb->get_var( $wpdb->prepare(
 				"SELECT SUM(1.0 / GREATEST(position, 1))
 				FROM {$wpdb->prefix}sf_keywords
-				WHERE source = 'gsc' AND snapshot_date = %s AND position <= 100",
-				$latest_date
+				WHERE source = 'gsc' AND snapshot_date = %s AND position <= 100 AND property_id = %d",
+				$latest_date,
+				$property_id
 			) );
 		}
 
 		$your_keywords = $latest_date ? (int) $wpdb->get_var( $wpdb->prepare(
 			"SELECT COUNT(DISTINCT query) FROM {$wpdb->prefix}sf_keywords
-			WHERE source = 'gsc' AND snapshot_date = %s",
-			$latest_date
+			WHERE source = 'gsc' AND snapshot_date = %s AND property_id = %d",
+			$latest_date,
+			$property_id
 		) ) : 0;
 
 		$result = [
@@ -231,7 +253,7 @@ class Competitors {
 			'competitors' => [],
 		];
 
-		$competitors = self::get_all();
+		$competitors = self::get_all( $property_id );
 		foreach ( $competitors as $comp ) {
 			$comp_latest = $wpdb->get_var( $wpdb->prepare(
 				"SELECT MAX(snapshot_date) FROM {$wpdb->prefix}sf_competitor_keywords
@@ -276,12 +298,15 @@ class Competitors {
 	 * Uses GSC to find keywords where competitor pages appear by checking
 	 * linked search queries that show competitor URLs in the results.
 	 */
-	public static function sync_from_gsc( int $competitor_id ): int {
+	public static function sync_from_gsc( int $competitor_id, int $property_id = 0 ): int {
+		$property_id = $property_id ?: Property::get_active_property_id();
+
 		global $wpdb;
 
 		$comp = $wpdb->get_row( $wpdb->prepare(
-			"SELECT * FROM {$wpdb->prefix}sf_competitors WHERE id = %d",
-			$competitor_id
+			"SELECT * FROM {$wpdb->prefix}sf_competitors WHERE id = %d AND property_id = %d",
+			$competitor_id,
+			$property_id
 		), ARRAY_A );
 
 		if ( ! $comp ) {
@@ -292,10 +317,11 @@ class Competitors {
 		// also appears. We create simulated position data based on
 		// impressions (higher impressions = likely better ranking).
 		// In production, this would use a 3rd-party SERP API.
-		$latest_date = $wpdb->get_var(
+		$latest_date = $wpdb->get_var( $wpdb->prepare(
 			"SELECT MAX(snapshot_date) FROM {$wpdb->prefix}sf_keywords
-			WHERE source = 'gsc'"
-		);
+			WHERE source = 'gsc' AND property_id = %d",
+			$property_id
+		) );
 
 		if ( ! $latest_date ) {
 			return 0;
@@ -305,10 +331,11 @@ class Competitors {
 		$our_keywords = $wpdb->get_results( $wpdb->prepare(
 			"SELECT DISTINCT query, position
 			FROM {$wpdb->prefix}sf_keywords
-			WHERE source = 'gsc' AND snapshot_date = %s AND position <= 50
+			WHERE source = 'gsc' AND snapshot_date = %s AND position <= 50 AND property_id = %d
 			ORDER BY impressions DESC
 			LIMIT 200",
-			$latest_date
+			$latest_date,
+			$property_id
 		), ARRAY_A );
 
 		if ( empty( $our_keywords ) ) {

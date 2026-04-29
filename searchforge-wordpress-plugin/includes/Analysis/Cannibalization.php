@@ -2,6 +2,8 @@
 
 namespace SearchForge\Analysis;
 
+use SearchForge\Models\Property;
+
 defined( 'ABSPATH' ) || exit;
 
 /**
@@ -17,12 +19,15 @@ class Cannibalization {
 	 *
 	 * @return array  [ [ 'query' => ..., 'pages' => [...], 'severity' => ... ], ... ]
 	 */
-	public static function detect( int $limit = 50 ): array {
+	public static function detect( int $limit = 50, int $property_id = 0 ): array {
+		$property_id = $property_id ?: Property::get_active_property_id();
+
 		global $wpdb;
 
-		$latest_date = $wpdb->get_var(
-			"SELECT MAX(snapshot_date) FROM {$wpdb->prefix}sf_keywords WHERE source = 'gsc'"
-		);
+		$latest_date = $wpdb->get_var( $wpdb->prepare(
+			"SELECT MAX(snapshot_date) FROM {$wpdb->prefix}sf_keywords WHERE source = 'gsc' AND property_id = %d",
+			$property_id
+		) );
 
 		if ( ! $latest_date ) {
 			return [];
@@ -33,12 +38,13 @@ class Cannibalization {
 			"SELECT query, COUNT(DISTINCT page_path) AS page_count,
 				SUM(clicks) AS total_clicks, SUM(impressions) AS total_impressions
 			FROM {$wpdb->prefix}sf_keywords
-			WHERE source = 'gsc' AND snapshot_date = %s
+			WHERE source = 'gsc' AND snapshot_date = %s AND property_id = %d
 			GROUP BY query
 			HAVING page_count >= 2
 			ORDER BY total_impressions DESC
 			LIMIT %d",
 			$latest_date,
+			$property_id,
 			$limit
 		), ARRAY_A );
 
@@ -52,10 +58,11 @@ class Cannibalization {
 			$pages = $wpdb->get_results( $wpdb->prepare(
 				"SELECT page_path, clicks, impressions, position, ctr
 				FROM {$wpdb->prefix}sf_keywords
-				WHERE source = 'gsc' AND snapshot_date = %s AND query = %s
+				WHERE source = 'gsc' AND snapshot_date = %s AND query = %s AND property_id = %d
 				ORDER BY position ASC",
 				$latest_date,
-				$candidate['query']
+				$candidate['query'],
+				$property_id
 			), ARRAY_A );
 
 			// Calculate severity based on position spread and click distribution.

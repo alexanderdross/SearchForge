@@ -3,6 +3,7 @@
 namespace SearchForge\Trends;
 
 use SearchForge\Admin\Settings;
+use SearchForge\Models\Property;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -13,7 +14,9 @@ class Engine {
 	 *
 	 * Returns weekly snapshots with change percentages and decay detection.
 	 */
-	public static function get_page_trend( string $page_path, string $source = 'gsc' ): ?array {
+	public static function get_page_trend( string $page_path, string $source = 'gsc', int $property_id = 0 ): ?array {
+		$property_id = $property_id ?: Property::get_active_property_id();
+
 		global $wpdb;
 
 		if ( ! Settings::is_pro() ) {
@@ -34,12 +37,13 @@ class Engine {
 				YEARWEEK(snapshot_date, 1) as yearweek
 			FROM {$wpdb->prefix}sf_snapshots
 			WHERE page_path = %s AND source = %s AND device = 'all'
-				AND snapshot_date >= %s
+				AND snapshot_date >= %s AND property_id = %d
 			GROUP BY yearweek
 			ORDER BY yearweek ASC",
 			$page_path,
 			$source,
-			$cutoff
+			$cutoff,
+			$property_id
 		), ARRAY_A );
 
 		if ( count( $snapshots ) < 2 ) {
@@ -86,7 +90,9 @@ class Engine {
 	 *
 	 * @return array|null  [ 'current' => [...], 'previous' => [...], 'changes' => [...] ]
 	 */
-	public static function get_yoy_comparison( string $page_path, string $source = 'gsc' ): ?array {
+	public static function get_yoy_comparison( string $page_path, string $source = 'gsc', int $property_id = 0 ): ?array {
+		$property_id = $property_id ?: Property::get_active_property_id();
+
 		global $wpdb;
 
 		if ( ! Settings::is_pro() ) {
@@ -106,11 +112,12 @@ class Engine {
 				AVG(position) as position, AVG(ctr) as ctr
 			FROM {$wpdb->prefix}sf_snapshots
 			WHERE page_path = %s AND source = %s AND device = 'all'
-				AND snapshot_date BETWEEN %s AND %s",
+				AND snapshot_date BETWEEN %s AND %s AND property_id = %d",
 			$page_path,
 			$source,
 			$start,
-			$end
+			$end,
+			$property_id
 		), ARRAY_A );
 
 		$previous = $wpdb->get_row( $wpdb->prepare(
@@ -118,11 +125,12 @@ class Engine {
 				AVG(position) as position, AVG(ctr) as ctr
 			FROM {$wpdb->prefix}sf_snapshots
 			WHERE page_path = %s AND source = %s AND device = 'all'
-				AND snapshot_date BETWEEN %s AND %s",
+				AND snapshot_date BETWEEN %s AND %s AND property_id = %d",
 			$page_path,
 			$source,
 			$prev_start,
-			$prev_end
+			$prev_end,
+			$property_id
 		), ARRAY_A );
 
 		if ( ! $previous || ! (int) $previous['clicks'] ) {
@@ -148,7 +156,9 @@ class Engine {
 	 *
 	 * @return array  List of [ 'page_path' => ..., 'decline_pct' => ..., ... ]
 	 */
-	public static function get_decaying_pages( string $source = 'gsc', int $limit = 20 ): array {
+	public static function get_decaying_pages( string $source = 'gsc', int $limit = 20, int $property_id = 0 ): array {
+		$property_id = $property_id ?: Property::get_active_property_id();
+
 		global $wpdb;
 
 		$recent_end   = gmdate( 'Y-m-d', strtotime( '-2 days' ) );
@@ -168,14 +178,14 @@ class Engine {
 				SELECT page_path, SUM(clicks) AS clicks, AVG(position) AS position
 				FROM {$wpdb->prefix}sf_snapshots
 				WHERE source = %s AND device = 'all'
-					AND snapshot_date BETWEEN %s AND %s
+					AND snapshot_date BETWEEN %s AND %s AND property_id = %d
 				GROUP BY page_path
 			) r
 			INNER JOIN (
 				SELECT page_path, SUM(clicks) AS clicks, AVG(position) AS position
 				FROM {$wpdb->prefix}sf_snapshots
 				WHERE source = %s AND device = 'all'
-					AND snapshot_date BETWEEN %s AND %s
+					AND snapshot_date BETWEEN %s AND %s AND property_id = %d
 				GROUP BY page_path
 			) p ON r.page_path = p.page_path
 			WHERE p.clicks > 5 AND r.clicks < p.clicks
@@ -184,9 +194,11 @@ class Engine {
 			$source,
 			$recent_start,
 			$recent_end,
+			$property_id,
 			$source,
 			$prev_start,
 			$prev_end,
+			$property_id,
 			$limit
 		), ARRAY_A );
 
@@ -198,7 +210,9 @@ class Engine {
 	 *
 	 * @return array
 	 */
-	public static function get_new_keyword_pages( string $source = 'gsc', int $days = 7 ): array {
+	public static function get_new_keyword_pages( string $source = 'gsc', int $days = 7, int $property_id = 0 ): array {
+		$property_id = $property_id ?: Property::get_active_property_id();
+
 		global $wpdb;
 
 		$recent_date = gmdate( 'Y-m-d', strtotime( "-{$days} days" ) );
@@ -209,16 +223,18 @@ class Engine {
 			FROM {$wpdb->prefix}sf_keywords r
 			LEFT JOIN {$wpdb->prefix}sf_keywords p
 				ON r.query = p.query AND r.page_path = p.page_path
-				AND p.source = %s AND p.snapshot_date = %s
-			WHERE r.source = %s AND r.snapshot_date >= %s AND p.id IS NULL
+				AND p.source = %s AND p.snapshot_date = %s AND p.property_id = %d
+			WHERE r.source = %s AND r.snapshot_date >= %s AND r.property_id = %d AND p.id IS NULL
 			GROUP BY r.page_path
 			HAVING new_keywords > 0
 			ORDER BY new_keywords DESC
 			LIMIT 20",
 			$source,
 			$prev_date,
+			$property_id,
 			$source,
-			$recent_date
+			$recent_date,
+			$property_id
 		), ARRAY_A );
 
 		return $results ?: [];

@@ -11,39 +11,52 @@ class Client {
 	private const API_BASE = 'https://ssl.bing.com/webmaster/api.svc/json';
 
 	/**
-	 * Get the API key from settings.
+	 * Get the API key from property config or global settings.
+	 *
+	 * @param array|null $property Optional property config array.
 	 */
-	private static function get_api_key(): string {
+	private static function get_api_key( ?array $property = null ): string {
+		if ( $property && ! empty( $property['bing_api_key'] ) ) {
+			return $property['bing_api_key'];
+		}
 		return Settings::get( 'bing_api_key', '' );
 	}
 
 	/**
-	 * Get the configured site URL.
+	 * Get the configured site URL from property config or global settings.
+	 *
+	 * @param array|null $property Optional property config array.
 	 */
-	private static function get_site_url(): string {
+	private static function get_site_url_from_config( ?array $property = null ): string {
+		if ( $property && ! empty( $property['bing_site_url'] ) ) {
+			return $property['bing_site_url'];
+		}
 		return Settings::get( 'bing_site_url', '' );
 	}
 
 	/**
 	 * Verify the site is registered in Bing Webmaster Tools.
 	 *
+	 * @param array|null $property Optional property config array.
 	 * @return array|\WP_Error
 	 */
-	public static function get_sites(): array|\WP_Error {
-		return self::api_get( '/GetUserSites' );
+	public static function get_sites( ?array $property = null ): array|\WP_Error {
+		return self::api_get( '/GetUserSites', [], $property );
 	}
 
 	/**
 	 * Get page-level traffic data (query stats grouped by page).
 	 *
+	 * @param string     $site_url Site URL. Empty = use config.
+	 * @param array|null $property Optional property config array.
 	 * @return array|\WP_Error
 	 */
-	public static function get_page_stats( string $site_url = '' ): array|\WP_Error {
+	public static function get_page_stats( string $site_url = '', ?array $property = null ): array|\WP_Error {
 		if ( ! $site_url ) {
-			$site_url = self::get_site_url();
+			$site_url = self::get_site_url_from_config( $property );
 		}
 
-		$result = self::api_get( '/GetPageStats', [ 'siteUrl' => $site_url ] );
+		$result = self::api_get( '/GetPageStats', [ 'siteUrl' => $site_url ], $property );
 		if ( is_wp_error( $result ) ) {
 			return $result;
 		}
@@ -54,14 +67,16 @@ class Client {
 	/**
 	 * Get query-level traffic data.
 	 *
+	 * @param string     $site_url Site URL. Empty = use config.
+	 * @param array|null $property Optional property config array.
 	 * @return array|\WP_Error
 	 */
-	public static function get_query_stats( string $site_url = '' ): array|\WP_Error {
+	public static function get_query_stats( string $site_url = '', ?array $property = null ): array|\WP_Error {
 		if ( ! $site_url ) {
-			$site_url = self::get_site_url();
+			$site_url = self::get_site_url_from_config( $property );
 		}
 
-		$result = self::api_get( '/GetQueryStats', [ 'siteUrl' => $site_url ] );
+		$result = self::api_get( '/GetQueryStats', [ 'siteUrl' => $site_url ], $property );
 		if ( is_wp_error( $result ) ) {
 			return $result;
 		}
@@ -72,39 +87,47 @@ class Client {
 	/**
 	 * Get page traffic data for a specific page.
 	 *
+	 * @param string     $page_url  Page URL.
+	 * @param string     $site_url  Site URL. Empty = use config.
+	 * @param array|null $property  Optional property config array.
 	 * @return array|\WP_Error
 	 */
-	public static function get_page_query_stats( string $page_url, string $site_url = '' ): array|\WP_Error {
+	public static function get_page_query_stats( string $page_url, string $site_url = '', ?array $property = null ): array|\WP_Error {
 		if ( ! $site_url ) {
-			$site_url = self::get_site_url();
+			$site_url = self::get_site_url_from_config( $property );
 		}
 
 		return self::api_get( '/GetPageQueryStats', [
 			'siteUrl' => $site_url,
 			'page'    => $page_url,
-		] );
+		], $property );
 	}
 
 	/**
 	 * Get ranking data for keywords.
 	 *
+	 * @param string     $site_url  Site URL. Empty = use config.
+	 * @param array|null $property  Optional property config array.
 	 * @return array|\WP_Error
 	 */
-	public static function get_rank_and_traffic_stats( string $site_url = '' ): array|\WP_Error {
+	public static function get_rank_and_traffic_stats( string $site_url = '', ?array $property = null ): array|\WP_Error {
 		if ( ! $site_url ) {
-			$site_url = self::get_site_url();
+			$site_url = self::get_site_url_from_config( $property );
 		}
 
-		return self::api_get( '/GetRankAndTrafficStats', [ 'siteUrl' => $site_url ] );
+		return self::api_get( '/GetRankAndTrafficStats', [ 'siteUrl' => $site_url ], $property );
 	}
 
 	/**
 	 * Make a GET request to the Bing Webmaster API.
 	 *
+	 * @param string     $endpoint API endpoint path.
+	 * @param array      $params   Query parameters.
+	 * @param array|null $property Optional property config for API key.
 	 * @return array|\WP_Error
 	 */
-	private static function api_get( string $endpoint, array $params = [] ): array|\WP_Error {
-		$api_key = self::get_api_key();
+	private static function api_get( string $endpoint, array $params = [], ?array $property = null ): array|\WP_Error {
+		$api_key = self::get_api_key( $property );
 		if ( empty( $api_key ) ) {
 			return new \WP_Error( 'no_api_key', __( 'Bing API key not configured.', 'searchforge' ) );
 		}

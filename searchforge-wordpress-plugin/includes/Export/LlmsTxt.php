@@ -3,6 +3,7 @@
 namespace SearchForge\Export;
 
 use SearchForge\Admin\Settings;
+use SearchForge\Models\Property;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -71,7 +72,9 @@ class LlmsTxt {
 	/**
 	 * Generate llms-full.txt — includes SEO data if Pro.
 	 */
-	private function generate_full(): string {
+	private function generate_full( int $property_id = 0 ): string {
+		$property_id = $property_id ?: Property::get_active_property_id();
+
 		$txt = $this->generate_basic();
 
 		if ( ! Settings::is_pro() ) {
@@ -82,9 +85,10 @@ class LlmsTxt {
 
 		global $wpdb;
 
-		$latest_date = $wpdb->get_var(
-			"SELECT MAX(snapshot_date) FROM {$wpdb->prefix}sf_snapshots WHERE source = 'gsc'"
-		);
+		$latest_date = $wpdb->get_var( $wpdb->prepare(
+			"SELECT MAX(snapshot_date) FROM {$wpdb->prefix}sf_snapshots WHERE source = 'gsc' AND property_id = %d",
+			$property_id
+		) );
 
 		if ( ! $latest_date ) {
 			return $txt;
@@ -93,10 +97,11 @@ class LlmsTxt {
 		$top_pages = $wpdb->get_results( $wpdb->prepare(
 			"SELECT page_path, clicks, impressions, position
 			FROM {$wpdb->prefix}sf_snapshots
-			WHERE source = 'gsc' AND snapshot_date = %s AND device = 'all'
+			WHERE source = 'gsc' AND snapshot_date = %s AND device = 'all' AND property_id = %d
 			ORDER BY clicks DESC
 			LIMIT 50",
-			$latest_date
+			$latest_date,
+			$property_id
 		), ARRAY_A );
 
 		if ( empty( $top_pages ) ) {
@@ -121,11 +126,12 @@ class LlmsTxt {
 		$top_keywords = $wpdb->get_results( $wpdb->prepare(
 			"SELECT query, SUM(clicks) as clicks, AVG(position) as position
 			FROM {$wpdb->prefix}sf_keywords
-			WHERE source = 'gsc' AND snapshot_date = %s
+			WHERE source = 'gsc' AND snapshot_date = %s AND property_id = %d
 			GROUP BY query
 			ORDER BY clicks DESC
 			LIMIT 30",
-			$latest_date
+			$latest_date,
+			$property_id
 		), ARRAY_A );
 
 		if ( ! empty( $top_keywords ) ) {

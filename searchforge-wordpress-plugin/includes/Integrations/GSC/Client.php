@@ -14,10 +14,11 @@ class Client {
 	/**
 	 * List verified sites/properties.
 	 *
+	 * @param array|null $property Optional property config for per-property tokens.
 	 * @return array|\WP_Error
 	 */
-	public static function list_sites(): array|\WP_Error {
-		$token = OAuth::get_access_token();
+	public static function list_sites( ?array $property = null ): array|\WP_Error {
+		$token = OAuth::get_access_token( $property );
 		if ( is_wp_error( $token ) ) {
 			return $token;
 		}
@@ -43,12 +44,13 @@ class Client {
 	/**
 	 * Query Search Analytics.
 	 *
-	 * @param string $property  Site URL (e.g., "https://example.com/")
-	 * @param array  $params    Query parameters.
+	 * @param string     $property  Site URL (e.g., "https://example.com/")
+	 * @param array      $params    Query parameters.
+	 * @param array|null $prop_config Optional property config for per-property tokens.
 	 * @return array|\WP_Error
 	 */
-	public static function search_analytics( string $property, array $params ): array|\WP_Error {
-		$token = OAuth::get_access_token();
+	public static function search_analytics( string $property, array $params, ?array $prop_config = null ): array|\WP_Error {
+		$token = OAuth::get_access_token( $prop_config );
 		if ( is_wp_error( $token ) ) {
 			return $token;
 		}
@@ -90,9 +92,10 @@ class Client {
 	/**
 	 * Get page-level data (clicks, impressions, CTR, position).
 	 *
+	 * @param array|null $prop_config Optional property config for per-property tokens.
 	 * @return array|\WP_Error  Array of [ 'page' => ..., 'clicks' => ..., ... ]
 	 */
-	public static function get_page_data( string $property, string $start_date, string $end_date, int $limit = 1000 ): array|\WP_Error {
+	public static function get_page_data( string $property, string $start_date, string $end_date, int $limit = 1000, ?array $prop_config = null ): array|\WP_Error {
 		$all_rows  = [];
 		$start_row = 0;
 
@@ -103,7 +106,7 @@ class Client {
 				'dimensions' => [ 'page' ],
 				'rowLimit'   => min( $limit - count( $all_rows ), 1000 ),
 				'startRow'   => $start_row,
-			] );
+			], $prop_config );
 
 			if ( is_wp_error( $rows ) ) {
 				return $rows;
@@ -136,9 +139,10 @@ class Client {
 	/**
 	 * Get keyword data for a specific page or all pages.
 	 *
+	 * @param array|null $prop_config Optional property config for per-property tokens.
 	 * @return array|\WP_Error
 	 */
-	public static function get_keyword_data( string $property, string $start_date, string $end_date, string $page_url = '', int $limit = 5000 ): array|\WP_Error {
+	public static function get_keyword_data( string $property, string $start_date, string $end_date, string $page_url = '', int $limit = 5000, ?array $prop_config = null ): array|\WP_Error {
 		$all_rows  = [];
 		$start_row = 0;
 
@@ -164,7 +168,7 @@ class Client {
 			$params['startRow'] = $start_row;
 			$params['rowLimit'] = min( $limit - count( $all_rows ), 1000 );
 
-			$rows = self::search_analytics( $property, $params );
+			$rows = self::search_analytics( $property, $params, $prop_config );
 
 			if ( is_wp_error( $rows ) ) {
 				return $rows;

@@ -131,51 +131,56 @@ class Menu {
 		);
 	}
 
+	private function render_template( string $template ): void {
+		include SEARCHFORGE_PATH . 'templates/' . $template;
+		include SEARCHFORGE_PATH . 'templates/partials/admin-footer.php';
+	}
+
 	public function render_dashboard(): void {
-		include SEARCHFORGE_PATH . 'templates/dashboard.php';
+		$this->render_template( 'dashboard.php' );
 	}
 
 	public function render_pages(): void {
-		include SEARCHFORGE_PATH . 'templates/pages.php';
+		$this->render_template( 'pages.php' );
 	}
 
 	public function render_keywords(): void {
-		include SEARCHFORGE_PATH . 'templates/keywords.php';
+		$this->render_template( 'keywords.php' );
 	}
 
 	public function render_analysis(): void {
-		include SEARCHFORGE_PATH . 'templates/analysis.php';
+		$this->render_template( 'analysis.php' );
 	}
 
 	public function render_monitoring(): void {
-		include SEARCHFORGE_PATH . 'templates/monitoring.php';
+		$this->render_template( 'monitoring.php' );
 	}
 
 	public function render_export(): void {
-		include SEARCHFORGE_PATH . 'templates/export.php';
+		$this->render_template( 'export.php' );
 	}
 
 	public function render_settings(): void {
-		include SEARCHFORGE_PATH . 'templates/settings.php';
+		$this->render_template( 'settings.php' );
 	}
 
 	public function render_competitors(): void {
-		include SEARCHFORGE_PATH . 'templates/competitors.php';
+		$this->render_template( 'competitors.php' );
 	}
 
 	public function render_page_detail(): void {
-		include SEARCHFORGE_PATH . 'templates/page-detail.php';
+		$this->render_template( 'page-detail.php' );
 	}
 
 	public function render_instructions(): void {
-		include SEARCHFORGE_PATH . 'templates/instructions.php';
+		$this->render_template( 'instructions.php' );
 	}
 
 	public function render_comparison(): void {
-		include SEARCHFORGE_PATH . 'templates/comparison.php';
+		$this->render_template( 'comparison.php' );
 	}
 
 	public function render_merger(): void {
-		include SEARCHFORGE_PATH . 'templates/merger-analysis.php';
+		$this->render_template( 'merger-analysis.php' );
 	}
 }

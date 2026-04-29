@@ -1010,3 +1010,22 @@
 		transition-duration: 0.01ms !important;
 	}
 }
+
+/* Admin Footer */
+.sf-admin-footer {
+	margin-top: 40px;
+	padding: 16px 0;
+	border-top: 1px solid #dcdcde;
+	text-align: center;
+	color: #787c82;
+	font-size: 13px;
+}
+.sf-admin-footer a {
+	color: #0f766e;
+	text-decoration: none;
+	font-weight: 600;
+}
+.sf-admin-footer a:hover {
+	color: #0d5f59;
+	text-decoration: underline;
+}

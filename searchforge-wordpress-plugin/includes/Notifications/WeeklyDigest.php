@@ -45,6 +45,7 @@ class WeeklyDigest {
 
 		// Alert count from last 7 days.
 		global $wpdb;
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 		$alert_count = (int) $wpdb->get_var( $wpdb->prepare(
 			"SELECT COUNT(*) FROM {$wpdb->prefix}sf_alerts
 			WHERE created_at >= DATE_SUB(NOW(), INTERVAL 7 DAY) AND property_id = %d",
@@ -56,7 +57,7 @@ class WeeklyDigest {
 
 		$subject = sprintf(
 			/* translators: %s: site name */
-			__( '[SearchForge] Weekly SEO Digest — %s', 'searchforge' ),
+			__( '[SearchForge] Weekly SEO Digest — %s', 'searchforge-wordpress-plugin' ),
 			$site_name
 		);
 
@@ -165,13 +166,13 @@ class WeeklyDigest {
 					<?php if ( $data['alert_count'] > 0 ) : ?>
 						<p>
 							<span class="alert-count"><?php echo esc_html( $data['alert_count'] ); ?></span>
-							<?php esc_html_e( 'new alert(s) this week.', 'searchforge' ); ?>
+							<?php esc_html_e( 'new alert(s) this week.', 'searchforge-wordpress-plugin' ); ?>
 						</p>
 					<?php endif; ?>
 
 					<!-- Top Pages -->
 					<?php if ( ! empty( $data['top_pages'] ) ) : ?>
-						<h2><?php esc_html_e( 'Top Pages', 'searchforge' ); ?></h2>
+						<h2><?php esc_html_e( 'Top Pages', 'searchforge-wordpress-plugin' ); ?></h2>
 						<table>
 							<thead>
 								<tr>
@@ -194,7 +195,7 @@ class WeeklyDigest {
 
 					<!-- Content Decay -->
 					<?php if ( ! empty( $data['decaying'] ) ) : ?>
-						<h2><?php esc_html_e( 'Content Decay Warning', 'searchforge' ); ?></h2>
+						<h2><?php esc_html_e( 'Content Decay Warning', 'searchforge-wordpress-plugin' ); ?></h2>
 						<table>
 							<thead>
 								<tr>
@@ -215,19 +216,21 @@ class WeeklyDigest {
 
 					<p style="text-align:center;margin:24px 0 0;">
 						<a href="<?php echo esc_url( admin_url( 'admin.php?page=searchforge' ) ); ?>" class="btn">
-							<?php esc_html_e( 'View Full Dashboard', 'searchforge' ); ?>
+							<?php esc_html_e( 'View Full Dashboard', 'searchforge-wordpress-plugin' ); ?>
 						</a>
 					</p>
 				</div>
 
 				<div class="footer">
-					<?php echo esc_html( sprintf(
-						__( 'SearchForge v%s — %s', 'searchforge' ),
+					<?php
+					/* translators: %1$s: plugin version number, %2$s: site URL */
+					echo esc_html( sprintf(
+						__( 'SearchForge v%1$s — %2$s', 'searchforge-wordpress-plugin' ),
 						SEARCHFORGE_VERSION,
 						$data['site_url']
 					) ); ?>
 					<br>
-					<?php esc_html_e( 'You can disable this digest in SearchForge > Settings > Alerts.', 'searchforge' ); ?>
+					<?php esc_html_e( 'You can disable this digest in SearchForge > Settings > Alerts.', 'searchforge-wordpress-plugin' ); ?>
 				</div>
 			</div>
 		</body>

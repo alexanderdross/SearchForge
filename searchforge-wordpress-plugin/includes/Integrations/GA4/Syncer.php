@@ -31,17 +31,17 @@ class Syncer {
 	 */
 	public function sync(): array|\WP_Error {
 		if ( ! Settings::is_pro() ) {
-			return new \WP_Error( 'not_pro', __( 'GA4 integration requires a Pro license.', 'searchforge' ) );
+			return new \WP_Error( 'not_pro', __( 'GA4 integration requires a Pro license.', 'searchforge-wordpress-plugin' ) );
 		}
 
 		$prop = Property::get( $this->property_id );
 		if ( ! $prop ) {
-			return new \WP_Error( 'no_property', __( 'Property not found.', 'searchforge' ) );
+			return new \WP_Error( 'no_property', __( 'Property not found.', 'searchforge-wordpress-plugin' ) );
 		}
 
 		$ga4_property_id = $prop['ga4_property_id'] ?? '';
 		if ( empty( $ga4_property_id ) ) {
-			return new \WP_Error( 'no_ga4', __( 'GA4 property ID not configured.', 'searchforge' ) );
+			return new \WP_Error( 'no_ga4', __( 'GA4 property ID not configured.', 'searchforge-wordpress-plugin' ) );
 		}
 
 		global $wpdb;
@@ -68,6 +68,7 @@ class Syncer {
 				$organic = $landing_data[ $path ] ?? [];
 
 				// Delete existing data for this date + path + property.
+				// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
 				$wpdb->query( $wpdb->prepare(
 					"DELETE FROM {$table} WHERE page_path = %s AND snapshot_date = %s AND property_id = %d",
 					$path,
@@ -75,6 +76,7 @@ class Syncer {
 					$this->property_id
 				) );
 
+				// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
 				$wpdb->insert( $table, [
 					'page_path'           => $path,
 					'snapshot_date'       => $today,
@@ -93,13 +95,16 @@ class Syncer {
 				$synced++;
 			}
 
+			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
 			$wpdb->query( 'COMMIT' );
 		} catch ( \Throwable $e ) {
+			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
 			$wpdb->query( 'ROLLBACK' );
 			throw $e;
 		}
 
 		// Log the sync.
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
 		$wpdb->insert( $wpdb->prefix . 'sf_sync_log', [
 			'source'          => 'ga4',
 			'status'          => 'completed',
@@ -119,6 +124,7 @@ class Syncer {
 	public static function get_page_behavior( string $page_path ): ?array {
 		global $wpdb;
 
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 		return $wpdb->get_row( $wpdb->prepare(
 			"SELECT * FROM {$wpdb->prefix}sf_ga4_metrics
 			WHERE page_path = %s

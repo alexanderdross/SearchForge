@@ -24,6 +24,7 @@ class Cannibalization {
 
 		global $wpdb;
 
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 		$latest_date = $wpdb->get_var( $wpdb->prepare(
 			"SELECT MAX(snapshot_date) FROM {$wpdb->prefix}sf_keywords WHERE source = 'gsc' AND property_id = %d",
 			$property_id
@@ -34,6 +35,7 @@ class Cannibalization {
 		}
 
 		// Find queries ranking for 2+ different pages.
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 		$candidates = $wpdb->get_results( $wpdb->prepare(
 			"SELECT query, COUNT(DISTINCT page_path) AS page_count,
 				SUM(clicks) AS total_clicks, SUM(impressions) AS total_impressions
@@ -55,6 +57,7 @@ class Cannibalization {
 		$results = [];
 
 		foreach ( $candidates as $candidate ) {
+			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 			$pages = $wpdb->get_results( $wpdb->prepare(
 				"SELECT page_path, clicks, impressions, position, ctr
 				FROM {$wpdb->prefix}sf_keywords

@@ -69,13 +69,13 @@ class AuditLog {
 	}
 
 	public function on_export(): void {
-		$type   = sanitize_text_field( $_POST['export_type'] ?? 'unknown' );
-		$format = sanitize_text_field( $_POST['export_format'] ?? 'unknown' );
+		$type   = sanitize_text_field( wp_unslash( $_POST['export_type'] ?? 'unknown' ) );
+		$format = sanitize_text_field( wp_unslash( $_POST['export_format'] ?? 'unknown' ) );
 		self::log( 'data_export', "Exported {$type} as {$format}" );
 	}
 
 	public function on_alert_dismissed(): void {
-		$alert_id = absint( $_POST['alert_id'] ?? 0 );
+		$alert_id = absint( wp_unslash( $_POST['alert_id'] ?? 0 ) );
 		if ( $alert_id ) {
 			self::log( 'alert_dismissed', "Alert #{$alert_id} dismissed" );
 		}
@@ -89,6 +89,7 @@ class AuditLog {
 
 		$user = wp_get_current_user();
 
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
 		$wpdb->insert( "{$wpdb->prefix}sf_audit_log", [
 			'user_id'    => $user->ID ?? 0,
 			'user_login' => $user->user_login ?? 'system',
@@ -121,6 +122,7 @@ class AuditLog {
 		$params[] = $limit;
 		$params[] = $offset;
 
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 		return $wpdb->get_results( $wpdb->prepare(
 			"SELECT * FROM {$wpdb->prefix}sf_audit_log
 			{$where}
@@ -137,12 +139,14 @@ class AuditLog {
 		global $wpdb;
 
 		if ( $action ) {
+			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 			return (int) $wpdb->get_var( $wpdb->prepare(
 				"SELECT COUNT(*) FROM {$wpdb->prefix}sf_audit_log WHERE action = %s",
 				$action
 			) );
 		}
 
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 		return (int) $wpdb->get_var( "SELECT COUNT(*) FROM {$wpdb->prefix}sf_audit_log" );
 	}
 
@@ -152,7 +156,7 @@ class AuditLog {
 	 * Zeroes the last octet for IPv4 and the last 80 bits for IPv6.
 	 */
 	private static function get_ip(): string {
-		$ip = $_SERVER['REMOTE_ADDR'] ?? '';
+		$ip = sanitize_text_field( wp_unslash( $_SERVER['REMOTE_ADDR'] ?? '' ) );
 		$ip = filter_var( $ip, FILTER_VALIDATE_IP ) ?: '';
 
 		if ( empty( $ip ) ) {

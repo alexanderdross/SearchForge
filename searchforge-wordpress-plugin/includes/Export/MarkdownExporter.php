@@ -19,6 +19,7 @@ class MarkdownExporter {
 
 		global $wpdb;
 
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 		$latest_date = $wpdb->get_var( $wpdb->prepare(
 			"SELECT MAX(snapshot_date) FROM {$wpdb->prefix}sf_snapshots
 			WHERE page_path = %s AND source = 'gsc' AND property_id = %d",
@@ -27,7 +28,7 @@ class MarkdownExporter {
 		) );
 
 		if ( ! $latest_date ) {
-			return new \WP_Error( 'no_data', __( 'No data found for this page.', 'searchforge' ) );
+			return new \WP_Error( 'no_data', __( 'No data found for this page.', 'searchforge-wordpress-plugin' ) );
 		}
 
 		$site_url = home_url();
@@ -95,13 +96,14 @@ class MarkdownExporter {
 
 		global $wpdb;
 
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 		$latest_date = $wpdb->get_var( $wpdb->prepare(
 			"SELECT MAX(snapshot_date) FROM {$wpdb->prefix}sf_snapshots WHERE source = 'gsc' AND property_id = %d",
 			$property_id
 		) );
 
 		if ( ! $latest_date ) {
-			return new \WP_Error( 'no_data', __( 'No GSC data available. Run a sync first.', 'searchforge' ) );
+			return new \WP_Error( 'no_data', __( 'No GSC data available. Run a sync first.', 'searchforge-wordpress-plugin' ) );
 		}
 
 		$page_limit   = Settings::get_page_limit();
@@ -121,6 +123,7 @@ class MarkdownExporter {
 
 		// Per-source site overview.
 		foreach ( $sources as $source ) {
+			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 			$totals = $wpdb->get_row( $wpdb->prepare(
 				"SELECT COUNT(DISTINCT page_path) as pages, SUM(clicks) as clicks,
 					SUM(impressions) as impressions, AVG(ctr) as ctr, AVG(position) as position
@@ -143,6 +146,7 @@ class MarkdownExporter {
 		}
 
 		// Top pages (GSC primary, Bing secondary).
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 		$pages = $wpdb->get_results( $wpdb->prepare(
 			"SELECT page_path, clicks, impressions, ctr, position
 			FROM {$wpdb->prefix}sf_snapshots
@@ -276,6 +280,7 @@ class MarkdownExporter {
 		global $wpdb;
 
 		// Keywords that appear in both engines.
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 		$shared = $wpdb->get_results( $wpdb->prepare(
 			"SELECT
 				g.query,
@@ -319,6 +324,7 @@ class MarkdownExporter {
 		}
 
 		// Bing-only keywords.
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 		$bing_only = $wpdb->get_results( $wpdb->prepare(
 			"SELECT b.query, b.clicks, b.impressions, b.position
 			FROM {$wpdb->prefix}sf_keywords b
@@ -522,6 +528,7 @@ class MarkdownExporter {
 
 		global $wpdb;
 
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 		return $wpdb->get_row( $wpdb->prepare(
 			"SELECT clicks, impressions, ctr, position
 			FROM {$wpdb->prefix}sf_snapshots
@@ -541,6 +548,7 @@ class MarkdownExporter {
 
 		global $wpdb;
 
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 		return $wpdb->get_results( $wpdb->prepare(
 			"SELECT query, clicks, impressions, ctr, position
 			FROM {$wpdb->prefix}sf_keywords

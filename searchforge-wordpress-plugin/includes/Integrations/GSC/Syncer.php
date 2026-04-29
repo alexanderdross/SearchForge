@@ -31,15 +31,16 @@ class Syncer {
 
 		$prop = Property::get( $this->property_id );
 		if ( ! $prop ) {
-			return new \WP_Error( 'no_property', __( 'Property not found.', 'searchforge' ) );
+			return new \WP_Error( 'no_property', __( 'Property not found.', 'searchforge-wordpress-plugin' ) );
 		}
 
 		$gsc_property = $prop['gsc_property'] ?? '';
 		if ( empty( $gsc_property ) ) {
-			return new \WP_Error( 'no_property', __( 'No GSC property selected.', 'searchforge' ) );
+			return new \WP_Error( 'no_property', __( 'No GSC property selected.', 'searchforge-wordpress-plugin' ) );
 		}
 
 		// Log sync start.
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
 		$wpdb->insert( "{$wpdb->prefix}sf_sync_log", [
 			'source'      => 'gsc',
 			'status'      => 'running',
@@ -77,6 +78,7 @@ class Syncer {
 			$this->cleanup_old_data();
 
 			// Log success.
+			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
 			$wpdb->update( "{$wpdb->prefix}sf_sync_log", [
 				'status'          => 'completed',
 				'pages_synced'    => $pages_synced,
@@ -101,6 +103,7 @@ class Syncer {
 		$table = "{$wpdb->prefix}sf_snapshots";
 		$count = 0;
 
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
 		$wpdb->query( 'START TRANSACTION' );
 
 		try {
@@ -109,6 +112,7 @@ class Syncer {
 				$page_path = wp_parse_url( $page_url, PHP_URL_PATH ) ?: '/';
 
 				// Upsert: delete existing for this page+date+source+property, then insert.
+				// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
 				$wpdb->query( $wpdb->prepare(
 					"DELETE FROM {$table} WHERE page_path = %s AND snapshot_date = %s AND source = 'gsc' AND device = 'all' AND property_id = %d",
 					$page_path,
@@ -116,6 +120,7 @@ class Syncer {
 					$this->property_id
 				) );
 
+				// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
 				$result = $wpdb->insert( $table, [
 					'page_url'      => $page_url,
 					'page_path'     => $page_path,
@@ -136,8 +141,10 @@ class Syncer {
 				$count++;
 			}
 
+			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
 			$wpdb->query( 'COMMIT' );
 		} catch ( \Exception $e ) {
+			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
 			$wpdb->query( 'ROLLBACK' );
 			throw $e;
 		}
@@ -150,10 +157,12 @@ class Syncer {
 		$table = "{$wpdb->prefix}sf_keywords";
 		$count = 0;
 
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
 		$wpdb->query( 'START TRANSACTION' );
 
 		try {
 			// Delete existing keywords for this snapshot date and property.
+			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
 			$wpdb->query( $wpdb->prepare(
 				"DELETE FROM {$table} WHERE snapshot_date = %s AND source = 'gsc' AND property_id = %d",
 				$snapshot_date,
@@ -163,6 +172,7 @@ class Syncer {
 			foreach ( $keywords as $kw ) {
 				$page_path = wp_parse_url( $kw['page'], PHP_URL_PATH ) ?: '/';
 
+				// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
 				$result = $wpdb->insert( $table, [
 					'page_path'     => $page_path,
 					'query'         => $kw['query'],
@@ -183,8 +193,10 @@ class Syncer {
 				$count++;
 			}
 
+			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
 			$wpdb->query( 'COMMIT' );
 		} catch ( \Exception $e ) {
+			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
 			$wpdb->query( 'ROLLBACK' );
 			throw $e;
 		}
@@ -198,12 +210,14 @@ class Syncer {
 		$retention_days = Settings::get_retention_days();
 		$cutoff         = gmdate( 'Y-m-d', strtotime( "-{$retention_days} days" ) );
 
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
 		$wpdb->query( $wpdb->prepare(
 			"DELETE FROM {$wpdb->prefix}sf_snapshots WHERE snapshot_date < %s AND property_id = %d",
 			$cutoff,
 			$this->property_id
 		) );
 
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
 		$wpdb->query( $wpdb->prepare(
 			"DELETE FROM {$wpdb->prefix}sf_keywords WHERE snapshot_date < %s AND property_id = %d",
 			$cutoff,
@@ -214,6 +228,7 @@ class Syncer {
 	private function log_failure( int $log_id, string $message ): void {
 		global $wpdb;
 
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
 		$wpdb->update( "{$wpdb->prefix}sf_sync_log", [
 			'status'        => 'failed',
 			'error_message' => $message,

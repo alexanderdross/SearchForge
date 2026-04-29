@@ -1,9 +1,10 @@
 <?php
+// phpcs:disable WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound
 defined( 'ABSPATH' ) || exit;
 
-$page_path = sanitize_text_field( $_GET['path'] ?? '' );
+$page_path = sanitize_text_field( wp_unslash( $_GET['path'] ?? '' ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 if ( empty( $page_path ) ) {
-	echo '<div class="wrap"><div class="notice notice-error"><p>' . esc_html__( 'No page path specified.', 'searchforge' ) . '</p></div></div>';
+	echo '<div class="wrap"><div class="notice notice-error"><p>' . esc_html__( 'No page path specified.', 'searchforge-wordpress-plugin' ) . '</p></div></div>';
 	return;
 }
 
@@ -11,7 +12,7 @@ $property_id = SearchForge\Models\Property::get_active_property_id();
 
 $page_data   = SearchForge\Admin\PageDetail::get_page_data( $page_path, $property_id );
 if ( ! $page_data ) {
-	echo '<div class="wrap"><div class="notice notice-warning"><p>' . esc_html__( 'No data found for this page. Run a GSC sync first.', 'searchforge' ) . '</p></div></div>';
+	echo '<div class="wrap"><div class="notice notice-warning"><p>' . esc_html__( 'No data found for this page. Run a GSC sync first.', 'searchforge-wordpress-plugin' ) . '</p></div></div>';
 	return;
 }
 
@@ -31,17 +32,19 @@ $cannibal     = $is_pro ? SearchForge\Admin\PageDetail::get_page_cannibalization
 <div class="wrap searchforge-wrap sf-page-detail">
 	<h1>
 		<a href="<?php echo esc_url( admin_url( 'admin.php?page=searchforge-pages' ) ); ?>" class="sf-back-link">
-			&larr; <?php esc_html_e( 'Pages', 'searchforge' ); ?>
+			&larr; <?php esc_html_e( 'Pages', 'searchforge-wordpress-plugin' ); ?>
 		</a>
 		<?php echo esc_html( $page_path ); ?>
-		<a href="<?php echo esc_url( home_url( $page_path ) ); ?>" target="_blank" class="sf-external-link" aria-label="<?php esc_attr_e( 'View page in new tab', 'searchforge' ); ?>">&#8599;</a>
+		<a href="<?php echo esc_url( home_url( $page_path ) ); ?>" target="_blank" class="sf-external-link" aria-label="<?php esc_attr_e( 'View page in new tab', 'searchforge-wordpress-plugin' ); ?>">&#8599;</a>
 	</h1>
 
 	<?php include SEARCHFORGE_PATH . 'templates/partials/property-selector.php'; ?>
 
 	<p class="sf-page-meta">
-		<?php echo esc_html( sprintf(
-			__( 'Data from %s', 'searchforge' ),
+		<?php
+		/* translators: %s: snapshot date */
+		echo esc_html( sprintf(
+			__( 'Data from %s', 'searchforge-wordpress-plugin' ),
 			wp_date( get_option( 'date_format' ), strtotime( $page_data['snapshot_date'] ) )
 		) ); ?>
 	</p>
@@ -49,28 +52,28 @@ $cannibal     = $is_pro ? SearchForge\Admin\PageDetail::get_page_cannibalization
 	<!-- Metric Cards -->
 	<div class="sf-cards">
 		<div class="sf-card">
-			<h3><?php esc_html_e( 'Clicks', 'searchforge' ); ?></h3>
+			<h3><?php esc_html_e( 'Clicks', 'searchforge-wordpress-plugin' ); ?></h3>
 			<span class="sf-card-value"><?php echo esc_html( number_format( $page_data['clicks'] ) ); ?></span>
 		</div>
 		<div class="sf-card">
-			<h3><?php esc_html_e( 'Impressions', 'searchforge' ); ?></h3>
+			<h3><?php esc_html_e( 'Impressions', 'searchforge-wordpress-plugin' ); ?></h3>
 			<span class="sf-card-value"><?php echo esc_html( number_format( $page_data['impressions'] ) ); ?></span>
 		</div>
 		<div class="sf-card">
-			<h3><?php esc_html_e( 'CTR', 'searchforge' ); ?></h3>
+			<h3><?php esc_html_e( 'CTR', 'searchforge-wordpress-plugin' ); ?></h3>
 			<span class="sf-card-value"><?php echo esc_html( round( $page_data['ctr'] * 100, 1 ) ); ?>%</span>
 		</div>
 		<div class="sf-card">
-			<h3><?php esc_html_e( 'Position', 'searchforge' ); ?></h3>
+			<h3><?php esc_html_e( 'Position', 'searchforge-wordpress-plugin' ); ?></h3>
 			<span class="sf-card-value"><?php echo esc_html( round( $page_data['position'], 1 ) ); ?></span>
 		</div>
 		<div class="sf-card">
-			<h3><?php esc_html_e( 'Keywords', 'searchforge' ); ?></h3>
+			<h3><?php esc_html_e( 'Keywords', 'searchforge-wordpress-plugin' ); ?></h3>
 			<span class="sf-card-value"><?php echo esc_html( count( $keywords ) ); ?></span>
 		</div>
 		<?php if ( $score ) : ?>
 			<div class="sf-card sf-card-score">
-				<h3><?php esc_html_e( 'Score', 'searchforge' ); ?></h3>
+				<h3><?php esc_html_e( 'Score', 'searchforge-wordpress-plugin' ); ?></h3>
 				<span class="sf-card-value sf-score-<?php echo $score['total'] >= 70 ? 'good' : ( $score['total'] >= 40 ? 'ok' : 'low' ); ?>">
 					<?php echo esc_html( $score['total'] ); ?>/100
 				</span>
@@ -81,11 +84,11 @@ $cannibal     = $is_pro ? SearchForge\Admin\PageDetail::get_page_cannibalization
 	<!-- Action Buttons -->
 	<div class="sf-detail-actions">
 		<button class="button sf-export-btn" data-page="<?php echo esc_attr( $page_path ); ?>">
-			<?php esc_html_e( 'Export Brief', 'searchforge' ); ?>
+			<?php esc_html_e( 'Export Brief', 'searchforge-wordpress-plugin' ); ?>
 		</button>
 		<?php if ( $is_pro ) : ?>
 			<button class="button sf-ai-brief-btn" data-page="<?php echo esc_attr( $page_path ); ?>">
-				<?php esc_html_e( 'AI Content Brief', 'searchforge' ); ?>
+				<?php esc_html_e( 'AI Content Brief', 'searchforge-wordpress-plugin' ); ?>
 			</button>
 		<?php endif; ?>
 	</div>
@@ -94,21 +97,21 @@ $cannibal     = $is_pro ? SearchForge\Admin\PageDetail::get_page_cannibalization
 	<nav class="nav-tab-wrapper" role="tablist">
 		<a href="#sf-tab-overview" class="nav-tab nav-tab-active" data-tab="sf-tab-overview"
 			role="tab" aria-selected="true" aria-controls="sf-tab-overview" id="sf-tab-overview-tab">
-			<?php esc_html_e( 'Overview', 'searchforge' ); ?>
+			<?php esc_html_e( 'Overview', 'searchforge-wordpress-plugin' ); ?>
 		</a>
 		<a href="#sf-tab-keywords" class="nav-tab" data-tab="sf-tab-keywords"
 			role="tab" aria-selected="false" aria-controls="sf-tab-keywords" id="sf-tab-keywords-tab">
-			<?php esc_html_e( 'Keywords', 'searchforge' ); ?>
+			<?php esc_html_e( 'Keywords', 'searchforge-wordpress-plugin' ); ?>
 			<span class="sf-tab-count">(<?php echo esc_html( count( $keywords ) ); ?>)</span>
 		</a>
 		<a href="#sf-tab-trends" class="nav-tab" data-tab="sf-tab-trends"
 			role="tab" aria-selected="false" aria-controls="sf-tab-trends" id="sf-tab-trends-tab">
-			<?php esc_html_e( 'Trends', 'searchforge' ); ?>
+			<?php esc_html_e( 'Trends', 'searchforge-wordpress-plugin' ); ?>
 		</a>
 		<?php if ( $score && $is_pro ) : ?>
 			<a href="#sf-tab-score" class="nav-tab" data-tab="sf-tab-score"
 				role="tab" aria-selected="false" aria-controls="sf-tab-score" id="sf-tab-score-tab">
-				<?php esc_html_e( 'Score', 'searchforge' ); ?>
+				<?php esc_html_e( 'Score', 'searchforge-wordpress-plugin' ); ?>
 			</a>
 		<?php endif; ?>
 	</nav>
@@ -118,12 +121,14 @@ $cannibal     = $is_pro ? SearchForge\Admin\PageDetail::get_page_cannibalization
 
 		<!-- Trend Chart -->
 		<?php if ( ! empty( $daily_trend ) ) : ?>
-			<div class="sf-chart-container" aria-label="<?php esc_attr_e( '30-day trend chart showing clicks and impressions over time', 'searchforge' ); ?>">
-				<h2><?php esc_html_e( '30-Day Trend', 'searchforge' ); ?></h2>
+			<div class="sf-chart-container" aria-label="<?php esc_attr_e( '30-day trend chart showing clicks and impressions over time', 'searchforge-wordpress-plugin' ); ?>">
+				<h2><?php esc_html_e( '30-Day Trend', 'searchforge-wordpress-plugin' ); ?></h2>
 				<canvas id="sf-trend-chart" height="280"></canvas>
 				<span class="screen-reader-text">
-					<?php echo esc_html( sprintf(
-						__( 'Line chart displaying the 30-day trend for page %s. Current clicks: %s, impressions: %s, position: %s.', 'searchforge' ),
+					<?php
+					/* translators: %1$s: page path, %2$s: current clicks, %3$s: current impressions, %4$s: current position */
+					echo esc_html( sprintf(
+						__( 'Line chart displaying the 30-day trend for page %1$s. Current clicks: %2$s, impressions: %3$s, position: %4$s.', 'searchforge-wordpress-plugin' ),
 						$page_path,
 						number_format( $page_data['clicks'] ),
 						number_format( $page_data['impressions'] ),
@@ -136,7 +141,7 @@ $cannibal     = $is_pro ? SearchForge\Admin\PageDetail::get_page_cannibalization
 		<!-- Device Breakdown -->
 		<?php if ( ! empty( $devices ) ) : ?>
 			<div class="sf-section">
-				<h2><?php esc_html_e( 'Device Breakdown', 'searchforge' ); ?></h2>
+				<h2><?php esc_html_e( 'Device Breakdown', 'searchforge-wordpress-plugin' ); ?></h2>
 				<div class="sf-cards sf-device-cards">
 					<?php foreach ( $devices as $dev ) : ?>
 						<div class="sf-card">
@@ -152,15 +157,15 @@ $cannibal     = $is_pro ? SearchForge\Admin\PageDetail::get_page_cannibalization
 		<!-- Cross-Engine Comparison -->
 		<?php if ( $bing_data ) : ?>
 			<div class="sf-section">
-				<h2><?php esc_html_e( 'Google vs Bing', 'searchforge' ); ?></h2>
+				<h2><?php esc_html_e( 'Google vs Bing', 'searchforge-wordpress-plugin' ); ?></h2>
 				<table class="widefat sf-table">
 					<thead>
 						<tr>
-							<th scope="col"><?php esc_html_e( 'Engine', 'searchforge' ); ?></th>
-							<th scope="col"><?php esc_html_e( 'Clicks', 'searchforge' ); ?></th>
-							<th scope="col"><?php esc_html_e( 'Impressions', 'searchforge' ); ?></th>
-							<th scope="col"><?php esc_html_e( 'CTR', 'searchforge' ); ?></th>
-							<th scope="col"><?php esc_html_e( 'Position', 'searchforge' ); ?></th>
+							<th scope="col"><?php esc_html_e( 'Engine', 'searchforge-wordpress-plugin' ); ?></th>
+							<th scope="col"><?php esc_html_e( 'Clicks', 'searchforge-wordpress-plugin' ); ?></th>
+							<th scope="col"><?php esc_html_e( 'Impressions', 'searchforge-wordpress-plugin' ); ?></th>
+							<th scope="col"><?php esc_html_e( 'CTR', 'searchforge-wordpress-plugin' ); ?></th>
+							<th scope="col"><?php esc_html_e( 'Position', 'searchforge-wordpress-plugin' ); ?></th>
 						</tr>
 					</thead>
 					<tbody>
@@ -186,22 +191,22 @@ $cannibal     = $is_pro ? SearchForge\Admin\PageDetail::get_page_cannibalization
 		<!-- GA4 Behavior -->
 		<?php if ( $ga4_data ) : ?>
 			<div class="sf-section">
-				<h2><?php esc_html_e( 'On-Page Behavior (GA4)', 'searchforge' ); ?></h2>
+				<h2><?php esc_html_e( 'On-Page Behavior (GA4)', 'searchforge-wordpress-plugin' ); ?></h2>
 				<div class="sf-cards">
 					<div class="sf-card">
-						<h3><?php esc_html_e( 'Sessions', 'searchforge' ); ?></h3>
+						<h3><?php esc_html_e( 'Sessions', 'searchforge-wordpress-plugin' ); ?></h3>
 						<span class="sf-card-value"><?php echo esc_html( number_format( (int) $ga4_data['sessions'] ) ); ?></span>
 					</div>
 					<div class="sf-card">
-						<h3><?php esc_html_e( 'Bounce Rate', 'searchforge' ); ?></h3>
+						<h3><?php esc_html_e( 'Bounce Rate', 'searchforge-wordpress-plugin' ); ?></h3>
 						<span class="sf-card-value"><?php echo esc_html( round( (float) $ga4_data['bounce_rate'], 1 ) ); ?>%</span>
 					</div>
 					<div class="sf-card">
-						<h3><?php esc_html_e( 'Avg Duration', 'searchforge' ); ?></h3>
+						<h3><?php esc_html_e( 'Avg Duration', 'searchforge-wordpress-plugin' ); ?></h3>
 						<span class="sf-card-value"><?php echo esc_html( gmdate( 'i:s', (int) $ga4_data['avg_session_dur'] ) ); ?></span>
 					</div>
 					<div class="sf-card">
-						<h3><?php esc_html_e( 'Conversions', 'searchforge' ); ?></h3>
+						<h3><?php esc_html_e( 'Conversions', 'searchforge-wordpress-plugin' ); ?></h3>
 						<span class="sf-card-value"><?php echo esc_html( number_format( (int) $ga4_data['conversions'] ) ); ?></span>
 					</div>
 				</div>
@@ -210,12 +215,14 @@ $cannibal     = $is_pro ? SearchForge\Admin\PageDetail::get_page_cannibalization
 
 		<!-- Position Distribution Chart -->
 		<?php if ( ! empty( $pos_dist ) && array_sum( $pos_dist ) > 0 ) : ?>
-			<div class="sf-chart-container" aria-label="<?php esc_attr_e( 'Keyword position distribution chart', 'searchforge' ); ?>">
-				<h2><?php esc_html_e( 'Keyword Position Distribution', 'searchforge' ); ?></h2>
+			<div class="sf-chart-container" aria-label="<?php esc_attr_e( 'Keyword position distribution chart', 'searchforge-wordpress-plugin' ); ?>">
+				<h2><?php esc_html_e( 'Keyword Position Distribution', 'searchforge-wordpress-plugin' ); ?></h2>
 				<canvas id="sf-position-chart" height="200"></canvas>
 				<span class="screen-reader-text">
-					<?php echo esc_html( sprintf(
-						__( 'Bar chart showing keyword position distribution: %d keywords total across position ranges.', 'searchforge' ),
+					<?php
+					/* translators: %d: total number of keywords */
+					echo esc_html( sprintf(
+						__( 'Bar chart showing keyword position distribution: %d keywords total across position ranges.', 'searchforge-wordpress-plugin' ),
 						array_sum( $pos_dist )
 					) ); ?>
 				</span>
@@ -225,19 +232,19 @@ $cannibal     = $is_pro ? SearchForge\Admin\PageDetail::get_page_cannibalization
 		<!-- YoY Comparison -->
 		<?php if ( $yoy ) : ?>
 			<div class="sf-section">
-				<h2><?php esc_html_e( 'Year-over-Year Comparison', 'searchforge' ); ?></h2>
+				<h2><?php esc_html_e( 'Year-over-Year Comparison', 'searchforge-wordpress-plugin' ); ?></h2>
 				<table class="widefat sf-table">
 					<thead>
 						<tr>
-							<th scope="col"><?php esc_html_e( 'Metric', 'searchforge' ); ?></th>
-							<th scope="col"><?php esc_html_e( 'This Year', 'searchforge' ); ?></th>
-							<th scope="col"><?php esc_html_e( 'Last Year', 'searchforge' ); ?></th>
-							<th scope="col"><?php esc_html_e( 'Change', 'searchforge' ); ?></th>
+							<th scope="col"><?php esc_html_e( 'Metric', 'searchforge-wordpress-plugin' ); ?></th>
+							<th scope="col"><?php esc_html_e( 'This Year', 'searchforge-wordpress-plugin' ); ?></th>
+							<th scope="col"><?php esc_html_e( 'Last Year', 'searchforge-wordpress-plugin' ); ?></th>
+							<th scope="col"><?php esc_html_e( 'Change', 'searchforge-wordpress-plugin' ); ?></th>
 						</tr>
 					</thead>
 					<tbody>
 						<tr>
-							<td><?php esc_html_e( 'Clicks', 'searchforge' ); ?></td>
+							<td><?php esc_html_e( 'Clicks', 'searchforge-wordpress-plugin' ); ?></td>
 							<td><?php echo esc_html( number_format( (int) $yoy['current']['clicks'] ) ); ?></td>
 							<td><?php echo esc_html( number_format( (int) $yoy['previous']['clicks'] ) ); ?></td>
 							<td class="<?php echo $yoy['changes']['clicks'] >= 0 ? 'sf-change-up' : 'sf-change-down'; ?>">
@@ -245,7 +252,7 @@ $cannibal     = $is_pro ? SearchForge\Admin\PageDetail::get_page_cannibalization
 							</td>
 						</tr>
 						<tr>
-							<td><?php esc_html_e( 'Impressions', 'searchforge' ); ?></td>
+							<td><?php esc_html_e( 'Impressions', 'searchforge-wordpress-plugin' ); ?></td>
 							<td><?php echo esc_html( number_format( (int) $yoy['current']['impressions'] ) ); ?></td>
 							<td><?php echo esc_html( number_format( (int) $yoy['previous']['impressions'] ) ); ?></td>
 							<td class="<?php echo $yoy['changes']['impressions'] >= 0 ? 'sf-change-up' : 'sf-change-down'; ?>">
@@ -253,7 +260,7 @@ $cannibal     = $is_pro ? SearchForge\Admin\PageDetail::get_page_cannibalization
 							</td>
 						</tr>
 						<tr>
-							<td><?php esc_html_e( 'Position', 'searchforge' ); ?></td>
+							<td><?php esc_html_e( 'Position', 'searchforge-wordpress-plugin' ); ?></td>
 							<td><?php echo esc_html( round( (float) $yoy['current']['position'], 1 ) ); ?></td>
 							<td><?php echo esc_html( round( (float) $yoy['previous']['position'], 1 ) ); ?></td>
 							<td class="<?php echo $yoy['changes']['position'] >= 0 ? 'sf-change-up' : 'sf-change-down'; ?>">
@@ -270,17 +277,17 @@ $cannibal     = $is_pro ? SearchForge\Admin\PageDetail::get_page_cannibalization
 	<!-- Tab: Keywords -->
 	<div id="sf-tab-keywords" class="sf-tab-panel" role="tabpanel" aria-labelledby="sf-tab-keywords-tab" tabindex="0">
 		<?php if ( empty( $keywords ) ) : ?>
-			<p><?php esc_html_e( 'No keyword data for this page.', 'searchforge' ); ?></p>
+			<p><?php esc_html_e( 'No keyword data for this page.', 'searchforge-wordpress-plugin' ); ?></p>
 		<?php else : ?>
 			<table class="widefat sf-table">
 				<thead>
 					<tr>
-						<th scope="col"><?php esc_html_e( 'Keyword', 'searchforge' ); ?></th>
-						<th scope="col"><?php esc_html_e( 'Clicks', 'searchforge' ); ?></th>
-						<th scope="col"><?php esc_html_e( 'Impressions', 'searchforge' ); ?></th>
-						<th scope="col"><?php esc_html_e( 'CTR', 'searchforge' ); ?></th>
-						<th scope="col"><?php esc_html_e( 'Position', 'searchforge' ); ?></th>
-						<th scope="col"><?php esc_html_e( 'Status', 'searchforge' ); ?></th>
+						<th scope="col"><?php esc_html_e( 'Keyword', 'searchforge-wordpress-plugin' ); ?></th>
+						<th scope="col"><?php esc_html_e( 'Clicks', 'searchforge-wordpress-plugin' ); ?></th>
+						<th scope="col"><?php esc_html_e( 'Impressions', 'searchforge-wordpress-plugin' ); ?></th>
+						<th scope="col"><?php esc_html_e( 'CTR', 'searchforge-wordpress-plugin' ); ?></th>
+						<th scope="col"><?php esc_html_e( 'Position', 'searchforge-wordpress-plugin' ); ?></th>
+						<th scope="col"><?php esc_html_e( 'Status', 'searchforge-wordpress-plugin' ); ?></th>
 					</tr>
 				</thead>
 				<tbody>
@@ -288,16 +295,16 @@ $cannibal     = $is_pro ? SearchForge\Admin\PageDetail::get_page_cannibalization
 						$pos = (float) $kw['position'];
 						if ( $pos <= 3 ) {
 							$status_class = 'sf-pos-top3';
-							$status_label = __( 'Top 3', 'searchforge' );
+							$status_label = __( 'Top 3', 'searchforge-wordpress-plugin' );
 						} elseif ( $pos <= 10 ) {
 							$status_class = 'sf-pos-page1';
-							$status_label = __( 'Page 1', 'searchforge' );
+							$status_label = __( 'Page 1', 'searchforge-wordpress-plugin' );
 						} elseif ( $pos <= 20 ) {
 							$status_class = 'sf-pos-page2';
-							$status_label = __( 'Page 2', 'searchforge' );
+							$status_label = __( 'Page 2', 'searchforge-wordpress-plugin' );
 						} else {
 							$status_class = 'sf-pos-deep';
-							$status_label = __( 'Deep', 'searchforge' );
+							$status_label = __( 'Deep', 'searchforge-wordpress-plugin' );
 						}
 					?>
 						<tr>
@@ -316,17 +323,17 @@ $cannibal     = $is_pro ? SearchForge\Admin\PageDetail::get_page_cannibalization
 		<!-- Cannibalization Issues -->
 		<?php if ( ! empty( $cannibal ) ) : ?>
 			<div class="sf-section" style="margin-top: 20px;">
-				<h2><?php esc_html_e( 'Keyword Cannibalization', 'searchforge' ); ?></h2>
-				<p class="description"><?php esc_html_e( 'Keywords where this page competes with other pages on your site.', 'searchforge' ); ?></p>
+				<h2><?php esc_html_e( 'Keyword Cannibalization', 'searchforge-wordpress-plugin' ); ?></h2>
+				<p class="description"><?php esc_html_e( 'Keywords where this page competes with other pages on your site.', 'searchforge-wordpress-plugin' ); ?></p>
 				<table class="widefat sf-table">
 					<thead>
 						<tr>
-							<th scope="col"><?php esc_html_e( 'Keyword', 'searchforge' ); ?></th>
-							<th scope="col"><?php esc_html_e( 'Your Pos.', 'searchforge' ); ?></th>
-							<th scope="col"><?php esc_html_e( 'Your Clicks', 'searchforge' ); ?></th>
-							<th scope="col"><?php esc_html_e( 'Competing Page', 'searchforge' ); ?></th>
-							<th scope="col"><?php esc_html_e( 'Their Pos.', 'searchforge' ); ?></th>
-							<th scope="col"><?php esc_html_e( 'Their Clicks', 'searchforge' ); ?></th>
+							<th scope="col"><?php esc_html_e( 'Keyword', 'searchforge-wordpress-plugin' ); ?></th>
+							<th scope="col"><?php esc_html_e( 'Your Pos.', 'searchforge-wordpress-plugin' ); ?></th>
+							<th scope="col"><?php esc_html_e( 'Your Clicks', 'searchforge-wordpress-plugin' ); ?></th>
+							<th scope="col"><?php esc_html_e( 'Competing Page', 'searchforge-wordpress-plugin' ); ?></th>
+							<th scope="col"><?php esc_html_e( 'Their Pos.', 'searchforge-wordpress-plugin' ); ?></th>
+							<th scope="col"><?php esc_html_e( 'Their Clicks', 'searchforge-wordpress-plugin' ); ?></th>
 						</tr>
 					</thead>
 					<tbody>
@@ -354,23 +361,25 @@ $cannibal     = $is_pro ? SearchForge\Admin\PageDetail::get_page_cannibalization
 	<div id="sf-tab-trends" class="sf-tab-panel" role="tabpanel" aria-labelledby="sf-tab-trends-tab" tabindex="0">
 		<?php if ( ! $is_pro ) : ?>
 			<div class="notice notice-info">
-				<p><?php esc_html_e( 'Trend analysis requires a Pro license.', 'searchforge' ); ?></p>
+				<p><?php esc_html_e( 'Trend analysis requires a Pro license.', 'searchforge-wordpress-plugin' ); ?></p>
 			</div>
 		<?php elseif ( $trend && ! empty( $trend['snapshots'] ) ) : ?>
-			<div class="sf-chart-container" aria-label="<?php esc_attr_e( 'Weekly click trend chart', 'searchforge' ); ?>">
-				<h2><?php esc_html_e( 'Weekly Click Trend', 'searchforge' ); ?></h2>
+			<div class="sf-chart-container" aria-label="<?php esc_attr_e( 'Weekly click trend chart', 'searchforge-wordpress-plugin' ); ?>">
+				<h2><?php esc_html_e( 'Weekly Click Trend', 'searchforge-wordpress-plugin' ); ?></h2>
 				<canvas id="sf-weekly-trend-chart" height="280"></canvas>
 				<span class="screen-reader-text">
-					<?php esc_html_e( 'Line chart displaying weekly click trends over time for this page.', 'searchforge' ); ?>
+					<?php esc_html_e( 'Line chart displaying weekly click trends over time for this page.', 'searchforge-wordpress-plugin' ); ?>
 				</span>
 			</div>
 
 			<?php if ( $trend['decay_detected'] ) : ?>
 				<div class="notice notice-warning sf-decay-notice">
 					<p>
-						<strong><?php esc_html_e( 'Content Decay Detected', 'searchforge' ); ?></strong> -
-						<?php echo esc_html( sprintf(
-							__( 'Clicks declined %s%% over the last %d days.', 'searchforge' ),
+						<strong><?php esc_html_e( 'Content Decay Detected', 'searchforge-wordpress-plugin' ); ?></strong> -
+						<?php
+						/* translators: %1$s: percentage of click decline, %2$d: number of days in decay period */
+						echo esc_html( sprintf(
+							__( 'Clicks declined %1$s%% over the last %2$d days.', 'searchforge-wordpress-plugin' ),
 							$trend['decay_percentage'],
 							$trend['decay_period_days']
 						) ); ?>
@@ -381,11 +390,11 @@ $cannibal     = $is_pro ? SearchForge\Admin\PageDetail::get_page_cannibalization
 			<table class="widefat sf-table" style="margin-top: 16px;">
 				<thead>
 					<tr>
-						<th scope="col"><?php esc_html_e( 'Week', 'searchforge' ); ?></th>
-						<th scope="col"><?php esc_html_e( 'Clicks', 'searchforge' ); ?></th>
-						<th scope="col"><?php esc_html_e( 'Change', 'searchforge' ); ?></th>
-						<th scope="col"><?php esc_html_e( 'Impressions', 'searchforge' ); ?></th>
-						<th scope="col"><?php esc_html_e( 'Position', 'searchforge' ); ?></th>
+						<th scope="col"><?php esc_html_e( 'Week', 'searchforge-wordpress-plugin' ); ?></th>
+						<th scope="col"><?php esc_html_e( 'Clicks', 'searchforge-wordpress-plugin' ); ?></th>
+						<th scope="col"><?php esc_html_e( 'Change', 'searchforge-wordpress-plugin' ); ?></th>
+						<th scope="col"><?php esc_html_e( 'Impressions', 'searchforge-wordpress-plugin' ); ?></th>
+						<th scope="col"><?php esc_html_e( 'Position', 'searchforge-wordpress-plugin' ); ?></th>
 					</tr>
 				</thead>
 				<tbody>
@@ -409,7 +418,7 @@ $cannibal     = $is_pro ? SearchForge\Admin\PageDetail::get_page_cannibalization
 				</tbody>
 			</table>
 		<?php else : ?>
-			<p><?php esc_html_e( 'Not enough historical data yet. Trend data requires at least 2 weeks of snapshots.', 'searchforge' ); ?></p>
+			<p><?php esc_html_e( 'Not enough historical data yet. Trend data requires at least 2 weeks of snapshots.', 'searchforge-wordpress-plugin' ); ?></p>
 		<?php endif; ?>
 	</div>
 
@@ -440,7 +449,7 @@ $cannibal     = $is_pro ? SearchForge\Admin\PageDetail::get_page_cannibalization
 
 			<?php if ( ! empty( $score['recommendations'] ) ) : ?>
 				<div class="sf-section" style="margin-top: 20px;">
-					<h2><?php esc_html_e( 'Recommendations', 'searchforge' ); ?></h2>
+					<h2><?php esc_html_e( 'Recommendations', 'searchforge-wordpress-plugin' ); ?></h2>
 					<ul class="sf-recommendations">
 						<?php foreach ( $score['recommendations'] as $rec ) : ?>
 							<li><?php echo esc_html( $rec ); ?></li>
@@ -455,11 +464,11 @@ $cannibal     = $is_pro ? SearchForge\Admin\PageDetail::get_page_cannibalization
 <!-- Export Modal (reuse from admin.js) -->
 <div id="sf-export-modal" class="sf-modal" style="display:none;" role="dialog" aria-modal="true" aria-labelledby="sf-modal-title">
 	<div class="sf-modal-content">
-		<span class="sf-modal-close" role="button" tabindex="0" aria-label="<?php esc_attr_e( 'Close modal', 'searchforge' ); ?>">&times;</span>
+		<span class="sf-modal-close" role="button" tabindex="0" aria-label="<?php esc_attr_e( 'Close modal', 'searchforge-wordpress-plugin' ); ?>">&times;</span>
 		<h2 id="sf-modal-title"></h2>
 		<pre id="sf-modal-body"></pre>
 		<button class="button button-primary" id="sf-modal-download">
-			<?php esc_html_e( 'Download', 'searchforge' ); ?>
+			<?php esc_html_e( 'Download', 'searchforge-wordpress-plugin' ); ?>
 		</button>
 	</div>
 </div>
@@ -475,3 +484,4 @@ $chart_data = [
 <script>
 	var sfChartData = <?php echo wp_json_encode( $chart_data ); ?>;
 </script>
+<?php // phpcs:enable WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound ?>

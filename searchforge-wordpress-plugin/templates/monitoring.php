@@ -1,4 +1,5 @@
 <?php
+// phpcs:disable WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound
 defined( 'ABSPATH' ) || exit;
 
 $is_pro      = SearchForge\Admin\Settings::is_pro();
@@ -8,11 +9,11 @@ $quota       = SearchForge\Monitoring\QuotaTracker::get_summary();
 $comparison  = SearchForge\Monitoring\PerformanceTrend::get_period_comparison( 7, $property_id );
 $daily       = SearchForge\Monitoring\PerformanceTrend::get_daily_trends( 30, $property_id );
 $broken      = $is_pro ? SearchForge\Monitoring\BrokenLinks::get_latest() : [];
-$tab         = sanitize_text_field( $_GET['tab'] ?? 'overview' );
+$tab         = sanitize_text_field( wp_unslash( $_GET['tab'] ?? 'overview' ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 ?>
 
 <div class="wrap searchforge-wrap">
-	<h1><?php esc_html_e( 'SearchForge Monitoring', 'searchforge' ); ?>
+	<h1><?php esc_html_e( 'SearchForge Monitoring', 'searchforge-wordpress-plugin' ); ?>
 		<?php if ( ! $is_pro ) : ?>
 			<span class="sf-pro-badge">Pro</span>
 		<?php endif; ?>
@@ -25,19 +26,19 @@ $tab         = sanitize_text_field( $_GET['tab'] ?? 'overview' );
 			class="nav-tab <?php echo $tab === 'overview' ? 'nav-tab-active' : ''; ?>"
 			role="tab" aria-selected="<?php echo $tab === 'overview' ? 'true' : 'false'; ?>"
 			aria-controls="sf-monitoring-overview">
-			<?php esc_html_e( 'Overview', 'searchforge' ); ?>
+			<?php esc_html_e( 'Overview', 'searchforge-wordpress-plugin' ); ?>
 		</a>
 		<a href="<?php echo esc_url( admin_url( 'admin.php?page=searchforge-monitoring&tab=performance' ) ); ?>"
 			class="nav-tab <?php echo $tab === 'performance' ? 'nav-tab-active' : ''; ?>"
 			role="tab" aria-selected="<?php echo $tab === 'performance' ? 'true' : 'false'; ?>"
 			aria-controls="sf-monitoring-performance">
-			<?php esc_html_e( 'Performance', 'searchforge' ); ?>
+			<?php esc_html_e( 'Performance', 'searchforge-wordpress-plugin' ); ?>
 		</a>
 		<a href="<?php echo esc_url( admin_url( 'admin.php?page=searchforge-monitoring&tab=audit' ) ); ?>"
 			class="nav-tab <?php echo $tab === 'audit' ? 'nav-tab-active' : ''; ?>"
 			role="tab" aria-selected="<?php echo $tab === 'audit' ? 'true' : 'false'; ?>"
 			aria-controls="sf-monitoring-audit">
-			<?php esc_html_e( 'Audit Log', 'searchforge' ); ?>
+			<?php esc_html_e( 'Audit Log', 'searchforge-wordpress-plugin' ); ?>
 		</a>
 	</nav>
 
@@ -45,10 +46,10 @@ $tab         = sanitize_text_field( $_GET['tab'] ?? 'overview' );
 
 		<!-- Period Comparison -->
 		<?php if ( $comparison['current'] ) : ?>
-			<h2><?php esc_html_e( '7-Day Comparison', 'searchforge' ); ?></h2>
+			<h2><?php esc_html_e( '7-Day Comparison', 'searchforge-wordpress-plugin' ); ?></h2>
 			<div class="sf-cards">
 				<div class="sf-card">
-					<h3><?php esc_html_e( 'Clicks', 'searchforge' ); ?></h3>
+					<h3><?php esc_html_e( 'Clicks', 'searchforge-wordpress-plugin' ); ?></h3>
 					<span class="sf-card-value"><?php echo esc_html( number_format( (int) ( $comparison['current']['clicks'] ?? 0 ) ) ); ?></span>
 					<?php if ( $comparison['changes']['clicks'] !== null ) : ?>
 						<span class="sf-change sf-change-<?php echo $comparison['changes']['clicks'] >= 0 ? 'up' : 'down'; ?>">
@@ -57,7 +58,7 @@ $tab         = sanitize_text_field( $_GET['tab'] ?? 'overview' );
 					<?php endif; ?>
 				</div>
 				<div class="sf-card">
-					<h3><?php esc_html_e( 'Impressions', 'searchforge' ); ?></h3>
+					<h3><?php esc_html_e( 'Impressions', 'searchforge-wordpress-plugin' ); ?></h3>
 					<span class="sf-card-value"><?php echo esc_html( number_format( (int) ( $comparison['current']['impressions'] ?? 0 ) ) ); ?></span>
 					<?php if ( $comparison['changes']['impressions'] !== null ) : ?>
 						<span class="sf-change sf-change-<?php echo $comparison['changes']['impressions'] >= 0 ? 'up' : 'down'; ?>">
@@ -66,11 +67,11 @@ $tab         = sanitize_text_field( $_GET['tab'] ?? 'overview' );
 					<?php endif; ?>
 				</div>
 				<div class="sf-card">
-					<h3><?php esc_html_e( 'Avg Position', 'searchforge' ); ?></h3>
+					<h3><?php esc_html_e( 'Avg Position', 'searchforge-wordpress-plugin' ); ?></h3>
 					<span class="sf-card-value"><?php echo esc_html( $comparison['current']['avg_position'] ?? '—' ); ?></span>
 				</div>
 				<div class="sf-card">
-					<h3><?php esc_html_e( 'Avg CTR', 'searchforge' ); ?></h3>
+					<h3><?php esc_html_e( 'Avg CTR', 'searchforge-wordpress-plugin' ); ?></h3>
 					<span class="sf-card-value"><?php echo esc_html( round( (float) ( $comparison['current']['avg_ctr'] ?? 0 ) * 100, 1 ) ); ?>%</span>
 				</div>
 			</div>
@@ -78,41 +79,51 @@ $tab         = sanitize_text_field( $_GET['tab'] ?? 'overview' );
 
 		<!-- SSL Certificate -->
 		<?php if ( $ssl_info ) : ?>
-			<h2><?php esc_html_e( 'SSL Certificate', 'searchforge' ); ?></h2>
+			<h2><?php esc_html_e( 'SSL Certificate', 'searchforge-wordpress-plugin' ); ?></h2>
 			<div class="sf-ssl-card sf-ssl-<?php echo esc_attr( $ssl_info['status'] ); ?>">
 				<?php if ( $ssl_info['status'] === 'valid' ) : ?>
 					<span class="sf-ssl-icon dashicons dashicons-lock"></span>
 					<div>
-						<strong><?php esc_html_e( 'Valid', 'searchforge' ); ?></strong>
-						<?php echo esc_html( sprintf(
-							__( '%d days remaining — expires %s', 'searchforge' ),
+						<strong><?php esc_html_e( 'Valid', 'searchforge-wordpress-plugin' ); ?></strong>
+						<?php
+						/* translators: %1$d: number of days remaining, %2$s: expiry date */
+						echo esc_html( sprintf(
+							__( '%1$d days remaining — expires %2$s', 'searchforge-wordpress-plugin' ),
 							$ssl_info['days_left'],
 							$ssl_info['valid_to']
 						) ); ?>
 						<br>
-						<small><?php echo esc_html( sprintf( __( 'Issuer: %s', 'searchforge' ), $ssl_info['issuer'] ) ); ?></small>
+						<small><?php
+								/* translators: %s: SSL certificate issuer name */
+								echo esc_html( sprintf( __( 'Issuer: %s', 'searchforge-wordpress-plugin' ), $ssl_info['issuer'] ) ); ?></small>
 					</div>
 				<?php elseif ( $ssl_info['status'] === 'warning' || $ssl_info['status'] === 'critical' ) : ?>
 					<span class="sf-ssl-icon dashicons dashicons-warning"></span>
 					<div>
-						<strong><?php echo esc_html( sprintf( __( 'Expires in %d days!', 'searchforge' ), $ssl_info['days_left'] ) ); ?></strong>
-						<br><?php echo esc_html( sprintf( __( 'Expiry: %s | Issuer: %s', 'searchforge' ), $ssl_info['valid_to'], $ssl_info['issuer'] ) ); ?>
+						<strong><?php
+								/* translators: %d: number of days until SSL certificate expiry */
+								echo esc_html( sprintf( __( 'Expires in %d days!', 'searchforge-wordpress-plugin' ), $ssl_info['days_left'] ) ); ?></strong>
+						<br><?php
+								/* translators: %1$s: SSL expiry date, %2$s: SSL certificate issuer name */
+								echo esc_html( sprintf( __( 'Expiry: %1$s | Issuer: %2$s', 'searchforge-wordpress-plugin' ), $ssl_info['valid_to'], $ssl_info['issuer'] ) ); ?>
 					</div>
 				<?php elseif ( $ssl_info['status'] === 'expired' ) : ?>
 					<span class="sf-ssl-icon dashicons dashicons-dismiss"></span>
 					<div>
-						<strong><?php esc_html_e( 'Certificate Expired!', 'searchforge' ); ?></strong>
-						<br><?php echo esc_html( sprintf( __( 'Expired: %s', 'searchforge' ), $ssl_info['valid_to'] ) ); ?>
+						<strong><?php esc_html_e( 'Certificate Expired!', 'searchforge-wordpress-plugin' ); ?></strong>
+						<br><?php
+								/* translators: %s: SSL certificate expiry date */
+								echo esc_html( sprintf( __( 'Expired: %s', 'searchforge-wordpress-plugin' ), $ssl_info['valid_to'] ) ); ?>
 					</div>
 				<?php else : ?>
 					<span class="sf-ssl-icon dashicons dashicons-info"></span>
-					<div><?php echo esc_html( $ssl_info['message'] ?? __( 'Unable to check SSL.', 'searchforge' ) ); ?></div>
+					<div><?php echo esc_html( $ssl_info['message'] ?? __( 'Unable to check SSL.', 'searchforge-wordpress-plugin' ) ); ?></div>
 				<?php endif; ?>
 			</div>
 		<?php endif; ?>
 
 		<!-- API Quota Usage -->
-		<h2><?php esc_html_e( 'API Quota Usage (Today)', 'searchforge' ); ?></h2>
+		<h2><?php esc_html_e( 'API Quota Usage (Today)', 'searchforge-wordpress-plugin' ); ?></h2>
 		<div class="sf-quota-grid">
 			<?php foreach ( $quota as $service => $info ) : ?>
 				<div class="sf-quota-item sf-quota-<?php echo esc_attr( $info['status'] ); ?>">
@@ -128,10 +139,10 @@ $tab         = sanitize_text_field( $_GET['tab'] ?? 'overview' );
 		</div>
 
 		<!-- Sitemap Discovery -->
-		<h2><?php esc_html_e( 'Sitemap Discovery', 'searchforge' ); ?></h2>
+		<h2><?php esc_html_e( 'Sitemap Discovery', 'searchforge-wordpress-plugin' ); ?></h2>
 		<p>
 			<button type="button" class="button" id="sf-discover-sitemaps">
-				<?php esc_html_e( 'Discover Sitemaps', 'searchforge' ); ?>
+				<?php esc_html_e( 'Discover Sitemaps', 'searchforge-wordpress-plugin' ); ?>
 			</button>
 		</p>
 		<div id="sf-sitemap-results"></div>
@@ -141,15 +152,16 @@ $tab         = sanitize_text_field( $_GET['tab'] ?? 'overview' );
 			<h2>
 				<?php
 				if ( ! empty( $broken ) ) {
-					echo esc_html( sprintf( __( 'Broken Links (%d found)', 'searchforge' ), count( $broken ) ) );
+					/* translators: %d: number of broken links found */
+					echo esc_html( sprintf( __( 'Broken Links (%d found)', 'searchforge-wordpress-plugin' ), count( $broken ) ) );
 				} else {
-					esc_html_e( 'Broken Links', 'searchforge' );
+					esc_html_e( 'Broken Links', 'searchforge-wordpress-plugin' );
 				}
 				?>
 			</h2>
 			<p>
 				<button type="button" class="button" id="sf-scan-broken-links">
-					<?php esc_html_e( 'Scan Now', 'searchforge' ); ?>
+					<?php esc_html_e( 'Scan Now', 'searchforge-wordpress-plugin' ); ?>
 				</button>
 			</p>
 			<div id="sf-broken-link-results"></div>
@@ -159,10 +171,10 @@ $tab         = sanitize_text_field( $_GET['tab'] ?? 'overview' );
 			<table class="widefat sf-table">
 				<thead>
 					<tr>
-						<th scope="col"><?php esc_html_e( 'Page', 'searchforge' ); ?></th>
-						<th scope="col"><?php esc_html_e( 'Broken URL', 'searchforge' ); ?></th>
-						<th scope="col"><?php esc_html_e( 'Status', 'searchforge' ); ?></th>
-						<th scope="col"><?php esc_html_e( 'Type', 'searchforge' ); ?></th>
+						<th scope="col"><?php esc_html_e( 'Page', 'searchforge-wordpress-plugin' ); ?></th>
+						<th scope="col"><?php esc_html_e( 'Broken URL', 'searchforge-wordpress-plugin' ); ?></th>
+						<th scope="col"><?php esc_html_e( 'Status', 'searchforge-wordpress-plugin' ); ?></th>
+						<th scope="col"><?php esc_html_e( 'Type', 'searchforge-wordpress-plugin' ); ?></th>
 					</tr>
 				</thead>
 				<tbody>
@@ -184,19 +196,19 @@ $tab         = sanitize_text_field( $_GET['tab'] ?? 'overview' );
 
 	<?php elseif ( $tab === 'performance' ) : ?>
 
-		<h2><?php esc_html_e( '30-Day Performance Trend', 'searchforge' ); ?></h2>
+		<h2><?php esc_html_e( '30-Day Performance Trend', 'searchforge-wordpress-plugin' ); ?></h2>
 
 		<?php if ( empty( $daily ) ) : ?>
-			<p class="description"><?php esc_html_e( 'No performance data available yet. Run a sync first.', 'searchforge' ); ?></p>
+			<p class="description"><?php esc_html_e( 'No performance data available yet. Run a sync first.', 'searchforge-wordpress-plugin' ); ?></p>
 		<?php else : ?>
 			<table class="widefat sf-table">
 				<thead>
 					<tr>
-						<th scope="col"><?php esc_html_e( 'Date', 'searchforge' ); ?></th>
-						<th scope="col"><?php esc_html_e( 'Clicks', 'searchforge' ); ?></th>
-						<th scope="col"><?php esc_html_e( 'Impressions', 'searchforge' ); ?></th>
-						<th scope="col"><?php esc_html_e( 'Avg Position', 'searchforge' ); ?></th>
-						<th scope="col"><?php esc_html_e( 'CTR', 'searchforge' ); ?></th>
+						<th scope="col"><?php esc_html_e( 'Date', 'searchforge-wordpress-plugin' ); ?></th>
+						<th scope="col"><?php esc_html_e( 'Clicks', 'searchforge-wordpress-plugin' ); ?></th>
+						<th scope="col"><?php esc_html_e( 'Impressions', 'searchforge-wordpress-plugin' ); ?></th>
+						<th scope="col"><?php esc_html_e( 'Avg Position', 'searchforge-wordpress-plugin' ); ?></th>
+						<th scope="col"><?php esc_html_e( 'CTR', 'searchforge-wordpress-plugin' ); ?></th>
 					</tr>
 				</thead>
 				<tbody>
@@ -215,22 +227,22 @@ $tab         = sanitize_text_field( $_GET['tab'] ?? 'overview' );
 
 	<?php elseif ( $tab === 'audit' ) : ?>
 
-		<h2><?php esc_html_e( 'Audit Log', 'searchforge' ); ?></h2>
+		<h2><?php esc_html_e( 'Audit Log', 'searchforge-wordpress-plugin' ); ?></h2>
 
 		<?php
 		$audit_entries = SearchForge\Monitoring\AuditLog::get_entries( 50 );
 		if ( empty( $audit_entries ) ) :
 		?>
-			<p class="description"><?php esc_html_e( 'No audit log entries yet.', 'searchforge' ); ?></p>
+			<p class="description"><?php esc_html_e( 'No audit log entries yet.', 'searchforge-wordpress-plugin' ); ?></p>
 		<?php else : ?>
 			<table class="widefat sf-table">
 				<thead>
 					<tr>
-						<th scope="col"><?php esc_html_e( 'Date', 'searchforge' ); ?></th>
-						<th scope="col"><?php esc_html_e( 'User', 'searchforge' ); ?></th>
-						<th scope="col"><?php esc_html_e( 'Action', 'searchforge' ); ?></th>
-						<th scope="col"><?php esc_html_e( 'Details', 'searchforge' ); ?></th>
-						<th scope="col"><?php esc_html_e( 'IP', 'searchforge' ); ?></th>
+						<th scope="col"><?php esc_html_e( 'Date', 'searchforge-wordpress-plugin' ); ?></th>
+						<th scope="col"><?php esc_html_e( 'User', 'searchforge-wordpress-plugin' ); ?></th>
+						<th scope="col"><?php esc_html_e( 'Action', 'searchforge-wordpress-plugin' ); ?></th>
+						<th scope="col"><?php esc_html_e( 'Details', 'searchforge-wordpress-plugin' ); ?></th>
+						<th scope="col"><?php esc_html_e( 'IP', 'searchforge-wordpress-plugin' ); ?></th>
 					</tr>
 				</thead>
 				<tbody>
@@ -249,3 +261,4 @@ $tab         = sanitize_text_field( $_GET['tab'] ?? 'overview' );
 
 	<?php endif; ?>
 </div>
+<?php // phpcs:enable WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound ?>

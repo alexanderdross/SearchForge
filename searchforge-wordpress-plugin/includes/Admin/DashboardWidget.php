@@ -17,7 +17,7 @@ class DashboardWidget {
 
 		wp_add_dashboard_widget(
 			'searchforge_dashboard_widget',
-			__( 'SearchForge Overview', 'searchforge' ),
+			__( 'SearchForge Overview', 'searchforge-wordpress-plugin' ),
 			[ $this, 'render' ]
 		);
 	}
@@ -31,7 +31,7 @@ class DashboardWidget {
 			printf(
 				/* translators: %s: settings page URL */
 				wp_kses(
-					__( 'Google Search Console is not connected. <a href="%s">Connect now</a>.', 'searchforge' ),
+					__( 'Google Search Console is not connected. <a href="%s">Connect now</a>.', 'searchforge-wordpress-plugin' ),
 					[ 'a' => [ 'href' => [] ] ]
 				),
 				esc_url( admin_url( 'admin.php?page=searchforge-settings' ) )
@@ -45,12 +45,12 @@ class DashboardWidget {
 		echo '<div class="sf-widget-grid">';
 
 		$metrics = [
-			'total_clicks'      => __( 'Clicks', 'searchforge' ),
-			'total_impressions' => __( 'Impressions', 'searchforge' ),
-			'avg_ctr'           => __( 'Avg CTR', 'searchforge' ),
-			'avg_position'      => __( 'Avg Position', 'searchforge' ),
-			'total_pages'       => __( 'Pages', 'searchforge' ),
-			'total_keywords'    => __( 'Keywords', 'searchforge' ),
+			'total_clicks'      => __( 'Clicks', 'searchforge-wordpress-plugin' ),
+			'total_impressions' => __( 'Impressions', 'searchforge-wordpress-plugin' ),
+			'avg_ctr'           => __( 'Avg CTR', 'searchforge-wordpress-plugin' ),
+			'avg_position'      => __( 'Avg Position', 'searchforge-wordpress-plugin' ),
+			'total_pages'       => __( 'Pages', 'searchforge-wordpress-plugin' ),
+			'total_keywords'    => __( 'Keywords', 'searchforge-wordpress-plugin' ),
 		];
 
 		foreach ( $metrics as $key => $label ) {
@@ -79,7 +79,7 @@ class DashboardWidget {
 			$class = $score['total'] >= 70 ? 'good' : ( $score['total'] >= 40 ? 'ok' : 'low' );
 			printf(
 				'<p class="sf-widget-score"><strong>%s:</strong> <span class="sf-score-%s">%d/100</span></p>',
-				esc_html__( 'SearchForge Score', 'searchforge' ),
+				esc_html__( 'SearchForge Score', 'searchforge-wordpress-plugin' ),
 				esc_attr( $class ),
 				(int) $score['total']
 			);
@@ -89,13 +89,14 @@ class DashboardWidget {
 		if ( $summary['last_sync'] ) {
 			printf(
 				'<p class="sf-widget-sync">%s: %s</p>',
-				esc_html__( 'Last sync', 'searchforge' ),
+				esc_html__( 'Last sync', 'searchforge-wordpress-plugin' ),
 				esc_html( wp_date( get_option( 'date_format' ) . ' ' . get_option( 'time_format' ), strtotime( $summary['last_sync'] ) ) )
 			);
 		}
 
 		// Unread alerts count.
 		global $wpdb;
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 		$alert_count = (int) $wpdb->get_var(
 			"SELECT COUNT(*) FROM {$wpdb->prefix}sf_alerts WHERE is_read = 0"
 		);
@@ -106,7 +107,7 @@ class DashboardWidget {
 				esc_url( admin_url( 'admin.php?page=searchforge' ) ),
 				esc_html( sprintf(
 					/* translators: %d: number of unread alerts */
-					__( '%d unread alert(s)', 'searchforge' ),
+					__( '%d unread alert(s)', 'searchforge-wordpress-plugin' ),
 					$alert_count
 				) )
 			);
@@ -115,7 +116,7 @@ class DashboardWidget {
 		printf(
 			'<p><a href="%s" class="button button-small">%s</a></p>',
 			esc_url( admin_url( 'admin.php?page=searchforge' ) ),
-			esc_html__( 'View Dashboard', 'searchforge' )
+			esc_html__( 'View Dashboard', 'searchforge-wordpress-plugin' )
 		);
 	}
 }

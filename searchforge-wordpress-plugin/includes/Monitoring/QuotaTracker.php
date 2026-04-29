@@ -36,29 +36,29 @@ class QuotaTracker {
 	public static function get_limits(): array {
 		return [
 			'gsc'    => [
-				'label'       => __( 'Google Search Console', 'searchforge' ),
+				'label'       => __( 'Google Search Console', 'searchforge-wordpress-plugin' ),
 				'daily_limit' => 25000,
-				'unit'        => __( 'requests', 'searchforge' ),
+				'unit'        => __( 'requests', 'searchforge-wordpress-plugin' ),
 			],
 			'bing'   => [
-				'label'       => __( 'Bing Webmaster Tools', 'searchforge' ),
+				'label'       => __( 'Bing Webmaster Tools', 'searchforge-wordpress-plugin' ),
 				'daily_limit' => 10000,
-				'unit'        => __( 'requests', 'searchforge' ),
+				'unit'        => __( 'requests', 'searchforge-wordpress-plugin' ),
 			],
 			'ga4'    => [
-				'label'       => __( 'Google Analytics 4', 'searchforge' ),
+				'label'       => __( 'Google Analytics 4', 'searchforge-wordpress-plugin' ),
 				'daily_limit' => 10000,
-				'unit'        => __( 'tokens', 'searchforge' ),
+				'unit'        => __( 'tokens', 'searchforge-wordpress-plugin' ),
 			],
 			'kwp'    => [
-				'label'       => __( 'Keyword Planner', 'searchforge' ),
+				'label'       => __( 'Keyword Planner', 'searchforge-wordpress-plugin' ),
 				'daily_limit' => 10000,
-				'unit'        => __( 'operations', 'searchforge' ),
+				'unit'        => __( 'operations', 'searchforge-wordpress-plugin' ),
 			],
 			'trends' => [
-				'label'       => __( 'Google Trends (SerpApi)', 'searchforge' ),
+				'label'       => __( 'Google Trends (SerpApi)', 'searchforge-wordpress-plugin' ),
 				'daily_limit' => 100,
-				'unit'        => __( 'searches', 'searchforge' ),
+				'unit'        => __( 'searches', 'searchforge-wordpress-plugin' ),
 			],
 		];
 	}
@@ -126,8 +126,9 @@ class QuotaTracker {
 			if ( $info['status'] === 'exhausted' ) {
 				self::create_alert(
 					$service,
+					/* translators: %1$s: service label, %2$s: used quota, %3$s: quota limit, %4$s: quota unit */
 					sprintf(
-						__( '%s daily quota exhausted (%s/%s %s)', 'searchforge' ),
+						__( '%1$s daily quota exhausted (%2$s/%3$s %4$s)', 'searchforge-wordpress-plugin' ),
 						$info['label'],
 						number_format( $info['used'] ),
 						number_format( $info['limit'] ),
@@ -138,8 +139,9 @@ class QuotaTracker {
 			} elseif ( $info['status'] === 'warning' ) {
 				self::create_alert(
 					$service,
+					/* translators: %1$s: service label, %2$s: usage percentage, %3$s: used quota, %4$s: quota limit, %5$s: quota unit */
 					sprintf(
-						__( '%s quota at %s%% (%s/%s %s)', 'searchforge' ),
+						__( '%1$s quota at %2$s%% (%3$s/%4$s %5$s)', 'searchforge-wordpress-plugin' ),
 						$info['label'],
 						$info['pct'],
 						number_format( $info['used'] ),
@@ -158,6 +160,7 @@ class QuotaTracker {
 	private static function create_alert( string $service, string $title, string $severity ): void {
 		global $wpdb;
 
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 		$existing = $wpdb->get_var( $wpdb->prepare(
 			"SELECT COUNT(*) FROM {$wpdb->prefix}sf_alerts
 			WHERE alert_type = 'quota_warning'
@@ -170,6 +173,7 @@ class QuotaTracker {
 			return;
 		}
 
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
 		$wpdb->insert( "{$wpdb->prefix}sf_alerts", [
 			'alert_type' => 'quota_warning',
 			'title'      => $title,

@@ -20,6 +20,7 @@ class CsvExporter {
 
 		global $wpdb;
 
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 		$latest_date = $wpdb->get_var( $wpdb->prepare(
 			"SELECT MAX(snapshot_date) FROM {$wpdb->prefix}sf_snapshots WHERE source = 'gsc' AND property_id = %d",
 			$property_id
@@ -29,6 +30,7 @@ class CsvExporter {
 			return '';
 		}
 
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 		$rows = $wpdb->get_results( $wpdb->prepare(
 			"SELECT page_path, source, device, clicks, impressions, ctr, position, snapshot_date
 			FROM {$wpdb->prefix}sf_snapshots
@@ -51,6 +53,7 @@ class CsvExporter {
 
 		global $wpdb;
 
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 		$latest_date = $wpdb->get_var( $wpdb->prepare(
 			"SELECT MAX(snapshot_date) FROM {$wpdb->prefix}sf_keywords WHERE source = 'gsc' AND property_id = %d",
 			$property_id
@@ -60,6 +63,7 @@ class CsvExporter {
 			return '';
 		}
 
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 		$rows = $wpdb->get_results( $wpdb->prepare(
 			"SELECT query, page_path, source, clicks, impressions, ctr, position, search_volume, competition, snapshot_date
 			FROM {$wpdb->prefix}sf_keywords
@@ -83,6 +87,7 @@ class CsvExporter {
 
 		global $wpdb;
 
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 		$latest_date = $wpdb->get_var( $wpdb->prepare(
 			"SELECT MAX(snapshot_date) FROM {$wpdb->prefix}sf_snapshots WHERE source = 'gsc' AND property_id = %d",
 			$property_id
@@ -92,6 +97,7 @@ class CsvExporter {
 			return '[]';
 		}
 
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 		$rows = $wpdb->get_results( $wpdb->prepare(
 			"SELECT page_path, source, device, clicks, impressions, ctr, position, snapshot_date
 			FROM {$wpdb->prefix}sf_snapshots
@@ -112,6 +118,7 @@ class CsvExporter {
 
 		global $wpdb;
 
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 		$latest_date = $wpdb->get_var( $wpdb->prepare(
 			"SELECT MAX(snapshot_date) FROM {$wpdb->prefix}sf_keywords WHERE source = 'gsc' AND property_id = %d",
 			$property_id
@@ -121,6 +128,7 @@ class CsvExporter {
 			return '[]';
 		}
 
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 		$rows = $wpdb->get_results( $wpdb->prepare(
 			"SELECT query, page_path, source, clicks, impressions, ctr, position, search_volume, competition, snapshot_date
 			FROM {$wpdb->prefix}sf_keywords
@@ -141,6 +149,7 @@ class CsvExporter {
 
 		global $wpdb;
 
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 		$rows = $wpdb->get_results( $wpdb->prepare(
 			"SELECT alert_type, title, severity, is_read, created_at
 			FROM {$wpdb->prefix}sf_alerts
@@ -163,7 +172,7 @@ class CsvExporter {
 			return '';
 		}
 
-		$output = fopen( 'php://temp', 'r+' );
+		$output = fopen( 'php://temp', 'r+' ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fopen
 		fputcsv( $output, $headers );
 
 		foreach ( $rows as $row ) {
@@ -172,7 +181,7 @@ class CsvExporter {
 
 		rewind( $output );
 		$csv = stream_get_contents( $output );
-		fclose( $output );
+		fclose( $output ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fclose
 
 		return $csv;
 	}

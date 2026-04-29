@@ -12,8 +12,8 @@ class Menu {
 
 	public function register_menus(): void {
 		add_menu_page(
-			__( 'SearchForge', 'searchforge' ),
-			__( 'SearchForge', 'searchforge' ),
+			__( 'SearchForge', 'searchforge-wordpress-plugin' ),
+			__( 'SearchForge', 'searchforge-wordpress-plugin' ),
 			'manage_options',
 			'searchforge',
 			[ $this, 'render_dashboard' ],
@@ -23,8 +23,8 @@ class Menu {
 
 		add_submenu_page(
 			'searchforge',
-			__( 'Dashboard', 'searchforge' ),
-			__( 'Dashboard', 'searchforge' ),
+			__( 'Dashboard', 'searchforge-wordpress-plugin' ),
+			__( 'Dashboard', 'searchforge-wordpress-plugin' ),
 			'manage_options',
 			'searchforge',
 			[ $this, 'render_dashboard' ]
@@ -32,8 +32,8 @@ class Menu {
 
 		add_submenu_page(
 			'searchforge',
-			__( 'Pages', 'searchforge' ),
-			__( 'Pages', 'searchforge' ),
+			__( 'Pages', 'searchforge-wordpress-plugin' ),
+			__( 'Pages', 'searchforge-wordpress-plugin' ),
 			'manage_options',
 			'searchforge-pages',
 			[ $this, 'render_pages' ]
@@ -41,8 +41,8 @@ class Menu {
 
 		add_submenu_page(
 			'searchforge',
-			__( 'Keywords', 'searchforge' ),
-			__( 'Keywords', 'searchforge' ),
+			__( 'Keywords', 'searchforge-wordpress-plugin' ),
+			__( 'Keywords', 'searchforge-wordpress-plugin' ),
 			'manage_options',
 			'searchforge-keywords',
 			[ $this, 'render_keywords' ]
@@ -50,8 +50,8 @@ class Menu {
 
 		add_submenu_page(
 			'searchforge',
-			__( 'Analysis', 'searchforge' ),
-			__( 'Analysis', 'searchforge' ),
+			__( 'Analysis', 'searchforge-wordpress-plugin' ),
+			__( 'Analysis', 'searchforge-wordpress-plugin' ),
 			'manage_options',
 			'searchforge-analysis',
 			[ $this, 'render_analysis' ]
@@ -59,8 +59,8 @@ class Menu {
 
 		add_submenu_page(
 			'searchforge',
-			__( 'Competitors', 'searchforge' ),
-			__( 'Competitors', 'searchforge' ),
+			__( 'Competitors', 'searchforge-wordpress-plugin' ),
+			__( 'Competitors', 'searchforge-wordpress-plugin' ),
 			'manage_options',
 			'searchforge-competitors',
 			[ $this, 'render_competitors' ]
@@ -68,8 +68,8 @@ class Menu {
 
 		add_submenu_page(
 			'searchforge',
-			__( 'Monitoring', 'searchforge' ),
-			__( 'Monitoring', 'searchforge' ),
+			__( 'Monitoring', 'searchforge-wordpress-plugin' ),
+			__( 'Monitoring', 'searchforge-wordpress-plugin' ),
 			'manage_options',
 			'searchforge-monitoring',
 			[ $this, 'render_monitoring' ]
@@ -77,8 +77,8 @@ class Menu {
 
 		add_submenu_page(
 			'searchforge',
-			__( 'Export', 'searchforge' ),
-			__( 'Export', 'searchforge' ),
+			__( 'Export', 'searchforge-wordpress-plugin' ),
+			__( 'Export', 'searchforge-wordpress-plugin' ),
 			'manage_options',
 			'searchforge-export',
 			[ $this, 'render_export' ]
@@ -86,8 +86,8 @@ class Menu {
 
 		add_submenu_page(
 			'searchforge',
-			__( 'Comparison', 'searchforge' ),
-			__( 'Comparison', 'searchforge' ),
+			__( 'Comparison', 'searchforge-wordpress-plugin' ),
+			__( 'Comparison', 'searchforge-wordpress-plugin' ),
 			'manage_options',
 			'searchforge-comparison',
 			[ $this, 'render_comparison' ]
@@ -95,8 +95,8 @@ class Menu {
 
 		add_submenu_page(
 			'searchforge',
-			__( 'Merger Analysis', 'searchforge' ),
-			__( 'Merger Analysis', 'searchforge' ),
+			__( 'Merger Analysis', 'searchforge-wordpress-plugin' ),
+			__( 'Merger Analysis', 'searchforge-wordpress-plugin' ),
 			'manage_options',
 			'searchforge-merger',
 			[ $this, 'render_merger' ]
@@ -104,8 +104,8 @@ class Menu {
 
 		add_submenu_page(
 			'searchforge',
-			__( 'Instructions', 'searchforge' ),
-			__( 'Instructions', 'searchforge' ),
+			__( 'Instructions', 'searchforge-wordpress-plugin' ),
+			__( 'Instructions', 'searchforge-wordpress-plugin' ),
 			'manage_options',
 			'searchforge-instructions',
 			[ $this, 'render_instructions' ]
@@ -113,8 +113,8 @@ class Menu {
 
 		add_submenu_page(
 			'searchforge',
-			__( 'Settings', 'searchforge' ),
-			__( 'Settings', 'searchforge' ),
+			__( 'Settings', 'searchforge-wordpress-plugin' ),
+			__( 'Settings', 'searchforge-wordpress-plugin' ),
 			'manage_options',
 			'searchforge-settings',
 			[ $this, 'render_settings' ]
@@ -123,8 +123,8 @@ class Menu {
 		// Hidden page detail view (no menu entry).
 		add_submenu_page(
 			null,
-			__( 'Page Detail', 'searchforge' ),
-			__( 'Page Detail', 'searchforge' ),
+			__( 'Page Detail', 'searchforge-wordpress-plugin' ),
+			__( 'Page Detail', 'searchforge-wordpress-plugin' ),
 			'manage_options',
 			'searchforge-page-detail',
 			[ $this, 'render_page_detail' ]

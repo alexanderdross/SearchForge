@@ -27,7 +27,7 @@ class Client {
 	public static function get_page_metrics( int $days = 28, int $limit = 100, ?array $property = null ): array|\WP_Error {
 		$property_id = self::resolve_ga4_property_id( $property );
 		if ( empty( $property_id ) ) {
-			return new \WP_Error( 'no_ga4', __( 'GA4 property ID not configured.', 'searchforge' ) );
+			return new \WP_Error( 'no_ga4', __( 'GA4 property ID not configured.', 'searchforge-wordpress-plugin' ) );
 		}
 
 		$body = [
@@ -83,7 +83,7 @@ class Client {
 	public static function get_landing_pages( int $days = 28, int $limit = 50, ?array $property = null ): array|\WP_Error {
 		$property_id = self::resolve_ga4_property_id( $property );
 		if ( empty( $property_id ) ) {
-			return new \WP_Error( 'no_ga4', __( 'GA4 property ID not configured.', 'searchforge' ) );
+			return new \WP_Error( 'no_ga4', __( 'GA4 property ID not configured.', 'searchforge-wordpress-plugin' ) );
 		}
 
 		$body = [
@@ -195,7 +195,7 @@ class Client {
 		$token = \SearchForge\Integrations\GSC\OAuth::get_access_token( $property );
 
 		if ( is_wp_error( $token ) ) {
-			return new \WP_Error( 'ga4_auth', __( 'GA4 requires a connected Google account. Connect via GSC settings.', 'searchforge' ) );
+			return new \WP_Error( 'ga4_auth', __( 'GA4 requires a connected Google account. Connect via GSC settings.', 'searchforge-wordpress-plugin' ) );
 		}
 
 		return $token;

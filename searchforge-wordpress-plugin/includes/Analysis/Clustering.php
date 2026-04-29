@@ -24,6 +24,7 @@ class Clustering {
 
 		global $wpdb;
 
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 		$latest_date = $wpdb->get_var( $wpdb->prepare(
 			"SELECT MAX(snapshot_date) FROM {$wpdb->prefix}sf_keywords WHERE source = 'gsc' AND property_id = %d",
 			$property_id
@@ -33,6 +34,7 @@ class Clustering {
 			return [];
 		}
 
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 		$keywords = $wpdb->get_results( $wpdb->prepare(
 			"SELECT query, SUM(clicks) as total_clicks, SUM(impressions) as total_impressions,
 				AVG(position) as avg_position

@@ -65,6 +65,7 @@ class Monitor {
 		$recent    = gmdate( 'Y-m-d', strtotime( '-2 days' ) );
 		$previous  = gmdate( 'Y-m-d', strtotime( '-9 days' ) );
 
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 		$drops = $wpdb->get_results( $wpdb->prepare(
 			"SELECT
 				r.query, r.page_path,
@@ -94,8 +95,9 @@ class Monitor {
 
 		return [
 			'type'    => 'ranking_drop',
+			/* translators: %1$d: number of keywords that dropped, %2$d: position drop threshold */
 			'title'   => sprintf(
-				__( '%d keywords dropped %d+ positions', 'searchforge' ),
+				__( '%1$d keywords dropped %2$d+ positions', 'searchforge-wordpress-plugin' ),
 				count( $drops ),
 				$threshold
 			),
@@ -117,6 +119,7 @@ class Monitor {
 		global $wpdb;
 
 		// Get last 4 weeks of daily click totals.
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 		$daily_clicks = $wpdb->get_results( $wpdb->prepare(
 			"SELECT snapshot_date, SUM(clicks) as total_clicks
 			FROM {$wpdb->prefix}sf_snapshots
@@ -157,8 +160,9 @@ class Monitor {
 
 		return [
 			'type'     => 'traffic_anomaly',
+			/* translators: %1$s: anomaly type (spike or drop), %2$s: percentage change, %3$s: direction relative to average (above or below) */
 			'title'    => sprintf(
-				__( 'Traffic %s detected: %s%% %s average', 'searchforge' ),
+				__( 'Traffic %1$s detected: %2$s%% %3$s average', 'searchforge-wordpress-plugin' ),
 				$type,
 				abs( $pct ),
 				$type === 'spike' ? 'above' : 'below'
@@ -191,8 +195,9 @@ class Monitor {
 
 		return [
 			'type'     => 'new_keywords',
+			/* translators: %1$d: number of new keywords, %2$d: number of pages */
 			'title'    => sprintf(
-				__( '%d new keywords detected across %d pages', 'searchforge' ),
+				__( '%1$d new keywords detected across %2$d pages', 'searchforge-wordpress-plugin' ),
 				$total_new,
 				count( $new_pages )
 			),
@@ -221,8 +226,9 @@ class Monitor {
 
 		return [
 			'type'     => 'content_decay',
+			/* translators: %d: number of pages showing content decay */
 			'title'    => sprintf(
-				__( '%d pages showing content decay (>20%% click decline)', 'searchforge' ),
+				__( '%d pages showing content decay (>20%% click decline)', 'searchforge-wordpress-plugin' ),
 				count( $significant )
 			),
 			'items'    => array_values( $significant ),
@@ -281,6 +287,7 @@ class Monitor {
 		global $wpdb;
 
 		foreach ( $alerts as $alert ) {
+			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
 			$wpdb->insert( "{$wpdb->prefix}sf_alerts", [
 				'alert_type'  => $alert['type'],
 				'title'       => $alert['title'],

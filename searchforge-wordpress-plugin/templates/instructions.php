@@ -67,6 +67,7 @@ $is_pro = SearchForge\Admin\Settings::is_pro();
 					<tr><td>Google Analytics 4</td><td><?php esc_html_e( 'Pro+', 'searchforge' ); ?></td><td>OAuth 2.0</td></tr>
 					<tr><td>Google Keyword Planner</td><td><?php esc_html_e( 'Pro+', 'searchforge' ); ?></td><td><?php esc_html_e( 'Developer Token', 'searchforge' ); ?></td></tr>
 					<tr><td>Google Trends (via SerpAPI)</td><td><?php esc_html_e( 'Pro+', 'searchforge' ); ?></td><td><?php esc_html_e( 'API Key', 'searchforge' ); ?></td></tr>
+					<tr><td>Adobe Analytics</td><td><?php esc_html_e( 'Pro+', 'searchforge' ); ?></td><td><?php esc_html_e( 'OAuth Server-to-Server', 'searchforge' ); ?></td></tr>
 				</tbody>
 			</table>
 			<p style="margin-top: 12px;"><?php esc_html_e( 'Configure all sources in SearchForge → Settings. Each data source enriches your briefs with additional context.', 'searchforge' ); ?></p>
@@ -151,22 +152,25 @@ $is_pro = SearchForge\Admin\Settings::is_pro();
 					<span class="sf-pro-badge">Pro</span>
 				<?php endif; ?>
 			</h2>
-			<p><?php esc_html_e( 'Generate a comprehensive markdown brief for domain mergers, migrations, and portfolio consolidation. Available under SearchForge → Merger Analysis.', 'searchforge' ); ?></p>
+			<p><?php esc_html_e( 'Generate a comprehensive markdown brief for domain mergers, migrations, and portfolio consolidation. Available under SearchForge → Merger Analysis. Works with analytics data from any CMS backend (WordPress, Drupal, custom).', 'searchforge' ); ?></p>
 			<h3><?php esc_html_e( 'How to Use', 'searchforge' ); ?></h3>
 			<ol>
 				<li><?php esc_html_e( 'Ensure at least 2 properties are configured with synced data.', 'searchforge' ); ?></li>
 				<li><?php esc_html_e( 'Go to SearchForge → Merger Analysis.', 'searchforge' ); ?></li>
 				<li><?php esc_html_e( 'Select 2 or more properties via the checkboxes.', 'searchforge' ); ?></li>
+				<li><?php esc_html_e( 'Optionally, upload CSV files with your current header/footer navigation items for each domain or subfolder (e.g., www.domain.com, www.domain.com/country/, www.domain.com/country/product-1/).', 'searchforge' ); ?></li>
 				<li><?php esc_html_e( 'Click "Generate Merger Brief" and wait for the analysis to complete.', 'searchforge' ); ?></li>
 				<li><?php esc_html_e( 'Review the rendered brief or click "Download .md" to save it.', 'searchforge' ); ?></li>
 			</ol>
+			<h3><?php esc_html_e( 'Navigation CSV Upload', 'searchforge' ); ?></h3>
+			<p><?php esc_html_e( 'Upload one CSV per domain or subfolder containing your current navigation items. The CSV must have a header row with columns: label, url, location (header or footer). The brief will include a "Current Navigation Inventory" section showing your existing items alongside the traffic-weighted recommendations.', 'searchforge' ); ?></p>
 			<h3><?php esc_html_e( 'What the Brief Includes', 'searchforge' ); ?></h3>
 			<ul>
 				<li><strong><?php esc_html_e( 'Executive Summary', 'searchforge' ); ?></strong> — <?php esc_html_e( 'Aggregate traffic, keyword counts, and top-level consolidation recommendations.', 'searchforge' ); ?></li>
 				<li><strong><?php esc_html_e( 'URL Pattern Analysis', 'searchforge' ); ?></strong> — <?php esc_html_e( 'Subfolder structure detection across properties.', 'searchforge' ); ?></li>
 				<li><strong><?php esc_html_e( 'Navigation Recommendations', 'searchforge' ); ?></strong> — <?php esc_html_e( 'Traffic-weighted header (max 8-10 items) and footer navigation suggestions, plus items to consolidate or retire.', 'searchforge' ); ?></li>
 				<li><strong><?php esc_html_e( 'Information Architecture', 'searchforge' ); ?></strong> — <?php esc_html_e( 'Proposed content silos from keyword clusters and URL patterns, redirect map for 301s, orphaned content flagging.', 'searchforge' ); ?></li>
-				<li><strong><?php esc_html_e( 'User Funnel Optimization', 'searchforge' ); ?></strong> — <?php esc_html_e( 'Entry points, drop-off pages, conversion corridors to protect, and internal linking recommendations (requires GA4 data).', 'searchforge' ); ?></li>
+				<li><strong><?php esc_html_e( 'User Funnel Optimization', 'searchforge' ); ?></strong> — <?php esc_html_e( 'Entry points, drop-off pages, conversion corridors to protect, and internal linking recommendations (requires GA4 or Adobe Analytics data).', 'searchforge' ); ?></li>
 				<li><strong><?php esc_html_e( 'Cross-Property Cannibalization', 'searchforge' ); ?></strong> — <?php esc_html_e( 'Keywords where multiple properties compete against each other in search results.', 'searchforge' ); ?></li>
 			</ul>
 		</div>

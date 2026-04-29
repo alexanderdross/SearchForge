@@ -15,6 +15,7 @@ class Property {
 		'gsc_access_token',
 		'gsc_refresh_token',
 		'bing_api_key',
+		'adobe_client_secret',
 	];
 
 	public static function get( int $id ): ?array {

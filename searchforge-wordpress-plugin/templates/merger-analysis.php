@@ -31,7 +31,7 @@ $property_id = SearchForge\Models\Property::get_active_property_id();
 	<?php else : ?>
 
 		<p class="description">
-			<?php esc_html_e( 'Generate a combined SEO analysis brief for selected properties. Useful for domain mergers, migrations, and portfolio analysis.', 'searchforge' ); ?>
+			<?php esc_html_e( 'Generate a combined SEO analysis brief for selected properties. Useful for domain mergers, migrations, and portfolio analysis. The analytics data can come from any CMS backend (WordPress, Drupal, custom).', 'searchforge' ); ?>
 		</p>
 
 		<div class="sf-merger-form" style="margin-top: 16px;">
@@ -44,7 +44,46 @@ $property_id = SearchForge\Models\Property::get_active_property_id();
 					</label>
 				<?php endforeach; ?>
 			</fieldset>
-			<p style="margin-top: 12px;">
+
+			<hr style="border: none; border-top: 1px solid #dcdcde; margin: 20px 0;">
+
+			<h2><?php esc_html_e( 'Upload Current Navigation (Optional)', 'searchforge' ); ?></h2>
+			<p class="description">
+				<?php esc_html_e( 'Upload CSV files with the current header and footer navigation items for each domain or subfolder. This enriches the brief with your existing navigation structure for comparison.', 'searchforge' ); ?>
+			</p>
+			<p class="description" style="margin-top: 4px;">
+				<?php esc_html_e( 'CSV format: label, url, location (header/footer). First row must be a header row.', 'searchforge' ); ?>
+			</p>
+
+			<div id="sf-nav-uploads" style="margin-top: 12px;">
+				<div class="sf-nav-upload-row" style="display: flex; gap: 8px; align-items: center; margin-bottom: 8px;">
+					<input type="text" class="sf-nav-csv-label regular-text" placeholder="<?php esc_attr_e( 'e.g. www.domain.com', 'searchforge' ); ?>" style="max-width: 240px;" />
+					<input type="file" class="sf-nav-csv-file" accept=".csv" />
+					<button type="button" class="button sf-nav-upload-remove" title="<?php esc_attr_e( 'Remove', 'searchforge' ); ?>">&times;</button>
+				</div>
+			</div>
+			<p style="margin-top: 8px;">
+				<button type="button" class="button" id="sf-add-nav-upload">
+					<?php esc_html_e( '+ Add Another Domain / Subfolder', 'searchforge' ); ?>
+				</button>
+			</p>
+
+			<details style="margin-top: 12px;">
+				<summary style="cursor: pointer; color: #2271b1;"><?php esc_html_e( 'CSV Example', 'searchforge' ); ?></summary>
+				<pre style="background: #f6f7f7; border: 1px solid #dcdcde; padding: 12px; margin-top: 8px; font-size: 13px;">label,url,location
+Home,https://www.domain.com/,header
+Products,https://www.domain.com/products/,header
+About Us,https://www.domain.com/about/,header
+Contact,https://www.domain.com/contact/,header
+Blog,https://www.domain.com/blog/,footer
+Careers,https://www.domain.com/careers/,footer
+Privacy Policy,https://www.domain.com/privacy/,footer
+Terms of Service,https://www.domain.com/terms/,footer</pre>
+			</details>
+
+			<hr style="border: none; border-top: 1px solid #dcdcde; margin: 20px 0;">
+
+			<p>
 				<button type="button" class="button button-primary" id="sf-generate-merger-brief" disabled>
 					<?php esc_html_e( 'Generate Merger Brief', 'searchforge' ); ?>
 				</button>

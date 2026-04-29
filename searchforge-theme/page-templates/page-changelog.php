@@ -22,7 +22,38 @@ get_header();
 
 		<article class="sf-changelog-entry">
 			<div class="sf-changelog-entry__header">
-				<h2>v2.1.0 <span class="sf-badge sf-badge--accent">Latest</span></h2>
+				<h2>v3.0.0 <span class="sf-badge sf-badge--accent">Latest</span></h2>
+				<time class="sf-text--muted" datetime="2026-04-29">April 29, 2026</time>
+			</div>
+			<h3>Multi-Property Management &amp; Merger Intelligence</h3>
+			<p class="sf-text--muted">The biggest SearchForge release yet. Manage multiple domains from one WordPress installation, compare metrics across properties, and generate data-driven merger briefs for domain consolidations.</p>
+			<h4>Added</h4>
+			<ul>
+				<li>Multi-domain property management &mdash; manage multiple GSC properties, Bing sites, and GA4 streams per WordPress installation</li>
+				<li>Property selector dropdown on all admin pages for switching between properties</li>
+				<li>Property Comparison page &mdash; side-by-side metrics across all properties (clicks, impressions, CTR, position, pages, keywords, SearchForge Score)</li>
+				<li>CMS Backend Merger Analysis &mdash; comprehensive markdown briefs for domain mergers, migrations, and portfolio consolidation</li>
+				<li>Merger brief includes: executive summary, URL pattern analysis, traffic-weighted navigation recommendations, information architecture restructuring with 301 redirect map, user funnel optimization, and cross-property keyword cannibalization</li>
+				<li>Instructions page in the plugin admin with documentation for all features</li>
+				<li>New <a href="<?php echo esc_url( home_url( '/docs/multi-property/' ) ); ?>">Multi-Property &amp; Merger documentation</a></li>
+				<li>REST API: <code>GET/POST /properties</code>, <code>GET /comparison</code>, <code>GET /merger-analysis</code></li>
+				<li>WP-CLI: <code>wp searchforge properties</code>, <code>wp searchforge merger --properties=1,2,3</code></li>
+			</ul>
+			<h4>Changed</h4>
+			<ul>
+				<li>All database queries now filter by <code>property_id</code> for complete data isolation</li>
+				<li>OAuth tokens stored per-property with AES-256-CBC encryption</li>
+				<li>Settings page reorganized with Properties management section</li>
+			</ul>
+			<h4>Fixed</h4>
+			<ul>
+				<li>Page Detail view engine call argument order corrected</li>
+			</ul>
+		</article>
+
+		<article class="sf-changelog-entry">
+			<div class="sf-changelog-entry__header">
+				<h2>v2.1.0</h2>
 				<time class="sf-text--muted" datetime="2026-04-02">April 2, 2026</time>
 			</div>
 			<h3>Adobe Analytics Integration</h3>

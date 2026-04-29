@@ -2,6 +2,36 @@
 
 All notable changes to the SearchForge WordPress plugin will be documented in this file.
 
+## [3.0.0] - 2026-04-29
+
+### Added
+- Multi-domain property management: manage multiple GSC properties, Bing sites, and GA4 streams from one WordPress installation.
+- New `sf_properties` database table with per-property credentials (AES-256-CBC encrypted).
+- `property_id` column added to all 7 existing data tables with migration from single-property data.
+- Property selector dropdown on all admin pages for switching between properties.
+- Property Comparison page: side-by-side metrics (clicks, impressions, CTR, position, pages, keywords, SearchForge Score) across all properties.
+- CMS Backend Merger Analysis: generates comprehensive markdown briefs for domain mergers, migrations, and portfolio consolidation.
+- Merger brief includes: executive summary, URL pattern analysis, traffic-weighted navigation recommendations (header/footer), information architecture restructuring with redirect map, user funnel optimization (requires GA4), and cross-property keyword cannibalization detection.
+- Navigation scoring formula: clicks (30%) + sessions (20%) + engagement (20%) + keyword breadth (15%) + conversions (15%).
+- Instructions admin page with comprehensive documentation for all plugin features.
+- REST API: `GET/POST /properties`, `GET/PUT/DELETE /properties/{id}`, `GET /comparison`, `GET /merger-analysis`.
+- REST API: all existing endpoints accept optional `property_id` parameter.
+- WP-CLI: `wp searchforge properties` (list all), `wp searchforge merger --properties=1,2,3 --file=out.md`.
+- WP-CLI: `--property=<id>` flag on `sync`, `export` commands.
+- AJAX handlers: `switch_property`, `add_property`, `remove_property`, `sync_property`, `generate_merger_brief`.
+- Multi-property daily sync loop processes all properties automatically.
+
+### Changed
+- OAuth tokens and API keys stored in `sf_properties` table (per-property) instead of `wp_options`.
+- Encryption logic extracted to shared `Database\Encryption` helper.
+- All ~90 database queries across 16 files now filter by `property_id`.
+- Transient cache keys include `property_id` for per-property isolation.
+- Settings page reorganized with Properties management section.
+- Version bump to 3.0.0 for major multi-property architecture change.
+
+### Fixed
+- Page Detail view: `Engine::get_page_trend()` and `Engine::get_yoy_comparison()` now receive correct `source` argument.
+
 ## [2.0.0] - 2026-03-08
 
 ### Added

@@ -4,7 +4,7 @@ Tags: seo, search console, analytics, content optimization, llm
 Requires at least: 6.0
 Tested up to: 6.9
 Requires PHP: 8.0
-Stable tag: 3.1.0
+Stable tag: 3.2.0
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -68,6 +68,14 @@ SearchForge generates structured markdown documents for each page combining sear
 
 == Changelog ==
 
+= 3.2.0 =
+* Added step-by-step API credential setup guides for all integrations (GSC, Bing, GA4, Keyword Planner, SerpAPI, Adobe Analytics).
+* Added OAuth redirect URI display with copy button on Settings page for easy Google Cloud Console configuration.
+* Added downloadable CSV template for merger analysis navigation upload.
+* Added direct links to Google Cloud Console, Bing Webmaster Tools, Google Ads, SerpAPI, and Adobe Developer Console in documentation.
+* Changed admin footer text from "made with love" to "made with heart".
+* Fixed all WordPress Plugin Check errors and warnings across 15 files.
+
 = 3.1.0 =
 * Added Adobe Analytics integration via Analytics 2.0 API (visits, page views, bounce rate, time on page, conversions, revenue).
 * Added OAuth Server-to-Server authentication with Adobe IMS.
@@ -87,6 +95,9 @@ SearchForge generates structured markdown documents for each page combining sear
 * Fixed Page Detail view argument handling for trend and year-over-year data.
 
 == Upgrade Notice ==
+
+= 3.2.0 =
+Adds detailed API credential setup guides, OAuth redirect URI display, and downloadable CSV template. Resolves all Plugin Check issues. No database migration required.
 
 = 3.1.0 =
 Adds Adobe Analytics as a ninth data source and CSV navigation upload for merger analysis. No database migration required.

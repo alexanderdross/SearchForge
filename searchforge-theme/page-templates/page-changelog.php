@@ -22,7 +22,34 @@ get_header();
 
 		<article class="sf-changelog-entry">
 			<div class="sf-changelog-entry__header">
-				<h2>v3.1.0 <span class="sf-badge sf-badge--accent">Latest</span></h2>
+				<h2>v3.2.0 <span class="sf-badge sf-badge--accent">Latest</span></h2>
+				<time class="sf-text--muted" datetime="2026-04-30">April 30, 2026</time>
+			</div>
+			<h3>Documentation &amp; Developer Experience</h3>
+			<p class="sf-text--muted">Comprehensive API credential setup guides, improved Settings UX, and full WordPress Plugin Check compliance.</p>
+			<h4>Added</h4>
+			<ul>
+				<li>Step-by-step API credential setup guides for all integrations (GSC OAuth, Bing, GA4, Keyword Planner, SerpAPI, Adobe Analytics) in the plugin Instructions page</li>
+				<li>OAuth redirect URI display with copy button on the Settings page for easy Google Cloud Console configuration</li>
+				<li>Downloadable CSV template for merger analysis navigation upload</li>
+				<li>Direct links to Google Cloud Console, Bing Webmaster Tools, Google Ads, SerpAPI Dashboard, and Adobe Developer Console throughout documentation</li>
+				<li>Expanded <a href="<?php echo esc_url( home_url( '/docs/data-sources/' ) ); ?>">Data Sources</a> and <a href="<?php echo esc_url( home_url( '/docs/getting-started/' ) ); ?>">Getting Started</a> documentation with detailed credential creation walkthroughs</li>
+			</ul>
+			<h4>Changed</h4>
+			<ul>
+				<li>Admin footer text updated</li>
+				<li>Theme version bumped to 1.7.0</li>
+			</ul>
+			<h4>Fixed</h4>
+			<ul>
+				<li>Resolved all WordPress Plugin Check errors and warnings across 15 files</li>
+				<li>Fixed variable prefix compliance in uninstall handler</li>
+			</ul>
+		</article>
+
+		<article class="sf-changelog-entry">
+			<div class="sf-changelog-entry__header">
+				<h2>v3.1.0</h2>
 				<time class="sf-text--muted" datetime="2026-04-29">April 29, 2026</time>
 			</div>
 			<h3>Adobe Analytics &amp; CSV Navigation Upload</h3>

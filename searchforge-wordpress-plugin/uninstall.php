@@ -9,7 +9,7 @@ defined( 'WP_UNINSTALL_PLUGIN' ) || exit;
 global $wpdb;
 
 // Drop custom tables.
-$sf_tables = [
+$searchforge_tables = [
 	'sf_properties',
 	'sf_snapshots',
 	'sf_keywords',
@@ -23,9 +23,9 @@ $sf_tables = [
 	'sf_competitor_keywords',
 ];
 
-foreach ( $sf_tables as $sf_table ) {
+foreach ( $searchforge_tables as $searchforge_table ) {
 	// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.DirectDatabaseQuery.SchemaChange, WordPress.DB.PreparedSQL
-	$wpdb->query( "DROP TABLE IF EXISTS {$wpdb->prefix}{$sf_table}" );
+	$wpdb->query( "DROP TABLE IF EXISTS {$wpdb->prefix}{$searchforge_table}" );
 }
 
 // Remove options.

@@ -38,37 +38,41 @@ class Cleanup {
 		}
 
 		// Clean snapshots.
-		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders.ReplacementsWrongNumber
+		// phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders.ReplacementsWrongNumber, PluginCheck.Security.DirectDB.UnescapedDBParameter
 		$deleted['snapshots'] = (int) $wpdb->query( $wpdb->prepare(
 			"DELETE FROM {$wpdb->prefix}sf_snapshots WHERE snapshot_date < %s{$property_clause}",
 			$cutoff_date,
 			...$property_args
 		) );
+		// phpcs:enable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders.ReplacementsWrongNumber, PluginCheck.Security.DirectDB.UnescapedDBParameter
 
 		// Clean keywords.
-		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders.ReplacementsWrongNumber
+		// phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders.ReplacementsWrongNumber, PluginCheck.Security.DirectDB.UnescapedDBParameter
 		$deleted['keywords'] = (int) $wpdb->query( $wpdb->prepare(
 			"DELETE FROM {$wpdb->prefix}sf_keywords WHERE snapshot_date < %s{$property_clause}",
 			$cutoff_date,
 			...$property_args
 		) );
+		// phpcs:enable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders.ReplacementsWrongNumber, PluginCheck.Security.DirectDB.UnescapedDBParameter
 
 		// Clean GA4 metrics.
-		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders.ReplacementsWrongNumber
+		// phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders.ReplacementsWrongNumber, PluginCheck.Security.DirectDB.UnescapedDBParameter
 		$deleted['ga4'] = (int) $wpdb->query( $wpdb->prepare(
 			"DELETE FROM {$wpdb->prefix}sf_ga4_metrics WHERE snapshot_date < %s{$property_clause}",
 			$cutoff_date,
 			...$property_args
 		) );
+		// phpcs:enable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders.ReplacementsWrongNumber, PluginCheck.Security.DirectDB.UnescapedDBParameter
 
 		// Clean old alerts (keep 2x retention period).
 		$alert_cutoff = gmdate( 'Y-m-d H:i:s', strtotime( "-" . ( $retention_days * 2 ) . " days" ) );
-		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders.ReplacementsWrongNumber
+		// phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders.ReplacementsWrongNumber, PluginCheck.Security.DirectDB.UnescapedDBParameter
 		$deleted['alerts'] = (int) $wpdb->query( $wpdb->prepare(
 			"DELETE FROM {$wpdb->prefix}sf_alerts WHERE created_at < %s AND is_read = 1{$property_clause}",
 			$alert_cutoff,
 			...$property_args
 		) );
+		// phpcs:enable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders.ReplacementsWrongNumber, PluginCheck.Security.DirectDB.UnescapedDBParameter
 
 		// Clean expired brief caches.
 		if ( $property_id > 0 ) {
@@ -98,7 +102,7 @@ class Cleanup {
 					$property_id
 				) );
 				if ( $keep_id ) {
-					// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
+					// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 					$deleted['logs'] = (int) $wpdb->query( $wpdb->prepare(
 						"DELETE FROM {$wpdb->prefix}sf_sync_log WHERE id < %d AND property_id = %d",
 						$keep_id,
@@ -117,7 +121,7 @@ class Cleanup {
 					"SELECT id FROM {$wpdb->prefix}sf_sync_log ORDER BY id DESC LIMIT 1 OFFSET 89"
 				);
 				if ( $keep_id ) {
-					// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
+					// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 					$deleted['logs'] = (int) $wpdb->query( $wpdb->prepare(
 						"DELETE FROM {$wpdb->prefix}sf_sync_log WHERE id < %d",
 						$keep_id

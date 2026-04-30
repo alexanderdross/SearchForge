@@ -62,15 +62,40 @@ $sections = [
 
 		<article class="sf-doc-section" id="connecting-google-search-console">
 			<h2>Connecting Google Search Console</h2>
-			<p>Google Search Console is the primary data source and works on every tier, including Free.</p>
+			<p>Google Search Console is the primary data source and works on every tier, including Free. You need to create OAuth 2.0 credentials in Google Cloud Console first.</p>
+
+			<h3>Step 1: Create a Google Cloud Project</h3>
 			<ol class="sf-content">
-				<li>Go to <strong>SearchForge &rarr; Data Sources</strong>.</li>
-				<li>Click <strong>Connect Google Search Console</strong>.</li>
-				<li>Sign in with the Google account that has access to your GSC property.</li>
-				<li>Grant the requested permissions (read-only access to Search Console data).</li>
+				<li>Go to <a href="https://console.cloud.google.com/" target="_blank" rel="noopener">Google Cloud Console</a>.</li>
+				<li>Click the project dropdown at the top and select <strong>New Project</strong>.</li>
+				<li>Name it (e.g., &ldquo;SearchForge&rdquo;) and click <strong>Create</strong>.</li>
+			</ol>
+
+			<h3>Step 2: Enable the Search Console API</h3>
+			<ol class="sf-content">
+				<li>In your project, go to <a href="https://console.cloud.google.com/apis/library" target="_blank" rel="noopener">APIs &amp; Services &rarr; Library</a>.</li>
+				<li>Search for &ldquo;Google Search Console API&rdquo; and click <strong>Enable</strong>.</li>
+			</ol>
+
+			<h3>Step 3: Create OAuth 2.0 Credentials</h3>
+			<ol class="sf-content">
+				<li>Go to <a href="https://console.cloud.google.com/apis/credentials" target="_blank" rel="noopener">APIs &amp; Services &rarr; Credentials</a>.</li>
+				<li>Click <strong>Create Credentials &rarr; OAuth client ID</strong>.</li>
+				<li>If prompted, configure the <a href="https://console.cloud.google.com/apis/credentials/consent" target="_blank" rel="noopener">OAuth Consent Screen</a> first: select &ldquo;External&rdquo;, fill in your app name and email, then save.</li>
+				<li>For Application Type, select <strong>Web application</strong>.</li>
+				<li>Under <strong>Authorized redirect URIs</strong>, add the callback URL shown in SearchForge &rarr; Settings under the GSC section (displayed below the Client Secret field with a Copy button).</li>
+				<li>Click <strong>Create</strong> and copy the <strong>Client ID</strong> and <strong>Client Secret</strong>.</li>
+			</ol>
+
+			<h3>Step 4: Connect in SearchForge</h3>
+			<ol class="sf-content">
+				<li>Go to <strong>SearchForge &rarr; Settings &rarr; Google Search Console</strong>.</li>
+				<li>Paste the Client ID and Client Secret.</li>
+				<li>Click <strong>Authorize with Google</strong> and sign in with the Google account that has access to your GSC property.</li>
+				<li>Grant the requested permissions (read-only access).</li>
 				<li>Select your GSC property from the dropdown and click <strong>Save</strong>.</li>
 			</ol>
-			<p>SearchForge uses OAuth 2.0  - your credentials are never stored. The access token is stored securely in your WordPress database.</p>
+			<p>SearchForge uses OAuth 2.0 &mdash; your Google password is never stored. Only the access and refresh tokens are saved securely in your WordPress database.</p>
 		</article>
 
 		<hr style="border: none; border-top: 1px solid var(--sf-border); margin: var(--space-2xl) 0;">
@@ -79,15 +104,15 @@ $sections = [
 			<h2>Connecting Additional Data Sources</h2>
 			<p>Pro and above tiers can connect up to 9 data sources. After GSC, consider connecting these for richer briefs:</p>
 			<ul class="sf-content">
-				<li><strong>Bing Webmaster Tools</strong> - Bing-specific search data via API key or OAuth.</li>
-				<li><strong>Google Analytics 4</strong> - On-page behavior metrics (bounce rate, engagement, conversions). Uses the same Google OAuth as GSC.</li>
-				<li><strong>Google Keyword Planner</strong> - Search volume and competition data. Requires a Google Ads account.</li>
-				<li><strong>Google Trends</strong> - Relative interest and rising queries. Requires a SerpApi key.</li>
-				<li><strong>Google Business Profile</strong> - Local SEO data for physical locations.</li>
-				<li><strong>Bing Places</strong> - Bing local search data.</li>
-				<li><strong>Adobe Analytics</strong> - Enterprise behavior metrics via the Adobe Analytics 2.0 API. Requires Adobe Developer Console credentials (Organization ID, Client ID, Client Secret) and a Report Suite ID.</li>
+				<li><strong>Bing Webmaster Tools</strong> &mdash; Get your API key from <a href="https://www.bing.com/webmasters/" target="_blank" rel="noopener">Bing Webmaster Tools</a> &rarr; Settings &rarr; API Access &rarr; API Key.</li>
+				<li><strong>Google Analytics 4</strong> &mdash; Uses the same Google Cloud project as GSC. Enable the &ldquo;Google Analytics Data API&rdquo; in <a href="https://console.cloud.google.com/apis/library" target="_blank" rel="noopener">APIs &amp; Services &rarr; Library</a>, then enter your GA4 Property ID (found in <a href="https://analytics.google.com/analytics/web/" target="_blank" rel="noopener">Google Analytics</a> &rarr; Admin &rarr; Property Settings).</li>
+				<li><strong>Google Keyword Planner</strong> &mdash; Requires a <a href="https://ads.google.com/" target="_blank" rel="noopener">Google Ads</a> account (no active campaigns needed). Get a developer token from Tools &amp; Settings &rarr; Setup &rarr; API Center.</li>
+				<li><strong>Google Trends</strong> &mdash; Requires a <a href="https://serpapi.com/" target="_blank" rel="noopener">SerpAPI</a> key. Copy it from your <a href="https://serpapi.com/dashboard" target="_blank" rel="noopener">SerpAPI Dashboard</a>.</li>
+				<li><strong>Google Business Profile</strong> &mdash; Local SEO data for physical locations. Connect via OAuth.</li>
+				<li><strong>Bing Places</strong> &mdash; Bing local search data. Connect with your Microsoft account.</li>
+				<li><strong>Adobe Analytics</strong> &mdash; Create an OAuth Server-to-Server credential in the <a href="https://developer.adobe.com/console/" target="_blank" rel="noopener">Adobe Developer Console</a>. You&rsquo;ll need the Organization ID, Client ID, Client Secret, and Report Suite ID.</li>
 			</ul>
-			<p>Configure all sources at <strong>SearchForge - Data Sources</strong>. Each source enriches your briefs with additional context.</p>
+			<p>Configure all sources at <strong>SearchForge &rarr; Settings</strong>. See the <a href="<?php echo esc_url( home_url( '/docs/data-sources/' ) ); ?>">Data Sources</a> documentation for detailed step-by-step guides for each integration.</p>
 		</article>
 
 		<hr style="border: none; border-top: 1px solid var(--sf-border); margin: var(--space-2xl) 0;">

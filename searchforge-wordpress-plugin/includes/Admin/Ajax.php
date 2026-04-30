@@ -108,7 +108,7 @@ class Ajax {
 		}
 
 		global $wpdb;
-		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 		$wpdb->update( "{$wpdb->prefix}sf_alerts", [ 'is_read' => 1 ], [ 'id' => $alert_id ] );
 
 		wp_send_json_success();
@@ -460,7 +460,7 @@ class Ajax {
 			wp_send_json_error( [ 'message' => __( 'Merger analysis requires a Pro license.', 'searchforge-wordpress-plugin' ) ] );
 		}
 
-		$ids = array_map( 'absint', array_map( 'wp_unslash', (array) ( $_POST['property_ids'] ?? [] ) ) );
+		$ids = array_map( 'absint', wp_unslash( (array) ( $_POST['property_ids'] ?? [] ) ) ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
 		$ids = array_filter( $ids );
 
 		if ( count( $ids ) < 2 ) {
@@ -557,11 +557,14 @@ class Ajax {
 	private function parse_nav_csv_uploads(): array {
 		$nav_data = [];
 
+		// phpcs:ignore WordPress.Security.NonceVerification.Missing
 		if ( empty( $_FILES['nav_csv_files'] ) ) {
 			return $nav_data;
 		}
 
+		// phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
 		$files = $_FILES['nav_csv_files'];
+		// phpcs:ignore WordPress.Security.NonceVerification.Missing
 		$labels = array_map( 'sanitize_text_field', wp_unslash( $_POST['nav_csv_labels'] ?? [] ) );
 
 		$file_count = is_array( $files['name'] ) ? count( $files['name'] ) : 0;

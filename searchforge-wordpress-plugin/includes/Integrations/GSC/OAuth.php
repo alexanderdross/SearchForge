@@ -112,8 +112,8 @@ class OAuth {
 		if ( is_wp_error( $response ) ) {
 			add_action( 'admin_notices', function () use ( $response ) {
 				echo '<div class="notice notice-error"><p>' .
-					/* translators: %s: error message from token exchange */
 					esc_html( sprintf(
+						/* translators: %s: error message from token exchange */
 						__( 'SearchForge: Token exchange failed: %s', 'searchforge-wordpress-plugin' ),
 						$response->get_error_message()
 					) ) .
@@ -127,8 +127,8 @@ class OAuth {
 		if ( isset( $body['error'] ) ) {
 			add_action( 'admin_notices', function () use ( $body ) {
 				echo '<div class="notice notice-error"><p>' .
-					/* translators: %s: Google OAuth error description */
 					esc_html( sprintf(
+						/* translators: %s: Google OAuth error description */
 						__( 'SearchForge: Google OAuth error: %s', 'searchforge-wordpress-plugin' ),
 						$body['error_description'] ?? $body['error']
 					) ) .

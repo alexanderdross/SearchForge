@@ -42,8 +42,8 @@ $cannibal     = $is_pro ? SearchForge\Admin\PageDetail::get_page_cannibalization
 
 	<p class="sf-page-meta">
 		<?php
-		/* translators: %s: snapshot date */
 		echo esc_html( sprintf(
+			/* translators: %s: snapshot date */
 			__( 'Data from %s', 'searchforge-wordpress-plugin' ),
 			wp_date( get_option( 'date_format' ), strtotime( $page_data['snapshot_date'] ) )
 		) ); ?>
@@ -126,8 +126,8 @@ $cannibal     = $is_pro ? SearchForge\Admin\PageDetail::get_page_cannibalization
 				<canvas id="sf-trend-chart" height="280"></canvas>
 				<span class="screen-reader-text">
 					<?php
-					/* translators: %1$s: page path, %2$s: current clicks, %3$s: current impressions, %4$s: current position */
 					echo esc_html( sprintf(
+						/* translators: %1$s: page path, %2$s: current clicks, %3$s: current impressions, %4$s: current position */
 						__( 'Line chart displaying the 30-day trend for page %1$s. Current clicks: %2$s, impressions: %3$s, position: %4$s.', 'searchforge-wordpress-plugin' ),
 						$page_path,
 						number_format( $page_data['clicks'] ),
@@ -220,8 +220,8 @@ $cannibal     = $is_pro ? SearchForge\Admin\PageDetail::get_page_cannibalization
 				<canvas id="sf-position-chart" height="200"></canvas>
 				<span class="screen-reader-text">
 					<?php
-					/* translators: %d: total number of keywords */
 					echo esc_html( sprintf(
+						/* translators: %d: total number of keywords */
 						__( 'Bar chart showing keyword position distribution: %d keywords total across position ranges.', 'searchforge-wordpress-plugin' ),
 						array_sum( $pos_dist )
 					) ); ?>
@@ -377,8 +377,8 @@ $cannibal     = $is_pro ? SearchForge\Admin\PageDetail::get_page_cannibalization
 					<p>
 						<strong><?php esc_html_e( 'Content Decay Detected', 'searchforge-wordpress-plugin' ); ?></strong> -
 						<?php
-						/* translators: %1$s: percentage of click decline, %2$d: number of days in decay period */
 						echo esc_html( sprintf(
+							/* translators: %1$s: percentage of click decline, %2$d: number of days in decay period */
 							__( 'Clicks declined %1$s%% over the last %2$d days.', 'searchforge-wordpress-plugin' ),
 							$trend['decay_percentage'],
 							$trend['decay_period_days']

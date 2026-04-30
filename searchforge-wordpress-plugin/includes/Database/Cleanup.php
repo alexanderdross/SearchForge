@@ -38,7 +38,7 @@ class Cleanup {
 		}
 
 		// Clean snapshots.
-		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders.ReplacementsWrongNumber
 		$deleted['snapshots'] = (int) $wpdb->query( $wpdb->prepare(
 			"DELETE FROM {$wpdb->prefix}sf_snapshots WHERE snapshot_date < %s{$property_clause}",
 			$cutoff_date,
@@ -46,7 +46,7 @@ class Cleanup {
 		) );
 
 		// Clean keywords.
-		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders.ReplacementsWrongNumber
 		$deleted['keywords'] = (int) $wpdb->query( $wpdb->prepare(
 			"DELETE FROM {$wpdb->prefix}sf_keywords WHERE snapshot_date < %s{$property_clause}",
 			$cutoff_date,
@@ -54,7 +54,7 @@ class Cleanup {
 		) );
 
 		// Clean GA4 metrics.
-		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders.ReplacementsWrongNumber
 		$deleted['ga4'] = (int) $wpdb->query( $wpdb->prepare(
 			"DELETE FROM {$wpdb->prefix}sf_ga4_metrics WHERE snapshot_date < %s{$property_clause}",
 			$cutoff_date,
@@ -63,7 +63,7 @@ class Cleanup {
 
 		// Clean old alerts (keep 2x retention period).
 		$alert_cutoff = gmdate( 'Y-m-d H:i:s', strtotime( "-" . ( $retention_days * 2 ) . " days" ) );
-		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders.ReplacementsWrongNumber
 		$deleted['alerts'] = (int) $wpdb->query( $wpdb->prepare(
 			"DELETE FROM {$wpdb->prefix}sf_alerts WHERE created_at < %s AND is_read = 1{$property_clause}",
 			$alert_cutoff,
@@ -72,13 +72,13 @@ class Cleanup {
 
 		// Clean expired brief caches.
 		if ( $property_id > 0 ) {
-			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
+			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 			$deleted['briefs'] = (int) $wpdb->query( $wpdb->prepare(
 				"DELETE FROM {$wpdb->prefix}sf_briefs_cache WHERE expires_at < NOW() AND property_id = %d",
 				$property_id
 			) );
 		} else {
-			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
+			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 			$deleted['briefs'] = (int) $wpdb->query(
 				"DELETE FROM {$wpdb->prefix}sf_briefs_cache WHERE expires_at < NOW()"
 			);

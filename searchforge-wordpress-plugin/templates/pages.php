@@ -29,8 +29,8 @@ $base_url    = admin_url( 'admin.php?page=searchforge-pages' );
 		<div class="notice notice-info">
 			<p>
 				<?php
-				/* translators: %d: maximum number of pages allowed in free tier */
 				echo esc_html( sprintf(
+					/* translators: %d: maximum number of pages allowed in free tier */
 					__( 'Free tier is limited to %d pages. Upgrade to Pro for unlimited pages.', 'searchforge-wordpress-plugin' ),
 					$limit
 				) ); ?>

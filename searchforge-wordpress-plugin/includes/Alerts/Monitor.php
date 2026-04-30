@@ -95,8 +95,8 @@ class Monitor {
 
 		return [
 			'type'    => 'ranking_drop',
-			/* translators: %1$d: number of keywords that dropped, %2$d: position drop threshold */
 			'title'   => sprintf(
+				/* translators: %1$d: number of keywords that dropped, %2$d: position drop threshold */
 				__( '%1$d keywords dropped %2$d+ positions', 'searchforge-wordpress-plugin' ),
 				count( $drops ),
 				$threshold
@@ -160,8 +160,8 @@ class Monitor {
 
 		return [
 			'type'     => 'traffic_anomaly',
-			/* translators: %1$s: anomaly type (spike or drop), %2$s: percentage change, %3$s: direction relative to average (above or below) */
 			'title'    => sprintf(
+				/* translators: %1$s: anomaly type (spike or drop), %2$s: percentage change, %3$s: direction relative to average (above or below) */
 				__( 'Traffic %1$s detected: %2$s%% %3$s average', 'searchforge-wordpress-plugin' ),
 				$type,
 				abs( $pct ),
@@ -195,8 +195,8 @@ class Monitor {
 
 		return [
 			'type'     => 'new_keywords',
-			/* translators: %1$d: number of new keywords, %2$d: number of pages */
 			'title'    => sprintf(
+				/* translators: %1$d: number of new keywords, %2$d: number of pages */
 				__( '%1$d new keywords detected across %2$d pages', 'searchforge-wordpress-plugin' ),
 				$total_new,
 				count( $new_pages )
@@ -226,8 +226,8 @@ class Monitor {
 
 		return [
 			'type'     => 'content_decay',
-			/* translators: %d: number of pages showing content decay */
 			'title'    => sprintf(
+				/* translators: %d: number of pages showing content decay */
 				__( '%d pages showing content decay (>20%% click decline)', 'searchforge-wordpress-plugin' ),
 				count( $significant )
 			),

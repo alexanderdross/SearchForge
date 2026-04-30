@@ -64,8 +64,8 @@ if ( $is_pro ) {
 								</span>
 								<span class="sf-cannibal-meta">
 									<?php
-									/* translators: %1$d: number of pages, %2$s: total clicks, %3$s: total impressions, %4$s: position spread */
 									echo esc_html( sprintf(
+										/* translators: %1$d: number of pages, %2$s: total clicks, %3$s: total impressions, %4$s: position spread */
 										__( '%1$d pages | %2$s clicks | %3$s impressions | spread: %4$s pos', 'searchforge-wordpress-plugin' ),
 										$item['page_count'],
 										number_format( $item['total_clicks'] ),
@@ -116,8 +116,8 @@ if ( $is_pro ) {
 								<strong><?php echo esc_html( $cluster['name'] ); ?></strong>
 								<span class="sf-cluster-meta">
 									<?php
-									/* translators: %1$d: number of keywords, %2$s: total clicks, %3$s: total impressions */
 									echo esc_html( sprintf(
+										/* translators: %1$d: number of keywords, %2$s: total clicks, %3$s: total impressions */
 										__( '%1$d keywords | %2$s clicks | %3$s impressions', 'searchforge-wordpress-plugin' ),
 										count( $cluster['keywords'] ),
 										number_format( $cluster['total_clicks'] ),

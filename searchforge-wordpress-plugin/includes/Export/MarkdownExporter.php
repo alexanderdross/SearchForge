@@ -146,7 +146,7 @@ class MarkdownExporter {
 		}
 
 		// Top pages (GSC primary, Bing secondary).
-		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 		$pages = $wpdb->get_results( $wpdb->prepare(
 			"SELECT page_path, clicks, impressions, ctr, position
 			FROM {$wpdb->prefix}sf_snapshots

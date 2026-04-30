@@ -46,8 +46,8 @@ $can_add = count( $competitors ) < $limit;
 				</div>
 				<p class="description">
 					<?php
-					/* translators: %1$d: number of competitor slots used, %2$d: total competitor slots available */
 					echo esc_html( sprintf(
+						/* translators: %1$d: number of competitor slots used, %2$d: total competitor slots available */
 						__( '%1$d of %2$d competitor slots used.', 'searchforge-wordpress-plugin' ),
 						count( $competitors ),
 						$limit

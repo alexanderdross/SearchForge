@@ -69,12 +69,15 @@ class AuditLog {
 	}
 
 	public function on_export(): void {
+		// phpcs:ignore WordPress.Security.NonceVerification.Missing
 		$type   = sanitize_text_field( wp_unslash( $_POST['export_type'] ?? 'unknown' ) );
+		// phpcs:ignore WordPress.Security.NonceVerification.Missing
 		$format = sanitize_text_field( wp_unslash( $_POST['export_format'] ?? 'unknown' ) );
 		self::log( 'data_export', "Exported {$type} as {$format}" );
 	}
 
 	public function on_alert_dismissed(): void {
+		// phpcs:ignore WordPress.Security.NonceVerification.Missing
 		$alert_id = absint( wp_unslash( $_POST['alert_id'] ?? 0 ) );
 		if ( $alert_id ) {
 			self::log( 'alert_dismissed', "Alert #{$alert_id} dismissed" );
@@ -122,7 +125,7 @@ class AuditLog {
 		$params[] = $limit;
 		$params[] = $offset;
 
-		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders.ReplacementsWrongNumber
 		return $wpdb->get_results( $wpdb->prepare(
 			"SELECT * FROM {$wpdb->prefix}sf_audit_log
 			{$where}

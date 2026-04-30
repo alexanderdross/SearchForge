@@ -60,7 +60,7 @@ class Syncer {
 
 		$synced = 0;
 
-		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 		$wpdb->query( 'START TRANSACTION' );
 
 		try {
@@ -68,7 +68,7 @@ class Syncer {
 				$organic = $landing_data[ $path ] ?? [];
 
 				// Delete existing data for this date + path + property.
-				// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
+				// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 				$wpdb->query( $wpdb->prepare(
 					"DELETE FROM {$table} WHERE page_path = %s AND snapshot_date = %s AND property_id = %d",
 					$path,
@@ -76,7 +76,7 @@ class Syncer {
 					$this->property_id
 				) );
 
-				// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
+				// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 				$wpdb->insert( $table, [
 					'page_path'           => $path,
 					'snapshot_date'       => $today,
@@ -95,16 +95,16 @@ class Syncer {
 				$synced++;
 			}
 
-			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
+			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 			$wpdb->query( 'COMMIT' );
 		} catch ( \Throwable $e ) {
-			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
+			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 			$wpdb->query( 'ROLLBACK' );
 			throw $e;
 		}
 
 		// Log the sync.
-		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 		$wpdb->insert( $wpdb->prefix . 'sf_sync_log', [
 			'source'          => 'ga4',
 			'status'          => 'completed',

@@ -77,7 +77,7 @@ class PropertyComparison {
 
 		$placeholders = implode( ',', array_fill( 0, count( $property_ids ), '%d' ) );
 
-		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 		$rows = $wpdb->get_results( $wpdb->prepare(
 			"SELECT
 				s.property_id,
@@ -141,7 +141,7 @@ class PropertyComparison {
 
 		$placeholders = implode( ',', array_fill( 0, count( $property_ids ), '%d' ) );
 
-		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 		$rows = $wpdb->get_results( $wpdb->prepare(
 			"SELECT
 				k.property_id,

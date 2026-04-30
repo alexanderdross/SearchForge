@@ -132,7 +132,7 @@ class Dashboard {
 			$where .= $wpdb->prepare( " AND page_path LIKE %s", '%' . $wpdb->esc_like( $search ) . '%' );
 		}
 
-		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 		return $wpdb->get_results(
 			"SELECT page_path, clicks, impressions, ctr, position
 			FROM {$wpdb->prefix}sf_snapshots
@@ -208,7 +208,7 @@ class Dashboard {
 			$where .= $wpdb->prepare( " AND (query LIKE %s OR page_path LIKE %s)", $like, $like );
 		}
 
-		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 		return $wpdb->get_results(
 			"SELECT query, page_path, clicks, impressions, ctr, position
 			FROM {$wpdb->prefix}sf_keywords

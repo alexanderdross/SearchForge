@@ -1,0 +1,13 @@
+label,url,location
+Home,https://www.example.com/,header
+Products,https://www.example.com/products/,header
+Services,https://www.example.com/services/,header
+About Us,https://www.example.com/about/,header
+Contact,https://www.example.com/contact/,header
+Blog,https://www.example.com/blog/,header
+FAQ,https://www.example.com/faq/,footer
+Careers,https://www.example.com/careers/,footer
+Privacy Policy,https://www.example.com/privacy-policy/,footer
+Terms of Service,https://www.example.com/terms/,footer
+Imprint,https://www.example.com/imprint/,footer
+Sitemap,https://www.example.com/sitemap/,footer

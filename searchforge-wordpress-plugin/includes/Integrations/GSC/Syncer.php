@@ -120,7 +120,7 @@ class Syncer {
 					$this->property_id
 				) );
 
-				// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
+				// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 				$result = $wpdb->insert( $table, [
 					'page_url'      => $page_url,
 					'page_path'     => $page_path,
@@ -172,7 +172,7 @@ class Syncer {
 			foreach ( $keywords as $kw ) {
 				$page_path = wp_parse_url( $kw['page'], PHP_URL_PATH ) ?: '/';
 
-				// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
+				// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 				$result = $wpdb->insert( $table, [
 					'page_path'     => $page_path,
 					'query'         => $kw['query'],

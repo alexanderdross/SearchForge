@@ -76,7 +76,7 @@ class Syncer {
 					$this->property_id
 				) );
 
-				// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
+				// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 				$wpdb->insert( $table, [
 					'page_path'           => $path,
 					'snapshot_date'       => $today,
@@ -104,7 +104,7 @@ class Syncer {
 		}
 
 		// Log the sync.
-		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 		$wpdb->insert( $wpdb->prefix . 'sf_sync_log', [
 			'source'          => 'ga4',
 			'status'          => 'completed',

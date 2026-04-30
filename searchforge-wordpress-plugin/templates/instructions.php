@@ -19,7 +19,7 @@ $is_pro = SearchForge\Admin\Settings::is_pro();
 			<h2><?php esc_html_e( 'Getting Started', 'searchforge-wordpress-plugin' ); ?></h2>
 			<ol>
 				<li><?php esc_html_e( 'Go to SearchForge → Settings and enter your license key (Pro or Agency). Free tier works without a key.', 'searchforge-wordpress-plugin' ); ?></li>
-				<li><?php esc_html_e( 'Under Google Search Console, enter your OAuth Client ID and Client Secret, then click "Authorize with Google".', 'searchforge-wordpress-plugin' ); ?></li>
+				<li><?php esc_html_e( 'Under Google Search Console, enter your OAuth Client ID and Client Secret (see the "Google Search Console Setup" section below for how to create these), then click "Authorize with Google".', 'searchforge-wordpress-plugin' ); ?></li>
 				<li><?php esc_html_e( 'After authorization, select your GSC property from the dropdown and save.', 'searchforge-wordpress-plugin' ); ?></li>
 				<li><?php esc_html_e( 'Click "Sync Now" on the Dashboard to pull your first batch of ranking data.', 'searchforge-wordpress-plugin' ); ?></li>
 				<li><?php esc_html_e( 'Visit the Pages tab to see your tracked pages, then click any page for detailed metrics.', 'searchforge-wordpress-plugin' ); ?></li>
@@ -71,7 +71,158 @@ $is_pro = SearchForge\Admin\Settings::is_pro();
 					<tr><td>Adobe Analytics</td><td><?php esc_html_e( 'Pro+', 'searchforge-wordpress-plugin' ); ?></td><td><?php esc_html_e( 'OAuth Server-to-Server', 'searchforge-wordpress-plugin' ); ?></td></tr>
 				</tbody>
 			</table>
-			<p style="margin-top: 12px;"><?php esc_html_e( 'Configure all sources in SearchForge → Settings. Each data source enriches your briefs with additional context.', 'searchforge-wordpress-plugin' ); ?></p>
+			<p style="margin-top: 12px;"><?php esc_html_e( 'Configure all sources in SearchForge → Settings. Each data source enriches your briefs with additional context. See the setup guides below for step-by-step credential creation instructions.', 'searchforge-wordpress-plugin' ); ?></p>
+		</div>
+
+		<hr style="border: none; border-top: 1px solid #dcdcde; margin: 24px 0;">
+
+		<!-- GSC Setup -->
+		<div class="sf-instructions-section">
+			<h2><?php esc_html_e( 'Google Search Console Setup', 'searchforge-wordpress-plugin' ); ?></h2>
+			<p><?php esc_html_e( 'GSC requires OAuth 2.0 credentials from a Google Cloud project. Follow these steps to create them:', 'searchforge-wordpress-plugin' ); ?></p>
+			<h3><?php esc_html_e( 'Step 1: Create a Google Cloud Project', 'searchforge-wordpress-plugin' ); ?></h3>
+			<ol>
+				<li><?php
+					printf(
+						/* translators: %s: link to Google Cloud Console */
+						esc_html__( 'Go to the %s.', 'searchforge-wordpress-plugin' ),
+						'<a href="https://console.cloud.google.com/" target="_blank" rel="noopener">Google Cloud Console</a>'
+					); ?></li>
+				<li><?php esc_html_e( 'Click the project dropdown at the top and select "New Project".', 'searchforge-wordpress-plugin' ); ?></li>
+				<li><?php esc_html_e( 'Name it (e.g., "SearchForge") and click "Create".', 'searchforge-wordpress-plugin' ); ?></li>
+			</ol>
+			<h3><?php esc_html_e( 'Step 2: Enable the Search Console API', 'searchforge-wordpress-plugin' ); ?></h3>
+			<ol>
+				<li><?php
+					printf(
+						/* translators: %s: link to API Library */
+						esc_html__( 'In your project, go to %s.', 'searchforge-wordpress-plugin' ),
+						'<a href="https://console.cloud.google.com/apis/library" target="_blank" rel="noopener">APIs &amp; Services &rarr; Library</a>'
+					); ?></li>
+				<li><?php esc_html_e( 'Search for "Google Search Console API" and click "Enable".', 'searchforge-wordpress-plugin' ); ?></li>
+			</ol>
+			<h3><?php esc_html_e( 'Step 3: Create OAuth 2.0 Credentials', 'searchforge-wordpress-plugin' ); ?></h3>
+			<ol>
+				<li><?php
+					printf(
+						/* translators: %s: link to Credentials page */
+						esc_html__( 'Go to %s.', 'searchforge-wordpress-plugin' ),
+						'<a href="https://console.cloud.google.com/apis/credentials" target="_blank" rel="noopener">APIs &amp; Services &rarr; Credentials</a>'
+					); ?></li>
+				<li><?php esc_html_e( 'Click "Create Credentials" → "OAuth client ID".', 'searchforge-wordpress-plugin' ); ?></li>
+				<li><?php esc_html_e( 'If prompted, configure the OAuth Consent Screen first: select "External" user type, fill in the app name and your email, then save.', 'searchforge-wordpress-plugin' ); ?></li>
+				<li><?php esc_html_e( 'For Application Type, select "Web application".', 'searchforge-wordpress-plugin' ); ?></li>
+				<li><?php esc_html_e( 'Under "Authorized redirect URIs", add your SearchForge callback URL. You can find this in SearchForge → Settings under the GSC section.', 'searchforge-wordpress-plugin' ); ?></li>
+				<li><?php esc_html_e( 'Click "Create". Copy the Client ID and Client Secret.', 'searchforge-wordpress-plugin' ); ?></li>
+			</ol>
+			<h3><?php esc_html_e( 'Step 4: Connect in SearchForge', 'searchforge-wordpress-plugin' ); ?></h3>
+			<ol>
+				<li><?php esc_html_e( 'Go to SearchForge → Settings → Google Search Console.', 'searchforge-wordpress-plugin' ); ?></li>
+				<li><?php esc_html_e( 'Paste the Client ID and Client Secret.', 'searchforge-wordpress-plugin' ); ?></li>
+				<li><?php esc_html_e( 'Click "Authorize with Google" and sign in with the Google account that has access to your GSC property.', 'searchforge-wordpress-plugin' ); ?></li>
+				<li><?php esc_html_e( 'Select your property from the dropdown and save.', 'searchforge-wordpress-plugin' ); ?></li>
+			</ol>
+		</div>
+
+		<hr style="border: none; border-top: 1px solid #dcdcde; margin: 24px 0;">
+
+		<!-- Bing Setup -->
+		<div class="sf-instructions-section">
+			<h2><?php esc_html_e( 'Bing Webmaster Tools Setup', 'searchforge-wordpress-plugin' ); ?>
+				<?php if ( ! $is_pro ) : ?>
+					<span class="sf-pro-badge">Pro</span>
+				<?php endif; ?>
+			</h2>
+			<ol>
+				<li><?php
+					printf(
+						/* translators: %s: link to Bing Webmaster Tools */
+						esc_html__( 'Sign in to %s with your Microsoft account.', 'searchforge-wordpress-plugin' ),
+						'<a href="https://www.bing.com/webmasters/" target="_blank" rel="noopener">Bing Webmaster Tools</a>'
+					); ?></li>
+				<li><?php esc_html_e( 'Add and verify your site if you haven\'t already.', 'searchforge-wordpress-plugin' ); ?></li>
+				<li><?php esc_html_e( 'Click the gear icon (Settings) → "API Access" → "API Key".', 'searchforge-wordpress-plugin' ); ?></li>
+				<li><?php esc_html_e( 'Copy the API key.', 'searchforge-wordpress-plugin' ); ?></li>
+				<li><?php esc_html_e( 'In SearchForge → Settings → Bing Webmaster Tools, paste the API key and your site URL, then enable and save.', 'searchforge-wordpress-plugin' ); ?></li>
+			</ol>
+		</div>
+
+		<hr style="border: none; border-top: 1px solid #dcdcde; margin: 24px 0;">
+
+		<!-- GA4 Setup -->
+		<div class="sf-instructions-section">
+			<h2><?php esc_html_e( 'Google Analytics 4 Setup', 'searchforge-wordpress-plugin' ); ?>
+				<?php if ( ! $is_pro ) : ?>
+					<span class="sf-pro-badge">Pro</span>
+				<?php endif; ?>
+			</h2>
+			<p><?php esc_html_e( 'GA4 uses the same Google Cloud project as GSC. You only need to enable an additional API.', 'searchforge-wordpress-plugin' ); ?></p>
+			<ol>
+				<li><?php
+					printf(
+						/* translators: %s: link to API Library */
+						esc_html__( 'In your Google Cloud project, go to %s.', 'searchforge-wordpress-plugin' ),
+						'<a href="https://console.cloud.google.com/apis/library" target="_blank" rel="noopener">APIs &amp; Services &rarr; Library</a>'
+					); ?></li>
+				<li><?php esc_html_e( 'Search for "Google Analytics Data API" and click "Enable".', 'searchforge-wordpress-plugin' ); ?></li>
+				<li><?php
+					printf(
+						/* translators: %s: link to GA4 Admin */
+						esc_html__( 'Find your GA4 Property ID in %s → Property Settings (numeric ID, e.g., "123456789").', 'searchforge-wordpress-plugin' ),
+						'<a href="https://analytics.google.com/analytics/web/#/a" target="_blank" rel="noopener">Google Analytics</a>'
+					); ?></li>
+				<li><?php esc_html_e( 'In SearchForge → Settings → Google Analytics 4, enter the Property ID, enable, and save.', 'searchforge-wordpress-plugin' ); ?></li>
+			</ol>
+		</div>
+
+		<hr style="border: none; border-top: 1px solid #dcdcde; margin: 24px 0;">
+
+		<!-- Keyword Planner Setup -->
+		<div class="sf-instructions-section">
+			<h2><?php esc_html_e( 'Google Keyword Planner Setup', 'searchforge-wordpress-plugin' ); ?>
+				<?php if ( ! $is_pro ) : ?>
+					<span class="sf-pro-badge">Pro</span>
+				<?php endif; ?>
+			</h2>
+			<ol>
+				<li><?php
+					printf(
+						/* translators: %s: link to Google Ads */
+						esc_html__( 'Sign in to %s (create an account if needed — no active campaigns required).', 'searchforge-wordpress-plugin' ),
+						'<a href="https://ads.google.com/" target="_blank" rel="noopener">Google Ads</a>'
+					); ?></li>
+				<li><?php esc_html_e( 'Go to Tools & Settings → Setup → API Center. Apply for a developer token if you don\'t have one.', 'searchforge-wordpress-plugin' ); ?></li>
+				<li><?php esc_html_e( 'Find your Customer ID (10-digit number) at the top right of the Google Ads dashboard (formatted as XXX-XXX-XXXX).', 'searchforge-wordpress-plugin' ); ?></li>
+				<li><?php esc_html_e( 'In SearchForge → Settings → Keyword Planner, enter the Developer Token and Customer ID, then save.', 'searchforge-wordpress-plugin' ); ?></li>
+			</ol>
+			<p><?php esc_html_e( 'Note: A basic access developer token is sufficient. You do not need to run paid ads.', 'searchforge-wordpress-plugin' ); ?></p>
+		</div>
+
+		<hr style="border: none; border-top: 1px solid #dcdcde; margin: 24px 0;">
+
+		<!-- Google Trends / SerpAPI Setup -->
+		<div class="sf-instructions-section">
+			<h2><?php esc_html_e( 'Google Trends (SerpAPI) Setup', 'searchforge-wordpress-plugin' ); ?>
+				<?php if ( ! $is_pro ) : ?>
+					<span class="sf-pro-badge">Pro</span>
+				<?php endif; ?>
+			</h2>
+			<ol>
+				<li><?php
+					printf(
+						/* translators: %s: link to SerpAPI */
+						esc_html__( 'Create an account at %s.', 'searchforge-wordpress-plugin' ),
+						'<a href="https://serpapi.com/" target="_blank" rel="noopener">SerpAPI</a>'
+					); ?></li>
+				<li><?php
+					printf(
+						/* translators: %s: link to SerpAPI dashboard */
+						esc_html__( 'Go to your %s and copy your API key.', 'searchforge-wordpress-plugin' ),
+						'<a href="https://serpapi.com/dashboard" target="_blank" rel="noopener">SerpAPI Dashboard</a>'
+					); ?></li>
+				<li><?php esc_html_e( 'In SearchForge → Settings → Google Trends, paste the SerpAPI key, enable, and save.', 'searchforge-wordpress-plugin' ); ?></li>
+			</ol>
+			<p><?php esc_html_e( 'SerpAPI offers a free tier with 100 searches/month. Paid plans start at $50/month for higher volume.', 'searchforge-wordpress-plugin' ); ?></p>
 		</div>
 
 		<hr style="border: none; border-top: 1px solid #dcdcde; margin: 24px 0;">

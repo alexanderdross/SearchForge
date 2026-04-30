@@ -81,10 +81,10 @@ class Competitors {
 		global $wpdb;
 
 		// Delete keywords first.
-		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 		$wpdb->delete( $wpdb->prefix . 'sf_competitor_keywords', [ 'competitor_id' => $id ], [ '%d' ] );
 
-		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 		return (bool) $wpdb->delete( $wpdb->prefix . 'sf_competitors', [ 'id' => $id, 'property_id' => $property_id ], [ '%d', '%d' ] );
 	}
 
@@ -117,7 +117,7 @@ class Competitors {
 		$comp_ids = array_column( $competitors, 'id' );
 		$placeholders = implode( ',', array_fill( 0, count( $comp_ids ), '%d' ) );
 
-		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare
 		$comp_latest = $wpdb->get_var( $wpdb->prepare(
 			"SELECT MAX(snapshot_date) FROM {$wpdb->prefix}sf_competitor_keywords
 			WHERE competitor_id IN ({$placeholders})",
@@ -182,7 +182,7 @@ class Competitors {
 		$comp_ids = array_column( $competitors, 'id' );
 		$placeholders = implode( ',', array_fill( 0, count( $comp_ids ), '%d' ) );
 
-		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare
 		$comp_latest = $wpdb->get_var( $wpdb->prepare(
 			"SELECT MAX(snapshot_date) FROM {$wpdb->prefix}sf_competitor_keywords
 			WHERE competitor_id IN ({$placeholders})",
@@ -193,7 +193,7 @@ class Competitors {
 			return [];
 		}
 
-		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQLPlaceholders.ReplacementsWrongNumber
 		$results = $wpdb->get_results( $wpdb->prepare(
 			"SELECT
 				ck.query,
@@ -366,7 +366,8 @@ class Competitors {
 		$inserted = 0;
 
 		// Clear old data for this competitor for today.
-		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 		$wpdb->delete(
 			$wpdb->prefix . 'sf_competitor_keywords',
 			[ 'competitor_id' => $competitor_id, 'snapshot_date' => $today ],

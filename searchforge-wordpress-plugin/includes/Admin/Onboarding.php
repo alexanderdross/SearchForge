@@ -85,8 +85,8 @@ class Onboarding {
 		$steps[] = [
 			'text' => $connected
 				? __( 'Google Search Console connected', 'searchforge-wordpress-plugin' )
-				/* translators: %s: settings page URL */
 				: sprintf(
+					/* translators: %s: settings page URL */
 					__( 'Connect Google Search Console in <a href="%s">Settings</a>', 'searchforge-wordpress-plugin' ),
 					admin_url( 'admin.php?page=searchforge-settings' )
 				),

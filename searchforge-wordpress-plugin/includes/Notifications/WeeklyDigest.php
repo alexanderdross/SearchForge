@@ -223,8 +223,8 @@ class WeeklyDigest {
 
 				<div class="footer">
 					<?php
-					/* translators: %1$s: plugin version number, %2$s: site URL */
 					echo esc_html( sprintf(
+						/* translators: %1$s: plugin version number, %2$s: site URL */
 						__( 'SearchForge v%1$s — %2$s', 'searchforge-wordpress-plugin' ),
 						SEARCHFORGE_VERSION,
 						$data['site_url']

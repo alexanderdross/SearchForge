@@ -42,6 +42,7 @@ class LlmsTxt {
 		header( 'Cache-Control: public, max-age=86400' );
 		header( 'X-Generator: SearchForge/' . SEARCHFORGE_VERSION );
 
+		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Plain text output, not HTML context
 		echo $content;
 		exit;
 	}

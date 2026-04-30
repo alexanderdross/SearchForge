@@ -201,11 +201,11 @@ class Installer {
 		require_once ABSPATH . 'wp-admin/includes/upgrade.php';
 		dbDelta( $sql );
 
-		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.DirectDatabaseQuery.SchemaChange
 		$wpdb->query( "CREATE INDEX IF NOT EXISTS idx_keywords_page_date ON {$wpdb->prefix}sf_keywords (page_path, snapshot_date)" );
-		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.DirectDatabaseQuery.SchemaChange
 		$wpdb->query( "CREATE INDEX IF NOT EXISTS idx_keywords_query_source ON {$wpdb->prefix}sf_keywords (query(100), source)" );
-		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.DirectDatabaseQuery.SchemaChange
 		$wpdb->query( "CREATE INDEX IF NOT EXISTS idx_alerts_read_created ON {$wpdb->prefix}sf_alerts (is_read, created_at)" );
 	}
 
@@ -214,7 +214,7 @@ class Installer {
 
 		$table = $wpdb->prefix . 'sf_properties';
 
-		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 		$exists = (int) $wpdb->get_var( "SELECT COUNT(*) FROM {$table}" );
 		if ( $exists > 0 ) {
 			return;

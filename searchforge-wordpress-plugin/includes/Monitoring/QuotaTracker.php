@@ -126,8 +126,8 @@ class QuotaTracker {
 			if ( $info['status'] === 'exhausted' ) {
 				self::create_alert(
 					$service,
-					/* translators: %1$s: service label, %2$s: used quota, %3$s: quota limit, %4$s: quota unit */
 					sprintf(
+						/* translators: %1$s: service label, %2$s: used quota, %3$s: quota limit, %4$s: quota unit */
 						__( '%1$s daily quota exhausted (%2$s/%3$s %4$s)', 'searchforge-wordpress-plugin' ),
 						$info['label'],
 						number_format( $info['used'] ),
@@ -139,8 +139,8 @@ class QuotaTracker {
 			} elseif ( $info['status'] === 'warning' ) {
 				self::create_alert(
 					$service,
-					/* translators: %1$s: service label, %2$s: usage percentage, %3$s: used quota, %4$s: quota limit, %5$s: quota unit */
 					sprintf(
+						/* translators: %1$s: service label, %2$s: usage percentage, %3$s: used quota, %4$s: quota limit, %5$s: quota unit */
 						__( '%1$s quota at %2$s%% (%3$s/%4$s %5$s)', 'searchforge-wordpress-plugin' ),
 						$info['label'],
 						$info['pct'],

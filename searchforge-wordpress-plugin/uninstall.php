@@ -9,7 +9,7 @@ defined( 'WP_UNINSTALL_PLUGIN' ) || exit;
 global $wpdb;
 
 // Drop custom tables.
-$tables = [
+$sf_tables = [
 	'sf_properties',
 	'sf_snapshots',
 	'sf_keywords',
@@ -23,9 +23,9 @@ $tables = [
 	'sf_competitor_keywords',
 ];
 
-foreach ( $tables as $table ) {
-	// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL
-	$wpdb->query( "DROP TABLE IF EXISTS {$wpdb->prefix}{$table}" );
+foreach ( $sf_tables as $sf_table ) {
+	// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.DirectDatabaseQuery.SchemaChange, WordPress.DB.PreparedSQL
+	$wpdb->query( "DROP TABLE IF EXISTS {$wpdb->prefix}{$sf_table}" );
 }
 
 // Remove options.

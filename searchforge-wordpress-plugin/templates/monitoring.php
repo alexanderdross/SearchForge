@@ -86,8 +86,8 @@ $tab         = sanitize_text_field( wp_unslash( $_GET['tab'] ?? 'overview' ) ); 
 					<div>
 						<strong><?php esc_html_e( 'Valid', 'searchforge-wordpress-plugin' ); ?></strong>
 						<?php
-						/* translators: %1$d: number of days remaining, %2$s: expiry date */
 						echo esc_html( sprintf(
+							/* translators: %1$d: number of days remaining, %2$s: expiry date */
 							__( '%1$d days remaining — expires %2$s', 'searchforge-wordpress-plugin' ),
 							$ssl_info['days_left'],
 							$ssl_info['valid_to']

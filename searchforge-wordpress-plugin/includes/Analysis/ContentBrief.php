@@ -109,8 +109,9 @@ class ContentBrief {
 			$placeholders  = implode( ',', array_fill( 0, count( $query_list ), '%s' ) );
 			$prepare_args  = array_merge( $query_list, [ $latest_date, $property_id ] );
 
-			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQLPlaceholders.ReplacementsWrongNumber
 			$cannibalizing = $wpdb->get_col( $wpdb->prepare(
+				// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 				"SELECT query
 				FROM {$wpdb->prefix}sf_keywords
 				WHERE query IN ({$placeholders}) AND source = 'gsc' AND snapshot_date = %s AND property_id = %d

@@ -78,7 +78,7 @@ class Syncer {
 			$keywords_synced = $this->store_keyword_data( $query_stats, $today );
 
 			// Log success.
-			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
+			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 			$wpdb->update( "{$wpdb->prefix}sf_sync_log", [
 				'status'          => 'completed',
 				'pages_synced'    => $pages_synced,
@@ -106,7 +106,7 @@ class Syncer {
 		// Bing returns an array of page stat objects.
 		$pages = is_array( $stats ) ? $stats : [];
 
-		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 		$wpdb->query( 'START TRANSACTION' );
 
 		try {
@@ -124,7 +124,7 @@ class Syncer {
 				$position    = (float) ( $entry['AvgImpressionPosition'] ?? $entry['Position'] ?? 0 );
 
 				// Upsert.
-				// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
+				// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 				$wpdb->query( $wpdb->prepare(
 					"DELETE FROM {$table} WHERE page_path = %s AND snapshot_date = %s AND source = 'bing' AND device = 'all' AND property_id = %d",
 					$page_path,
@@ -153,10 +153,10 @@ class Syncer {
 				$count++;
 			}
 
-			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
+			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 			$wpdb->query( 'COMMIT' );
 		} catch ( \Exception $e ) {
-			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
+			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 			$wpdb->query( 'ROLLBACK' );
 			throw $e;
 		}
@@ -171,12 +171,12 @@ class Syncer {
 
 		$queries = is_array( $stats ) ? $stats : [];
 
-		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 		$wpdb->query( 'START TRANSACTION' );
 
 		try {
 			// Delete existing Bing keywords for this date and property.
-			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
+			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 			$wpdb->query( $wpdb->prepare(
 				"DELETE FROM {$table} WHERE snapshot_date = %s AND source = 'bing' AND property_id = %d",
 				$snapshot_date,
@@ -221,10 +221,10 @@ class Syncer {
 				$count++;
 			}
 
-			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
+			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 			$wpdb->query( 'COMMIT' );
 		} catch ( \Exception $e ) {
-			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
+			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 			$wpdb->query( 'ROLLBACK' );
 			throw $e;
 		}
@@ -235,7 +235,7 @@ class Syncer {
 	private function log_failure( int $log_id, string $message ): void {
 		global $wpdb;
 
-		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 		$wpdb->update( "{$wpdb->prefix}sf_sync_log", [
 			'status'        => 'failed',
 			'error_message' => $message,

@@ -54,7 +54,7 @@ class Enricher {
 					continue;
 				}
 
-				// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
+				// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 				$updated = $wpdb->query( $wpdb->prepare(
 					"UPDATE {$wpdb->prefix}sf_keywords
 					SET search_volume = %d, competition = %s

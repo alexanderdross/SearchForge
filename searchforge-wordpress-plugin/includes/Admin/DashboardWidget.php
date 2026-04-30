@@ -29,8 +29,8 @@ class DashboardWidget {
 		if ( ! $connected ) {
 			echo '<p>';
 			printf(
-				/* translators: %s: settings page URL */
 				wp_kses(
+					/* translators: %s: settings page URL */
 					__( 'Google Search Console is not connected. <a href="%s">Connect now</a>.', 'searchforge-wordpress-plugin' ),
 					[ 'a' => [ 'href' => [] ] ]
 				),

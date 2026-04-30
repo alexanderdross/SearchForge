@@ -100,8 +100,8 @@ $recent_alerts = $wpdb->get_results( $wpdb->prepare(
 			<canvas id="sf-dashboard-chart" height="200"></canvas>
 			<span class="screen-reader-text">
 				<?php
-				/* translators: %1$s: total clicks, %2$s: total impressions */
 				echo esc_html( sprintf(
+					/* translators: %1$s: total clicks, %2$s: total impressions */
 					__( 'Line chart displaying daily clicks and impressions for the last 14 days. Total clicks: %1$s, Total impressions: %2$s.', 'searchforge-wordpress-plugin' ),
 					number_format( $summary['total_clicks'] ),
 					number_format( $summary['total_impressions'] )
@@ -159,8 +159,8 @@ $recent_alerts = $wpdb->get_results( $wpdb->prepare(
 		<div class="sf-cannibal-summary">
 			<h2>
 				<?php
-				/* translators: %d: number of cannibalization issues */
 				echo esc_html( sprintf(
+					/* translators: %d: number of cannibalization issues */
 					__( 'Keyword Cannibalization (%d issues)', 'searchforge-wordpress-plugin' ),
 					$cannibal_count
 				) ); ?>
@@ -183,8 +183,8 @@ $recent_alerts = $wpdb->get_results( $wpdb->prepare(
 				<div class="sf-alert sf-alert-<?php echo $item['severity'] === 'high' ? 'high' : 'medium'; ?>">
 					<strong>&ldquo;<?php echo esc_html( $item['query'] ); ?>&rdquo;</strong>
 					<?php
-					/* translators: %1$d: number of competing pages, %2$s: total impressions */
 					echo esc_html( sprintf(
+						/* translators: %1$d: number of competing pages, %2$s: total impressions */
 						__( '%1$d pages competing | %2$s impressions', 'searchforge-wordpress-plugin' ),
 						$item['page_count'],
 						number_format( $item['total_impressions'] )
@@ -197,8 +197,8 @@ $recent_alerts = $wpdb->get_results( $wpdb->prepare(
 	<?php if ( $summary['last_sync'] ) : ?>
 		<p class="sf-last-sync">
 			<?php
-			/* translators: %1$s: last sync date and time, %2$s: sync status */
 			echo esc_html( sprintf(
+				/* translators: %1$s: last sync date and time, %2$s: sync status */
 				__( 'Last sync: %1$s (%2$s)', 'searchforge-wordpress-plugin' ),
 				wp_date( get_option( 'date_format' ) . ' ' . get_option( 'time_format' ), strtotime( $summary['last_sync'] ) ),
 				$summary['sync_status'] ?? 'unknown'

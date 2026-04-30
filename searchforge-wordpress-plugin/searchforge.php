@@ -8,7 +8,6 @@
  * Author URI:  https://drossmedia.de
  * License:     GPL-2.0-or-later
  * Text Domain: searchforge-wordpress-plugin
- * Domain Path: /languages
  * Requires at least: 6.0
  * Requires PHP: 8.0
  */
@@ -75,8 +74,6 @@ final class SearchForge {
 	}
 
 	public function init(): void {
-		load_plugin_textdomain( 'searchforge-wordpress-plugin', false, dirname( plugin_basename( SEARCHFORGE_FILE ) ) . '/languages' );
-
 		// Admin.
 		if ( is_admin() ) {
 			new SearchForge\Admin\Menu();

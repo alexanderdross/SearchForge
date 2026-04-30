@@ -158,8 +158,8 @@ class BrokenLinks {
 		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
 		$wpdb->insert( "{$wpdb->prefix}sf_alerts", [
 			'alert_type' => 'broken_links',
-			/* translators: %d: number of broken links detected */
 			'title'      => sprintf(
+				/* translators: %d: number of broken links detected */
 				__( '%d broken link(s) detected', 'searchforge-wordpress-plugin' ),
 				count( $broken )
 			),

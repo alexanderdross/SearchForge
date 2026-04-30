@@ -115,8 +115,8 @@ class SslChecker {
 		} elseif ( $result['status'] === 'error' ) {
 			$title = __( 'SSL certificate check failed', 'searchforge-wordpress-plugin' );
 		} else {
-			/* translators: %d: number of days until SSL certificate expiry */
 			$title = sprintf(
+				/* translators: %d: number of days until SSL certificate expiry */
 				__( 'SSL certificate expires in %d days', 'searchforge-wordpress-plugin' ),
 				$result['days_left']
 			);

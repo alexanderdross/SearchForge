@@ -856,4 +856,23 @@
 		});
 	});
 
+	// Copy-to-clipboard buttons.
+	$(document).on('click', '.sf-copy-btn', function () {
+		var targetId = $(this).data('copy-target');
+		var text = $('#' + targetId).text().trim();
+		var $btn = $(this);
+		if (navigator.clipboard) {
+			navigator.clipboard.writeText(text).then(function () {
+				$btn.text('Copied!');
+				setTimeout(function () { $btn.text('Copy'); }, 2000);
+			});
+		} else {
+			var $temp = $('<input>').val(text).appendTo('body').select();
+			document.execCommand('copy');
+			$temp.remove();
+			$btn.text('Copied!');
+			setTimeout(function () { $btn.text('Copy'); }, 2000);
+		}
+	});
+
 })(jQuery);

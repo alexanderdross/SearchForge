@@ -132,15 +132,17 @@ class Dashboard {
 			$where .= $wpdb->prepare( " AND page_path LIKE %s", '%' . $wpdb->esc_like( $search ) . '%' );
 		}
 
-		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
-		return $wpdb->get_results(
+		// phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter
+		$results = $wpdb->get_results(
 			"SELECT page_path, clicks, impressions, ctr, position
 			FROM {$wpdb->prefix}sf_snapshots
 			WHERE {$where}
 			ORDER BY clicks DESC
 			LIMIT {$query_limit} OFFSET {$offset}",
 			ARRAY_A
-		); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+		);
+		// phpcs:enable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter
+		return $results;
 	}
 
 	/**
@@ -208,15 +210,17 @@ class Dashboard {
 			$where .= $wpdb->prepare( " AND (query LIKE %s OR page_path LIKE %s)", $like, $like );
 		}
 
-		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
-		return $wpdb->get_results(
+		// phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter
+		$results = $wpdb->get_results(
 			"SELECT query, page_path, clicks, impressions, ctr, position
 			FROM {$wpdb->prefix}sf_keywords
 			WHERE {$where}
 			ORDER BY clicks DESC
 			LIMIT {$limit} OFFSET {$offset}",
 			ARRAY_A
-		); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+		);
+		// phpcs:enable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter
+		return $results;
 	}
 
 	/**

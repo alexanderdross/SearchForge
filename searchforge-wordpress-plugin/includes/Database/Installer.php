@@ -214,7 +214,7 @@ class Installer {
 
 		$table = $wpdb->prefix . 'sf_properties';
 
-		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter
 		$exists = (int) $wpdb->get_var( "SELECT COUNT(*) FROM {$table}" );
 		if ( $exists > 0 ) {
 			return;

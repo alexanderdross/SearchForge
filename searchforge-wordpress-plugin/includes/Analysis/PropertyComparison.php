@@ -77,7 +77,7 @@ class PropertyComparison {
 
 		$placeholders = implode( ',', array_fill( 0, count( $property_ids ), '%d' ) );
 
-		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+		// phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 		$rows = $wpdb->get_results( $wpdb->prepare(
 			"SELECT
 				s.property_id,
@@ -99,6 +99,7 @@ class PropertyComparison {
 			LIMIT %d",
 			...[ ...$property_ids, ...$property_ids, $limit * count( $property_ids ) ]
 		), ARRAY_A ) ?: [];
+		// phpcs:enable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 
 		$pages = [];
 		foreach ( $rows as $row ) {
@@ -141,7 +142,7 @@ class PropertyComparison {
 
 		$placeholders = implode( ',', array_fill( 0, count( $property_ids ), '%d' ) );
 
-		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+		// phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 		$rows = $wpdb->get_results( $wpdb->prepare(
 			"SELECT
 				k.property_id,
@@ -162,6 +163,7 @@ class PropertyComparison {
 			LIMIT %d",
 			...[ ...$property_ids, ...$property_ids, $limit * count( $property_ids ) ]
 		), ARRAY_A ) ?: [];
+		// phpcs:enable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 
 		$keywords = [];
 		foreach ( $rows as $row ) {

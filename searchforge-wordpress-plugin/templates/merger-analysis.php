@@ -50,13 +50,51 @@ $property_id = SearchForge\Models\Property::get_active_property_id();
 
 			<h2><?php esc_html_e( 'Upload Current Navigation (Optional)', 'searchforge-wordpress-plugin' ); ?></h2>
 			<p class="description">
-				<?php esc_html_e( 'Upload CSV files with the current header and footer navigation items for each domain or subfolder. This enriches the brief with your existing navigation structure for comparison.', 'searchforge-wordpress-plugin' ); ?>
-			</p>
-			<p class="description" style="margin-top: 4px;">
-				<?php esc_html_e( 'CSV format: label, url, location (header/footer). First row must be a header row.', 'searchforge-wordpress-plugin' ); ?>
+				<?php esc_html_e( 'Upload CSV files with the current header and footer navigation items for each domain or subfolder. This enriches the brief with your existing navigation structure for comparison and merger recommendations.', 'searchforge-wordpress-plugin' ); ?>
 			</p>
 
-			<div id="sf-nav-uploads" style="margin-top: 12px;">
+			<div class="sf-csv-format-info" style="background: #f0f6fc; border: 1px solid #c3d1e0; border-radius: 4px; padding: 16px; margin-top: 12px;">
+				<h3 style="margin: 0 0 8px;"><?php esc_html_e( 'CSV Format', 'searchforge-wordpress-plugin' ); ?></h3>
+				<p class="description" style="margin: 0 0 8px;">
+					<?php esc_html_e( 'The file must be comma-separated (,) — not semicolon. Save as UTF-8 .csv from Excel or Google Sheets.', 'searchforge-wordpress-plugin' ); ?>
+				</p>
+				<table class="widefat" style="max-width: 640px; margin-bottom: 12px;">
+					<thead>
+						<tr>
+							<th><?php esc_html_e( 'Column', 'searchforge-wordpress-plugin' ); ?></th>
+							<th><?php esc_html_e( 'Required', 'searchforge-wordpress-plugin' ); ?></th>
+							<th><?php esc_html_e( 'Description', 'searchforge-wordpress-plugin' ); ?></th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td><code>label</code></td>
+							<td><?php esc_html_e( 'Yes', 'searchforge-wordpress-plugin' ); ?></td>
+							<td><?php esc_html_e( 'Navigation item text (e.g. "Products", "About Us")', 'searchforge-wordpress-plugin' ); ?></td>
+						</tr>
+						<tr>
+							<td><code>url</code></td>
+							<td><?php esc_html_e( 'Yes', 'searchforge-wordpress-plugin' ); ?></td>
+							<td><?php esc_html_e( 'Full URL including https:// (e.g. "https://example.com/products/")', 'searchforge-wordpress-plugin' ); ?></td>
+						</tr>
+						<tr>
+							<td><code>location</code></td>
+							<td><?php esc_html_e( 'No', 'searchforge-wordpress-plugin' ); ?></td>
+							<td><?php esc_html_e( '"header" or "footer" — defaults to "header" if omitted', 'searchforge-wordpress-plugin' ); ?></td>
+						</tr>
+					</tbody>
+				</table>
+				<p style="margin: 0;">
+					<a href="<?php echo esc_url( SEARCHFORGE_URL . 'assets/templates/navigation-template.csv' ); ?>" download="navigation-template.csv" class="button">
+						<?php esc_html_e( 'Download Example CSV Template', 'searchforge-wordpress-plugin' ); ?>
+					</a>
+					<span class="description" style="margin-left: 8px;">
+						<?php esc_html_e( 'Fill in your own URLs and labels, then upload below.', 'searchforge-wordpress-plugin' ); ?>
+					</span>
+				</p>
+			</div>
+
+			<div id="sf-nav-uploads" style="margin-top: 16px;">
 				<div class="sf-nav-upload-row" style="display: flex; gap: 8px; align-items: center; margin-bottom: 8px;">
 					<input type="text" class="sf-nav-csv-label regular-text" placeholder="<?php esc_attr_e( 'e.g. www.domain.com', 'searchforge-wordpress-plugin' ); ?>" style="max-width: 240px;" />
 					<input type="file" class="sf-nav-csv-file" accept=".csv" />
@@ -68,19 +106,6 @@ $property_id = SearchForge\Models\Property::get_active_property_id();
 					<?php esc_html_e( '+ Add Another Domain / Subfolder', 'searchforge-wordpress-plugin' ); ?>
 				</button>
 			</p>
-
-			<details style="margin-top: 12px;">
-				<summary style="cursor: pointer; color: #2271b1;"><?php esc_html_e( 'CSV Example', 'searchforge-wordpress-plugin' ); ?></summary>
-				<pre style="background: #f6f7f7; border: 1px solid #dcdcde; padding: 12px; margin-top: 8px; font-size: 13px;">label,url,location
-Home,https://www.domain.com/,header
-Products,https://www.domain.com/products/,header
-About Us,https://www.domain.com/about/,header
-Contact,https://www.domain.com/contact/,header
-Blog,https://www.domain.com/blog/,footer
-Careers,https://www.domain.com/careers/,footer
-Privacy Policy,https://www.domain.com/privacy/,footer
-Terms of Service,https://www.domain.com/terms/,footer</pre>
-			</details>
 
 			<hr style="border: none; border-top: 1px solid #dcdcde; margin: 20px 0;">
 

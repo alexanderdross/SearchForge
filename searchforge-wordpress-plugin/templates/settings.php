@@ -551,6 +551,24 @@ if ( isset( $_GET['gsc_connected'] ) ) : // phpcs:ignore WordPress.Security.Nonc
 						</td>
 					</tr>
 					<tr>
+						<th scope="row"><?php esc_html_e( 'Authorized Redirect URI', 'searchforge-wordpress-plugin' ); ?></th>
+						<td>
+							<code id="sf-cfg-gsc-redirect-uri"><?php echo esc_html( \SearchForge\Integrations\GSC\OAuth::get_redirect_uri() ); ?></code>
+							<button type="button" class="button button-small sf-copy-btn" data-copy-target="sf-cfg-gsc-redirect-uri" title="<?php esc_attr_e( 'Copy to clipboard', 'searchforge-wordpress-plugin' ); ?>">
+								<?php esc_html_e( 'Copy', 'searchforge-wordpress-plugin' ); ?>
+							</button>
+							<p class="description">
+								<?php
+								printf(
+									/* translators: %s: link to Google Cloud Console credentials page */
+									esc_html__( 'Add this URL as an "Authorized redirect URI" in your %s when creating or editing your OAuth 2.0 Client ID.', 'searchforge-wordpress-plugin' ),
+									'<a href="https://console.cloud.google.com/apis/credentials" target="_blank" rel="noopener noreferrer">' . esc_html__( 'Google Cloud Console Credentials', 'searchforge-wordpress-plugin' ) . '</a>'
+								);
+								?>
+							</p>
+						</td>
+					</tr>
+					<tr>
 						<th scope="row"><?php esc_html_e( 'Connection', 'searchforge-wordpress-plugin' ); ?></th>
 						<td id="sf-cfg-gsc-status-cell"></td>
 					</tr>

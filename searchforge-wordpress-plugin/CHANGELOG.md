@@ -2,6 +2,22 @@
 
 All notable changes to the SearchForge WordPress plugin will be documented in this file.
 
+## [3.2.0] - 2026-04-30
+
+### Added
+- Step-by-step API credential setup guides for all integrations (GSC OAuth, Bing, GA4, Keyword Planner, SerpAPI, Adobe Analytics) in the Instructions page.
+- OAuth redirect URI display with copy button on the Settings page for easy Google Cloud Console configuration.
+- Downloadable CSV template for merger analysis navigation upload.
+- Direct links to Google Cloud Console, Bing Webmaster Tools, Google Ads, SerpAPI Dashboard, and Adobe Developer Console throughout documentation.
+
+### Changed
+- Admin footer text updated from "made with ♥love by" to "made with ♥ by".
+
+### Fixed
+- Resolved all WordPress Plugin Check errors and warnings across 15 files.
+- Converted phpcs:ignore to phpcs:disable/enable blocks for multi-line SQL query coverage.
+- Fixed variable prefix compliance in uninstall handler ($sf_tables → $searchforge_tables).
+
 ## [3.1.0] - 2026-04-29
 
 ### Added
